@@ -20,6 +20,23 @@ bool Player::Awake() {
 
 	//Initialize Player parameters
 	position = Vector2D(0, 0);
+	
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set( position.getX(), position.getY());
+	body = Engine::GetInstance().scene.get()->world->CreateBody(&bodyDef);
+
+	b2PolygonShape rectangle;
+	rectangle.SetAsBox(PIXEL_TO_METERS(10 / 2.0f), PIXEL_TO_METERS(10 / 2.0f));
+
+	b2PolygonShape boxShape = rectangle;
+
+	b2FixtureDef boxFixtureDef;
+	boxFixtureDef.shape = &boxShape;
+	boxFixtureDef.density = 1.0f;
+	boxFixtureDef.friction = 0.3f;
+	body->CreateFixture(&boxFixtureDef);
+
 	return true;
 }
 
@@ -31,20 +48,29 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	//Render the player texture and modify the position of the player using WSAD keys and render the texture
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		position.setY(position.getY() - speed*dt);
+	b2Vec2 velocityDir{ 0, body->GetLinearVelocity().y };
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		position.setY(position.getY() + speed*dt);
+	//Render the player texture and modify the position of the player using WSAD keys and render the texture
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		position.setX(position.getX() - speed*dt);
+		velocityDir.x -= speed*(dt/1000);
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		position.setX(position.getX() + speed*dt);
+		velocityDir.x += speed*(dt/1000);
 
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY());
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		velocityDir.y = 0;
+		body->SetLinearVelocity(velocityDir);
+		body->ApplyForceToCenter(b2Vec2{ 0, -12 }, true);
+	}
+
+	body->SetLinearVelocity(velocityDir);
+
+	position.setX(body->GetPosition().x);
+	position.setY(body->GetPosition().y);
+
+	printf("ola, %f\n", body->GetLinearVelocity().y);
+	Engine::GetInstance().render.get()->DrawTexture(texture, METERS_TO_PIXELS(position.getX()), METERS_TO_PIXELS(position.getY()));
 	return true;
 }
 

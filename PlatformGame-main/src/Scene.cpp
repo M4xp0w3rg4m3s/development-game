@@ -18,13 +18,17 @@ Scene::Scene() : Module()
 
 // Destructor
 Scene::~Scene()
-{}
+{
+	delete world;
+}
 
 // Called before render is available
 bool Scene::Awake()
 {
 	LOG("Loading Scene");
 	bool ret = true;
+
+	world = new b2World({ 0, 10 });
 
 	//Get the player texture name from the config file and assigns the value
 
@@ -56,6 +60,7 @@ bool Scene::LoadParameters(xml_node parameters) {
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	world->Step(1 / 60.0f, 8, 3);
 	return true;
 }
 

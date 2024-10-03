@@ -4,6 +4,7 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Log.h"
+#include "Scene.h"
 
 #include <math.h>
 
@@ -29,6 +30,22 @@ bool Map::Start() {
 
     //Calls the function to load the map. The name of the map is assigned in teh scene
     Load(mapPath + mapName);
+
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_staticBody;
+    bodyDef.position.Set(PIXEL_TO_METERS(0.0f), PIXEL_TO_METERS(300.0f));
+    mapBody = Engine::GetInstance().scene.get()->world->CreateBody(&bodyDef);
+
+    b2PolygonShape rectangle;
+    rectangle.SetAsBox(PIXEL_TO_METERS(1000 / 2.0f), PIXEL_TO_METERS(50 / 2.0f));
+
+    b2PolygonShape boxShape = rectangle;
+
+    b2FixtureDef boxFixtureDef;
+    boxFixtureDef.shape = &boxShape;
+    boxFixtureDef.density = 1.0f;
+    boxFixtureDef.friction = 0.3f;
+    mapBody->CreateFixture(&boxFixtureDef);
 
     return true;
 }
