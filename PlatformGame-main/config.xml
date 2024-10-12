@@ -18,7 +18,7 @@
   </window>
 
   <scene>
-    <player x="100" y="100" texturePath="Assets/Textures/player1.png"/>
+    <player x="100" y="100" texturePath="Assets/Textures/Character/Idle/Idle-Static.png"/>
     <map path="Assets/Maps/" name="Level1Map.tmx"/>
   </scene>
   
