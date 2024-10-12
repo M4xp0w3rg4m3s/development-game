@@ -9,6 +9,14 @@ class Player : public Entity
 {
 public:
 
+	enum PlayerState
+	{
+		IDLE = 1,
+		RUNNING,
+		JUMPING,
+		DEAD
+	};
+
 	Player();
 	
 	virtual ~Player();
@@ -22,6 +30,7 @@ public:
 	bool CleanUp();
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 
 public:
 
