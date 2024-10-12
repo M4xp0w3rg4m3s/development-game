@@ -1,7 +1,7 @@
 <!-- Config file for the game -->
 <config>
   <app>
-    <title>Guillem es putero</title>
+    <title>Zephyrus Platformer</title>
     <maxFrameDuration value="16"/>
   </app>
 
@@ -19,7 +19,7 @@
 
   <scene>
     <player x="100" y="100" texturePath="Assets/Textures/player1.png"/>
-    <map path="Assets/Maps/" name="MapTemplate.tmx"/>
+    <map path="Assets/Maps/" name="Level1Map.tmx"/>
   </scene>
   
 </config>
