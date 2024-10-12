@@ -10,10 +10,12 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "Map.h"
+#include "Item.h"
 
 Scene::Scene() : Module()
 {
 	name = "scene";
+	img = nullptr;
 }
 
 // Destructor
@@ -39,21 +41,19 @@ bool Scene::Awake()
 
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
-	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
+	//Create a new item using the entity manager and set the position to (200, 672) to test
+	Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	item->position = Vector2D(200, 672);
+	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
-	return true;
-}
+	Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
 
-// Load Parameters from config file
-bool Scene::LoadParameters(xml_node parameters) {
-
-	configParameters = parameters;
 	return true;
 }
 
@@ -71,6 +71,20 @@ bool Scene::Update(float dt)
 		if (player->active == true) player->Disable();
 		else player->Enable();
 	}
+
+	float camSpeed = 1;
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		Engine::GetInstance().render.get()->camera.y -= ceil(camSpeed * dt);
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		Engine::GetInstance().render.get()->camera.y += ceil(camSpeed * dt);
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		Engine::GetInstance().render.get()->camera.x -= ceil(camSpeed * dt);
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		Engine::GetInstance().render.get()->camera.x += ceil(camSpeed * dt);
 
 	return true;
 }
@@ -91,5 +105,8 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	SDL_DestroyTexture(img);
+
 	return true;
 }

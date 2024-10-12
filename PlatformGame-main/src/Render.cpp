@@ -26,8 +26,10 @@ bool Render::Awake()
 
 	Uint32 flags = SDL_RENDERER_ACCELERATED;
 
-	flags |= SDL_RENDERER_PRESENTVSYNC;
-	LOG("Using vsync");
+	if (configParameters.child("vsync").attribute("value").as_bool() == true) {
+		flags |= SDL_RENDERER_PRESENTVSYNC;
+		LOG("Using vsync");
+	}
 	int scale = Engine::GetInstance().window.get()->GetScale();
 
 	SDL_Window* window = Engine::GetInstance().window.get()->window;

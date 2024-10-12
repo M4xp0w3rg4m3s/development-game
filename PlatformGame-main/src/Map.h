@@ -3,6 +3,49 @@
 #include "Module.h"
 #include <list>
 #include <box2d/box2d.h>
+#include <vector>
+
+struct Properties
+{
+    struct Property
+    {
+        std::string name;
+        bool value; //We assume that we are going to work only with bool for the moment
+    };
+
+    std::list<Property*> propertyList;
+
+    ~Properties()
+    {
+        for (const auto& property : propertyList)
+        {
+            delete property;
+        }
+
+        propertyList.clear();
+    }
+
+    // L09: DONE 7: Method to ask for the value of a custom property
+    Property* GetProperty(const char* name);
+
+};
+
+struct MapLayer
+{
+    // L07: TODO 1: Add the info to the MapLayer Struct
+    int id;
+    std::string name;
+    int width;
+    int height;
+    std::vector<int> tiles;
+    Properties properties;
+
+    // L07: TODO 6: Short function to get the gid value of i,j
+    int Get(int i, int j) const
+    {
+        return tiles[(j * width) + i];
+    }
+};
 
 // Create a struct needed to hold the information to Map node
 struct TileSet
@@ -30,22 +73,6 @@ struct TileSet
         rect.y = margin + (tileheight + spacing) * (relativeIndex / columns);
 
         return rect;
-    }
-};
-
-struct MapLayer
-{
-    // Add the info to the MapLayer Struct
-    int id;
-    std::string name;
-    int width;
-    int height;
-    unsigned int* tiles;
-
-    // Short function to get the gid value of x,y
-    unsigned int Get(int x, int y) const
-    {
-        return tiles[(y * width) + x];
     }
 };
 
@@ -86,10 +113,16 @@ public:
     bool CleanUp();
 
     // Load new map
-    bool Load(std::string mapFileName);
+    bool Load(std::string path, std::string mapFileName);
 
     //Create a method that translates x,y coordinates from map positions to world positions
     Vector2D MapToWorld(int x, int y) const;
+
+    // L09: TODO 2: Implement function to the Tileset based on a tile id
+    TileSet* GetTilesetFromTileId(int gid) const;
+
+    // L09: TODO 6: Load a group of properties 
+    bool LoadProperties(xml_node& node, Properties& properties);
 
 public: 
     std::string mapName;

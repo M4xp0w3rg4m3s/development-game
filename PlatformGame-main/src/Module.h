@@ -55,6 +55,7 @@ public:
 
 	virtual bool LoadParameters(xml_node parameters)
 	{
+		configParameters = parameters;
 		return true;
 	}
 
@@ -62,5 +63,6 @@ public:
 
 	std::string name;
 	bool active;
+	xml_node configParameters;
 
 };

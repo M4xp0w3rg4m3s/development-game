@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Scene.h"
+#include "Physics.h"
 
 #include <math.h>
 
@@ -28,25 +29,6 @@ bool Map::Awake(pugi::xml_node config)
 
 bool Map::Start() {
 
-    //Calls the function to load the map. The name of the map is assigned in teh scene
-    Load(mapPath + mapName);
-
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(PIXEL_TO_METERS(0.0f), PIXEL_TO_METERS(300.0f));
-    mapBody = Engine::GetInstance().scene.get()->world->CreateBody(&bodyDef);
-
-    b2PolygonShape rectangle;
-    rectangle.SetAsBox(PIXEL_TO_METERS(1000 / 2.0f), PIXEL_TO_METERS(50 / 2.0f));
-
-    b2PolygonShape boxShape = rectangle;
-
-    b2FixtureDef boxFixtureDef;
-    boxFixtureDef.shape = &boxShape;
-    boxFixtureDef.density = 1.0f;
-    boxFixtureDef.friction = 0.3f;
-    mapBody->CreateFixture(&boxFixtureDef);
-
     return true;
 }
 
@@ -54,29 +36,48 @@ bool Map::Update(float dt)
 {
     bool ret = true;
 
-    if(mapLoaded == false)
-        return false;
+    if (mapLoaded) {
 
-    // Prepare the loop to draw all tiles in a layer + DrawTexture()
-    // iterate all tiles in a layer
-    for (const auto& mapLayer : mapData.layers) {
+        for (const auto& mapLayer : mapData.layers) {
+            //Check if the property Draw exist get the value, if it's true draw the lawyer
+            if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
+                for (int i = 0; i < mapData.width; i++) {
+                    for (int j = 0; j < mapData.height; j++) {
 
-        for (int i = 0; i < mapData.width; i++) {
-            for (int j = 0; j < mapData.height; j++) {
-                //Get the gid from tile
-                int gid = mapLayer->Get(i, j);
-                //Get the Rect from the tileSetTexture;
-                SDL_Rect tileRect = mapData.tilesets.front()->GetRect(gid);
-                //Get the screen coordinates from the tile coordinates
-                Vector2D mapCoord = MapToWorld(i, j);
-
-                // Complete the draw function
-                Engine::GetInstance().render->DrawTexture(mapData.tilesets.front()->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
-
+                        //Get the gid from tile
+                        int gid = mapLayer->Get(i, j);
+                        //Check if the gid is different from 0 - some tiles are empty
+                        if (gid != 0) {
+                            TileSet* tileSet = GetTilesetFromTileId(gid);
+                            if (tileSet != nullptr) {
+                                //Get the Rect from the tileSetTexture;
+                                SDL_Rect tileRect = tileSet->GetRect(gid);
+                                //Get the screen coordinates from the tile coordinates
+                                Vector2D mapCoord = MapToWorld(i, j);
+                                //Draw the texture
+                                Engine::GetInstance().render->DrawTexture(tileSet->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
     return ret;
+}
+
+TileSet* Map::GetTilesetFromTileId(int gid) const
+{
+    TileSet* set = nullptr;
+
+    for (const auto& tileset : mapData.tilesets) {
+        if (gid >= tileset->firstgid && gid < (tileset->firstgid + tileset->tilecount)) {
+            set = tileset;
+            break;
+        }
+    }
+
+    return set;
 }
 
 // Called before quitting
@@ -101,57 +102,59 @@ bool Map::CleanUp()
 }
 
 // Load new map
-bool Map::Load(std::string mapFileName)
+bool Map::Load(std::string path, std::string fileName)
 {
-    bool ret = true;
+    bool ret = false;
 
-    // L05: DONE 3: Implement LoadMap to load the map properties
-    // retrieve the paremeters of the <map> node and save it into map data
+    // Assigns the name of the map file and the path
+    mapName = fileName;
+    mapPath = path;
+    std::string mapPathName = mapPath + mapName;
 
     pugi::xml_document mapFileXML;
-    pugi::xml_parse_result result = mapFileXML.load_file(mapFileName.c_str());
+    pugi::xml_parse_result result = mapFileXML.load_file(mapPathName.c_str());
 
-    if(result == NULL)
+    if (result == NULL)
     {
-        LOG("Could not load map xml file %s. pugi error: %s", mapFileName, result.description());
+        LOG("Could not load map xml file %s. pugi error: %s", mapPathName.c_str(), result.description());
         ret = false;
     }
     else {
 
-        //Fill mapData variable
+        // L06: TODO 3: Implement LoadMap to load the map properties
+        // retrieve the paremeters of the <map> node and store the into the mapData struct
         mapData.width = mapFileXML.child("map").attribute("width").as_int();
         mapData.height = mapFileXML.child("map").attribute("height").as_int();
         mapData.tilewidth = mapFileXML.child("map").attribute("tilewidth").as_int();
         mapData.tileheight = mapFileXML.child("map").attribute("tileheight").as_int();
 
-        // L05: DONE 4: Implement the LoadTileSet function to load the tileset properties
-       // Iterate the Tileset
-        for (pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset")) {
+        // L06: TODO 4: Implement the LoadTileSet function to load the tileset properties
 
-            TileSet* tileset = new TileSet();
-
+        //Iterate the Tileset
+        for (pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
+        {
             //Load Tileset attributes
-            tileset->name = tilesetNode.attribute("name").as_string();
-            tileset->firstgid = tilesetNode.attribute("firstgid").as_int();
-            tileset->margin = tilesetNode.attribute("margin").as_int();
-            tileset->spacing = tilesetNode.attribute("spacing").as_int();
-            tileset->tilewidth = tilesetNode.attribute("tilewidth").as_int();
-            tileset->tileheight = tilesetNode.attribute("tileheight").as_int();
-            tileset->columns = tilesetNode.attribute("columns").as_int();
+            TileSet* tileSet = new TileSet();
+            tileSet->firstgid = tilesetNode.attribute("firstgid").as_int();
+            tileSet->name = tilesetNode.attribute("name").as_string();
+            tileSet->tilewidth = tilesetNode.attribute("tilewidth").as_int();
+            tileSet->tileheight = tilesetNode.attribute("tileheight").as_int();
+            tileSet->spacing = tilesetNode.attribute("spacing").as_int();
+            tileSet->margin = tilesetNode.attribute("margin").as_int();
+            tileSet->tilecount = tilesetNode.attribute("tilecount").as_int();
+            tileSet->columns = tilesetNode.attribute("columns").as_int();
 
-            //Load Tileset image
-            std::string mapTex = mapPath;
-            mapTex += tilesetNode.child("image").attribute("source").as_string();
-            tileset->texture = Engine::GetInstance().textures.get()->Load(mapTex.c_str());
+            //Load the tileset image
+            std::string imgName = tilesetNode.child("image").attribute("source").as_string();
+            tileSet->texture = Engine::GetInstance().textures->Load((mapPath + imgName).c_str());
 
-            mapData.tilesets.push_back(tileset);
-
+            mapData.tilesets.push_back(tileSet);
         }
 
-        // L06: DONE 3: Iterate all layers in the TMX and load each of them
+        // L07: TODO 3: Iterate all layers in the TMX and load each of them
         for (pugi::xml_node layerNode = mapFileXML.child("map").child("layer"); layerNode != NULL; layerNode = layerNode.next_sibling("layer")) {
 
-            // L06: DONE 4: Implement a function that loads a single layer layer
+            // L07: TODO 4: Implement the load of a single layer 
             //Load the attributes and saved in a new MapLayer
             MapLayer* mapLayer = new MapLayer();
             mapLayer->id = layerNode.attribute("id").as_int();
@@ -159,45 +162,63 @@ bool Map::Load(std::string mapFileName)
             mapLayer->width = layerNode.attribute("width").as_int();
             mapLayer->height = layerNode.attribute("height").as_int();
 
-            //Reserve the memory for the data 
-            mapLayer->tiles = new unsigned int[mapLayer->width * mapLayer->height];
-            memset(mapLayer->tiles, 0, mapLayer->width * mapLayer->height);
+            //L09: TODO 6 Call Load Layer Properties
+            LoadProperties(layerNode, mapLayer->properties);
 
             //Iterate over all the tiles and assign the values in the data array
-            int i = 0;
             for (pugi::xml_node tileNode = layerNode.child("data").child("tile"); tileNode != NULL; tileNode = tileNode.next_sibling("tile")) {
-                mapLayer->tiles[i] = tileNode.attribute("gid").as_uint();
-                i++;
+                mapLayer->tiles.push_back(tileNode.attribute("gid").as_int());
             }
 
             //add the layer to the map
             mapData.layers.push_back(mapLayer);
         }
 
-        // L05: DONE 5: LOG all the data loaded iterate all tilesetsand LOG everything
+        // L08 TODO 3: Create colliders
+        // L08 TODO 7: Assign collider type
+        // Later you can create a function here to load and create the colliders from the map
+        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(224 + 128, 544 + 32, 256, 64, STATIC);
+        c1->ctype = ColliderType::PLATFORM;
+
+        PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
+        c2->ctype = ColliderType::PLATFORM;
+
+        PhysBody* c3 = Engine::GetInstance().physics.get()->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
+        c3->ctype = ColliderType::PLATFORM;
+
+
+
+        ret = true;
+
+        // L06: TODO 5: LOG all the data loaded iterate all tilesetsand LOG everything
         if (ret == true)
         {
-            LOG("Successfully parsed map XML file :%s", mapFileName.c_str());
+            LOG("Successfully parsed map XML file :%s", fileName.c_str());
             LOG("width : %d height : %d", mapData.width, mapData.height);
             LOG("tile_width : %d tile_height : %d", mapData.tilewidth, mapData.tileheight);
 
             LOG("Tilesets----");
 
-            for(const auto& tileset : mapData.tilesets)
-			{
-				LOG("name : %s firstgid : %d", tileset->name.c_str(), tileset->firstgid);
-				LOG("tile width : %d tile height : %d", tileset->tilewidth, tileset->tileheight);
-				LOG("spacing : %d margin : %d", tileset->spacing, tileset->margin);
-			}
+            //iterate the tilesets
+            for (const auto& tileset : mapData.tilesets) {
+                LOG("name : %s firstgid : %d", tileset->name.c_str(), tileset->firstgid);
+                LOG("tile width : %d tile height : %d", tileset->tilewidth, tileset->tileheight);
+                LOG("spacing : %d margin : %d", tileset->spacing, tileset->margin);
+            }
+
             LOG("Layers----");
 
             for (const auto& layer : mapData.layers) {
                 LOG("id : %d name : %s", layer->id, layer->name.c_str());
-				LOG("Layer width : %d Layer height : %d", layer->width, layer->height);
+                LOG("Layer width : %d Layer height : %d", layer->width, layer->height);
             }
+        }
+        else {
+            LOG("Error while parsing map file: %s", mapPathName.c_str());
         }
 
         if (mapFileXML) mapFileXML.reset();
+
     }
 
     mapLoaded = ret;
@@ -215,4 +236,29 @@ Vector2D Map::MapToWorld(int x, int y) const
     return ret;
 }
 
+bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
+{
+    bool ret = false;
 
+    for (pugi::xml_node propertieNode = node.child("properties").child("property"); propertieNode; propertieNode = propertieNode.next_sibling("property"))
+    {
+        Properties::Property* p = new Properties::Property();
+        p->name = propertieNode.attribute("name").as_string();
+        p->value = propertieNode.attribute("value").as_bool(); // (!!) I'm assuming that all values are bool !!
+
+        properties.propertyList.push_back(p);
+    }
+
+    return ret;
+}
+
+Properties::Property* Properties::GetProperty(const char* name)
+{
+    for (const auto& property : propertyList) {
+        if (property->name == name) {
+            return property;
+        }
+    }
+
+    return nullptr;
+}

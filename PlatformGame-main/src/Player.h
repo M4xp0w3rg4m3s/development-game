@@ -21,12 +21,17 @@ public:
 
 	bool CleanUp();
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 public:
 
 	//Declare player parameters
 	float speed = 150.0f;
 	std::string textureName; 
 	SDL_Texture* texture = NULL;
+	int texW, texH;
 
-	b2Body* body;
+	int pickCoinFxId;
+
+	PhysBody* body;
 };

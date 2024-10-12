@@ -30,9 +30,6 @@ public:
 	// Retrieve window scale
 	int GetScale() const;
 
-	// Load Parameters from config file
-	bool LoadParameters(xml_node parameters);
-
 public:
 	// The window we'll be rendering to
 	SDL_Window* window;
@@ -41,8 +38,4 @@ public:
 	int width = 1280;
 	int height = 720;
 	int scale = 1;
-	bool fullscreen = false;
-	bool borderless = false;
-	bool resizable = false;
-	bool fullscreen_window = false;
 };

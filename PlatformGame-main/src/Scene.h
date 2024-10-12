@@ -31,12 +31,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// Load Parameters from config file
-	bool LoadParameters(xml_node parameters);
-
 	b2World* world;
 
 private:
+	SDL_Texture* img;
+
 	Player* player;
-	xml_node configParameters;
 };
