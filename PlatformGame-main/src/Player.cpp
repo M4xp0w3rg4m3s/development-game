@@ -20,7 +20,7 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//Initialize Player parameters
-	position = Vector2D(0, 0);
+	position = Vector2D(128, 0);
 	return true;
 }
 
@@ -66,7 +66,7 @@ bool Player::Update(float dt)
 
 	//Engine::GetInstance().render.get()->DrawTexture(texture, METERS_TO_PIXELS(position.getX()), METERS_TO_PIXELS(position.getY()));
 
-	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
+	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
@@ -74,6 +74,15 @@ bool Player::Update(float dt)
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		if (canJump) {
+			velocity.y = 0;
+			body->body->SetLinearVelocity(velocity);
+			body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
+			canJump = false;
+		}
 	}
 
 	body->body->SetLinearVelocity(velocity);
@@ -98,6 +107,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
+		canJump = true;
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");

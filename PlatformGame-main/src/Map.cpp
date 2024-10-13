@@ -148,9 +148,6 @@ bool Map::Load(std::string path, std::string fileName)
             std::string imgName = tilesetNode.child("image").attribute("source").as_string();
             tileSet->texture = Engine::GetInstance().textures->Load((mapPath + imgName).c_str());
 
-            PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(tileSet->GetRect(326).x, tileSet->GetRect(326).y, tileSet->GetRect(326).w, tileSet->GetRect(326).h, STATIC);
-            c1->ctype = ColliderType::PLATFORM;
-
             mapData.tilesets.push_back(tileSet);
         }
 
@@ -171,13 +168,6 @@ bool Map::Load(std::string path, std::string fileName)
             //Iterate over all the tiles and assign the values in the data array
             for (pugi::xml_node tileNode = layerNode.child("data").child("tile"); tileNode != NULL; tileNode = tileNode.next_sibling("tile")) {
                 mapLayer->tiles.push_back(tileNode.attribute("gid").as_int());
-                //if (mapLayer->name == "Collisions") {
-                //    if (tileNode.attribute("gid").as_int() == 326) {
-                //        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(tileNode.attribute(), 544 + 32, 256, 64, STATIC);
-                //        c1->ctype = ColliderType::PLATFORM;
-                //    }
-                //}
-
             }
 
             //add the layer to the map
@@ -186,8 +176,10 @@ bool Map::Load(std::string path, std::string fileName)
 
 
         // Create a function here to load and create the colliders from the map
-        //PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(224 + 128, 544 + 32, 256, 64, STATIC);
-        //c1->ctype = ColliderType::PLATFORM;
+        
+        // Formula --> CreateRectangle(x + width/2, y + height/2, width, height, STATIC);
+        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(256/2, 416+16, 256, 32, STATIC);
+        c1->ctype = ColliderType::PLATFORM;
 
         PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
         c2->ctype = ColliderType::PLATFORM;

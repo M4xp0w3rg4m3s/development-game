@@ -42,5 +42,6 @@ public:
 
 	int pickCoinFxId;
 
+	bool canJump = false;
 	PhysBody* body;
 };
