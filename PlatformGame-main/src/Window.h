@@ -35,7 +35,7 @@ public:
 	SDL_Window* window;
 
 	std::string title;
-	int width = 1280;
-	int height = 720;
-	int scale = 1;
+	int width = configParameters.child("resolution").attribute("width").as_int();
+	int height = configParameters.child("resolution").attribute("height").as_int();
+	int scale = configParameters.child("resolution").attribute("scale").as_int();
 };

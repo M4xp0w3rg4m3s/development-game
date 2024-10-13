@@ -121,14 +121,14 @@ bool Map::Load(std::string path, std::string fileName)
     }
     else {
 
-        // L06: TODO 3: Implement LoadMap to load the map properties
+        // LoadMap to load the map properties
         // retrieve the paremeters of the <map> node and store the into the mapData struct
         mapData.width = mapFileXML.child("map").attribute("width").as_int();
         mapData.height = mapFileXML.child("map").attribute("height").as_int();
         mapData.tilewidth = mapFileXML.child("map").attribute("tilewidth").as_int();
         mapData.tileheight = mapFileXML.child("map").attribute("tileheight").as_int();
 
-        // L06: TODO 4: Implement the LoadTileSet function to load the tileset properties
+        //LoadTileSet function to load the tileset properties
 
         //Iterate the Tileset
         for (pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
@@ -147,6 +147,9 @@ bool Map::Load(std::string path, std::string fileName)
             //Load the tileset image
             std::string imgName = tilesetNode.child("image").attribute("source").as_string();
             tileSet->texture = Engine::GetInstance().textures->Load((mapPath + imgName).c_str());
+
+            PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(tileSet->GetRect(326).x, tileSet->GetRect(326).y, tileSet->GetRect(326).w, tileSet->GetRect(326).h, STATIC);
+            c1->ctype = ColliderType::PLATFORM;
 
             mapData.tilesets.push_back(tileSet);
         }
@@ -168,17 +171,23 @@ bool Map::Load(std::string path, std::string fileName)
             //Iterate over all the tiles and assign the values in the data array
             for (pugi::xml_node tileNode = layerNode.child("data").child("tile"); tileNode != NULL; tileNode = tileNode.next_sibling("tile")) {
                 mapLayer->tiles.push_back(tileNode.attribute("gid").as_int());
+                //if (mapLayer->name == "Collisions") {
+                //    if (tileNode.attribute("gid").as_int() == 326) {
+                //        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(tileNode.attribute(), 544 + 32, 256, 64, STATIC);
+                //        c1->ctype = ColliderType::PLATFORM;
+                //    }
+                //}
+
             }
 
             //add the layer to the map
             mapData.layers.push_back(mapLayer);
         }
 
-        // L08 TODO 3: Create colliders
-        // L08 TODO 7: Assign collider type
-        // Later you can create a function here to load and create the colliders from the map
-        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(224 + 128, 544 + 32, 256, 64, STATIC);
-        c1->ctype = ColliderType::PLATFORM;
+
+        // Create a function here to load and create the colliders from the map
+        //PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(224 + 128, 544 + 32, 256, 64, STATIC);
+        //c1->ctype = ColliderType::PLATFORM;
 
         PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
         c2->ctype = ColliderType::PLATFORM;
@@ -187,10 +196,9 @@ bool Map::Load(std::string path, std::string fileName)
         c3->ctype = ColliderType::PLATFORM;
 
 
-
         ret = true;
 
-        // L06: TODO 5: LOG all the data loaded iterate all tilesetsand LOG everything
+        // LOG all the data loaded iterate all tilesetsand LOG everything
         if (ret == true)
         {
             LOG("Successfully parsed map XML file :%s", fileName.c_str());
@@ -225,7 +233,7 @@ bool Map::Load(std::string path, std::string fileName)
     return ret;
 }
 
-// L06: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
+// Translates x,y coordinates from map positions to world positions
 Vector2D Map::MapToWorld(int x, int y) const
 {
     Vector2D ret;
