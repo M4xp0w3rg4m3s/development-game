@@ -20,7 +20,7 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//Initialize Player parameters
-	position = Vector2D(128, 0);
+	position = Vector2D(192, 384);
 	return true;
 }
 
@@ -43,29 +43,6 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	//b2Vec2 velocityDir{ 0, body->GetLinearVelocity().y };
-
-	////Render the player texture and modify the position of the player using WSAD keys and render the texture
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	//	velocityDir.x -= speed*(dt/1000);
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	//	velocityDir.x += speed*(dt/1000);
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-	//	velocityDir.y = 0;
-	//	body->SetLinearVelocity(velocityDir);
-	//	body->ApplyForceToCenter(b2Vec2{ 0, -12 }, true);
-	//}
-
-	//body->SetLinearVelocity(velocityDir);
-
-	//position.setX(body->GetPosition().x);
-	//position.setY(body->GetPosition().y);
-
-	//Engine::GetInstance().render.get()->DrawTexture(texture, METERS_TO_PIXELS(position.getX()), METERS_TO_PIXELS(position.getY()));
-
 	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {

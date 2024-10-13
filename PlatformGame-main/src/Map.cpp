@@ -110,7 +110,6 @@ bool Map::Load(std::string path, std::string fileName)
     mapName = fileName;
     mapPath = path;
     std::string mapPathName = mapPath + mapName;
-
     pugi::xml_document mapFileXML;
     pugi::xml_parse_result result = mapFileXML.load_file(mapPathName.c_str());
 
@@ -131,7 +130,7 @@ bool Map::Load(std::string path, std::string fileName)
         //LoadTileSet function to load the tileset properties
 
         //Iterate the Tileset
-        for (pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
+        for (xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
         {
             //Load Tileset attributes
             TileSet* tileSet = new TileSet();
@@ -152,7 +151,7 @@ bool Map::Load(std::string path, std::string fileName)
         }
 
         // L07: TODO 3: Iterate all layers in the TMX and load each of them
-        for (pugi::xml_node layerNode = mapFileXML.child("map").child("layer"); layerNode != NULL; layerNode = layerNode.next_sibling("layer")) {
+        for (xml_node layerNode = mapFileXML.child("map").child("layer"); layerNode != NULL; layerNode = layerNode.next_sibling("layer")) {
 
             // L07: TODO 4: Implement the load of a single layer 
             //Load the attributes and saved in a new MapLayer
@@ -166,7 +165,7 @@ bool Map::Load(std::string path, std::string fileName)
             LoadProperties(layerNode, mapLayer->properties);
 
             //Iterate over all the tiles and assign the values in the data array
-            for (pugi::xml_node tileNode = layerNode.child("data").child("tile"); tileNode != NULL; tileNode = tileNode.next_sibling("tile")) {
+            for (xml_node tileNode = layerNode.child("data").child("tile"); tileNode != NULL; tileNode = tileNode.next_sibling("tile")) {
                 mapLayer->tiles.push_back(tileNode.attribute("gid").as_int());
             }
 
@@ -176,17 +175,19 @@ bool Map::Load(std::string path, std::string fileName)
 
 
         // Create a function here to load and create the colliders from the map
-        
         // Formula --> CreateRectangle(x + width/2, y + height/2, width, height, STATIC);
-        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(256/2, 416+16, 256, 32, STATIC);
-        c1->ctype = ColliderType::PLATFORM;
 
-        PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
-        c2->ctype = ColliderType::PLATFORM;
+        // In case of memory leaks make a list to store the collider pointers and then free them at the end of the code
 
-        PhysBody* c3 = Engine::GetInstance().physics.get()->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
-        c3->ctype = ColliderType::PLATFORM;
-
+        xml_node objectGroup = mapFileXML.child("map").child("objectgroup");
+        for (xml_node objectNode = objectGroup.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
+            int x = objectNode.attribute("x").as_int();
+            int y = objectNode.attribute("y").as_int();
+            int h = objectNode.attribute("height").as_int();
+            int w = objectNode.attribute("width").as_int();
+            PhysBody* collider = Engine::GetInstance().physics.get()->CreateRectangle(x + w / 2, y + h / 2, w, h, STATIC);
+            collider->ctype = ColliderType::PLATFORM;
+        }
 
         ret = true;
 
