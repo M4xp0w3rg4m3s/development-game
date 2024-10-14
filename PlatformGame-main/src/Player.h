@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_render.h"
 #include <box2d/box2d.h>
+#include "Sprite.h"
 
 class Player : public Entity
 {
@@ -44,4 +45,6 @@ public:
 
 	bool canJump = false;
 	PhysBody* body;
+
+	Sprite* animator;
 };
