@@ -64,10 +64,38 @@ bool Player::Start() {
 	animator->AddKeyFrame(3, { 4 * 64,3 * 64,64,64 });
 	animator->AddKeyFrame(3, { 5 * 64,3 * 64,64,64 });
 	animator->AddKeyFrame(3, { 6 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 1 * 64,4 * 64,64,64 });
-	animator->AddKeyFrame(3, { 2 * 64,4 * 64,64,64 });
-	animator->AddKeyFrame(3, { 3 * 64,4 * 64,64,64 });
 	animator->SetAnimationDelay(3, 100);
+
+	//LAND
+	animator->AddKeyFrame(4, { 1 * 64,4 * 64,64,64 });
+	animator->AddKeyFrame(4, { 2 * 64,4 * 64,64,64 });
+	animator->AddKeyFrame(4, { 3 * 64,4 * 64,64,64 });
+	animator->SetAnimationDelay(4, 100);
+
+	//DIE
+	animator->AddKeyFrame(5, { 0 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 1 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 2 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 3 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 4 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 5 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 6 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(5, { 7 * 64,5 * 64,64,64 });
+	animator->SetAnimationDelay(5, 100);
+
+	//COMBO PART1
+	animator->AddKeyFrame(6, { 0 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(6, { 1 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(6, { 2 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(6, { 3 * 64,6 * 64,64,64 });
+	animator->SetAnimationDelay(6, 100);
+
+	//COMBO PART2
+	animator->AddKeyFrame(7, { 4 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(7, { 5 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(7, { 6 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(7, { 7 * 64,6 * 64,64,64 });
+	animator->SetAnimationDelay(7, 100);
 
 	animator->SetAnimation(0);
 
