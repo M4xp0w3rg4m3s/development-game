@@ -15,6 +15,7 @@ public:
 		IDLE = 1,
 		RUNNING,
 		JUMPING,
+		FALLING,
 		DEAD
 	};
 
