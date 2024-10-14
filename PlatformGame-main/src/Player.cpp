@@ -55,7 +55,15 @@ bool Player::Start() {
 
 	// Add physics to the player - initialize physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
-	body = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 32, bodyType::DYNAMIC);
+
+	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), 20, 45, bodyType::DYNAMIC);
+
+	b2MassData playerMass;
+	playerMass.mass = 1.15f;
+	playerMass.center = body->body->GetLocalCenter();
+	body->body->SetMassData(&playerMass);
+
+	body->body->GetFixtureList()[0].SetFriction(0);
 
 	// Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	body->listener = this;
