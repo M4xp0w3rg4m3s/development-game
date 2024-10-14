@@ -72,8 +72,6 @@ bool Scene::Update(float dt)
 		else player->Enable();
 	}
 
-	float camSpeed = 1;
-
 	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
 		Engine::GetInstance().render.get()->camera.x = -(player->position.getX() - (Engine::GetInstance().window.get()->width)/2);
 	}

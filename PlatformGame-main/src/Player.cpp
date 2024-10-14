@@ -104,7 +104,27 @@ bool Player::Start() {
 	// Add physics to the player - initialize physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
-	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), 20, 45, bodyType::DYNAMIC);
+	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
+
+	// Create SHAPE
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.25f, PIXEL_TO_METERS(height) * 0.15f);
+
+	bodyBottom.shape = &box;
+	body->body->CreateFixture(&bodyBottom);
+
+	/*bodyBot = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height*0.25, bodyType::DYNAMIC);
+
+	b2WeldJointDef jointDef;
+	jointDef.bodyA = body->body;
+	jointDef.bodyB = bodyBot->body;
+	jointDef.localAnchorA.Set(0.0f, 0.0f);
+	jointDef.localAnchorB.Set(0.0f, (float)PIXEL_TOM((-height/2)));
+	jointDef.referenceAngle = 0.0f;
+	jointDef.stiffness = 0.0f;
+	jointDef.damping = 0.0f;
+
+	b2Joint* weldJoint = Engine::GetInstance().physics.get()->GetWorld()->CreateJoint(&jointDef);*/
 
 	b2MassData playerMass;
 	playerMass.mass = 1.15f;

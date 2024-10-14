@@ -41,11 +41,15 @@ public:
 	std::string textureName; 
 	SDL_Texture* texture = NULL;
 	int texW, texH;
+	int width = 20;
+	int height = 45;
 
 	int pickCoinFxId;
 
 	bool canJump = false;
 	PhysBody* body;
+	PhysBody* bodyBot;
+	b2FixtureDef bodyBottom;
 
 	Sprite* animator;
 };
