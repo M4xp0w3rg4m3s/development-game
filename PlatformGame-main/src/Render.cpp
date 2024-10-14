@@ -46,7 +46,9 @@ bool Render::Awake()
 		camera.h = Engine::GetInstance().window.get()->height * scale;
 		camera.x = 0;
 		camera.y = 0;
+		SDL_RenderSetLogicalSize(renderer, Engine::GetInstance().window->width * scale, Engine::GetInstance().window->height * scale);
 	}
+
 
 	return ret;
 }
