@@ -81,7 +81,7 @@ bool Player::Start() {
 	animator->AddKeyFrame(5, { 5 * 64,5 * 64,64,64 });
 	animator->AddKeyFrame(5, { 6 * 64,5 * 64,64,64 });
 	animator->AddKeyFrame(5, { 7 * 64,5 * 64,64,64 });
-	animator->SetAnimationDelay(5, 1000);
+	animator->SetAnimationDelay(5, 100);
 
 	//COMBO PART1
 	animator->AddKeyFrame(6, { 0 * 64,6 * 64,64,64 });

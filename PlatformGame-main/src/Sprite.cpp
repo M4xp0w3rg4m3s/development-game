@@ -73,6 +73,7 @@ void Sprite::Update()
                 current_anim = -1;
                 current_frame = 0;
             }
+            timer.Start();
 
         }
     }
