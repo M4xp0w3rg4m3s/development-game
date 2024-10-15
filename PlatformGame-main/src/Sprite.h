@@ -21,6 +21,7 @@ public:
     void AddKeyFrame(int id, const SDL_Rect& rect);
     void SetAnimation(int id);
     int GetAnimation();
+    bool LastFrame();
     void SetLoop(bool _loop);
 
     void Update();

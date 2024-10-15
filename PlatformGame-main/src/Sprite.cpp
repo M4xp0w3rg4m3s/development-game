@@ -47,6 +47,15 @@ int Sprite::GetAnimation()
     return current_anim;
 }
 
+bool Sprite::LastFrame()
+{
+    if (current_frame >= animations[current_anim].frames.size())
+    {
+        return true;
+    }
+    return false;
+}
+
 void Sprite::SetLoop(bool _loop)
 {
     animations[current_anim].loop = _loop;
@@ -70,11 +79,19 @@ void Sprite::Update()
         else {
             current_frame++;
             if (current_frame >= animations[current_anim].frames.size()) {
-                current_anim = -1;
-                current_frame = 0;
+                switch (current_anim)
+                {
+                case 3:
+                    current_anim = 4;
+                    current_frame = 0;
+                    break;
+                default:
+                    current_anim = -1;
+                    current_frame = 0;
+                    break;
+                }
             }
             timer.Start();
-
         }
     }
 }

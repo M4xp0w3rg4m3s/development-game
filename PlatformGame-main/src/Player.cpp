@@ -49,12 +49,12 @@ bool Player::Start() {
 	animator->AddKeyFrame(1, { 3 * 64,0 * 64,64,64 });
 	animator->SetAnimationDelay(1, 100);
 
-	//JUMP UP
+	/*JUMP UP
 	animator->AddKeyFrame(2, { 0 * 64,2 * 64,64,64 });
 	animator->AddKeyFrame(2, { 1 * 64,2 * 64,64,64 });
 	animator->AddKeyFrame(2, { 2 * 64,2 * 64,64,64 });
 	animator->AddKeyFrame(2, { 3 * 64,2 * 64,64,64 });
-	animator->SetAnimationDelay(2, 100);
+	animator->SetAnimationDelay(2, 100);*/
 
 	//FALL
 	animator->AddKeyFrame(3, { 0 * 64,3 * 64,64,64 });
@@ -66,11 +66,16 @@ bool Player::Start() {
 	animator->AddKeyFrame(3, { 6 * 64,3 * 64,64,64 });
 	animator->SetAnimationDelay(3, 100);
 
-	//LAND
-	animator->AddKeyFrame(4, { 1 * 64,4 * 64,64,64 });
-	animator->AddKeyFrame(4, { 2 * 64,4 * 64,64,64 });
-	animator->AddKeyFrame(4, { 3 * 64,4 * 64,64,64 });
-	animator->SetAnimationDelay(4, 100);
+	//FALL FINISH
+	animator->AddKeyFrame(4, { 6 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(4, { 5 * 64,3 * 64,64,64 });
+	animator->SetAnimationDelay(4, 80);
+
+	////LAND
+	//animator->AddKeyFrame(4, { 1 * 64,4 * 64,64,64 });
+	//animator->AddKeyFrame(4, { 2 * 64,4 * 64,64,64 });
+	//animator->AddKeyFrame(4, { 3 * 64,4 * 64,64,64 });
+	//animator->SetAnimationDelay(4, 100);
 
 	//DIE
 	animator->AddKeyFrame(5, { 0 * 64,5 * 64,64,64 });
@@ -182,18 +187,8 @@ bool Player::Update(float dt)
 
 	if (state != PlayerState::DYING)
 	{
-		//Grounded
-		if (velocity.y < 0) {
-			if (animator->GetAnimation() != 2) {
-				animator->SetAnimation(2);
-			}
-		}
-		else if (velocity.y > 0) {
-			if (animator->GetAnimation() != 3) {
-				animator->SetAnimation(3);
-			}
-		}
-		else if (velocity.x == 0 && velocity.y == 0) {
+		
+		if (velocity.x == 0 && velocity.y == 0) {
 			if (animator->GetAnimation() != 1)
 			{
 				animator->SetAnimation(1);
@@ -206,6 +201,25 @@ bool Player::Update(float dt)
 				animator->SetAnimation(0);
 
 			}
+		}
+		else if (velocity.y != 0)
+		{
+			if (animator->GetAnimation() != 3 && animator->GetAnimation() != 4)
+			{
+				animator->SetAnimation(3);
+				animator->SetLoop(false);
+			}
+			////Grounded
+			//if (velocity.y < 0) {
+			//	if (animator->GetAnimation() != 2) {
+			//		animator->SetAnimation(3);
+			//	}
+			//}
+			//else if (velocity.y > 0) {
+			//	if (animator->GetAnimation() != 3) {
+			//		animator->SetAnimation(3);
+			//	}
+			//}
 		}
 	}
 	else if (state == PlayerState::DYING)
