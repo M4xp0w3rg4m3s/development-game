@@ -82,6 +82,10 @@ void Sprite::Draw(int x, int y) const
 {
     DrawTint(x, y, {255,255,255,255});
 }
+void Sprite::Draw(int x, int y, int offsetX, int offsetY) const
+{
+    DrawTint(x + offsetX, y + offsetY, { 255,255,255,255 });
+}
 void Sprite::DrawTint(int x, int y, const SDL_Color& col) const
 {
     if (current_anim >= 0 && current_anim < animations.size())

@@ -26,6 +26,7 @@ public:
     void Update();
 
     void Draw(int x, int y) const;
+    void Draw(int x, int y, int offsetX, int offsetY) const;
     void DrawTint(int x, int y, const SDL_Color& col) const;
 
     void LookRight();

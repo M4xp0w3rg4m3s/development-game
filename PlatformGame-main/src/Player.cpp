@@ -149,11 +149,13 @@ bool Player::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		animator->LookLeft();
+		state = PlayerState::RUNNING;
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		animator->LookRight();
+		state = PlayerState::RUNNING;
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
@@ -162,8 +164,7 @@ bool Player::Update(float dt)
 			body->body->SetLinearVelocity(velocity);
 			body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
 			canJump = false;
-
-			//PlayerState = JUMPING
+			state = PlayerState::JUMPING;
 		}
 	}
 
@@ -185,6 +186,7 @@ bool Player::Update(float dt)
 		if (animator->GetAnimation() != 1)
 		{
 			animator->SetAnimation(1);
+			state = PlayerState::IDLE;
 		}
 	}
 	else if(velocity.x != 0 && velocity.y == 0) {
@@ -197,8 +199,24 @@ bool Player::Update(float dt)
 	
 
 	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY());
-	//Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY());
+	switch (state)
+	{
+	case IDLE:
+		animator->Draw((int)position.getX(), (int)position.getY(), 0, -7);
+		break;
+	case RUNNING:
+		animator->Draw((int)position.getX(), (int)position.getY(), 0, -5);
+		break;
+	/*case JUMPING:
+		break;
+	case FALLING:
+		break;
+	case DEAD:
+		break;*/
+	default:
+		animator->Draw((int)position.getX(), (int)position.getY());
+		break;
+	}
 
 	return true;
 }

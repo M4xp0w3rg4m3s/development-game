@@ -51,5 +51,7 @@ public:
 	PhysBody* bodyBot;
 	b2FixtureDef bodyBottom;
 
+	PlayerState state = IDLE;
+
 	Sprite* animator;
 };
