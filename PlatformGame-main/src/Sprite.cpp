@@ -49,7 +49,7 @@ int Sprite::GetAnimation()
 
 void Sprite::SetLoop(bool _loop)
 {
-    //this->loop = _loop;
+    animations[current_anim].loop = _loop;
 }
 
 void Sprite::Update()

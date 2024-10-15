@@ -16,7 +16,9 @@ public:
 		RUNNING,
 		JUMPING,
 		FALLING,
+		DYING,
 		DEAD
+		
 	};
 
 	Player();

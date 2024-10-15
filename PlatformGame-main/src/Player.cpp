@@ -30,7 +30,7 @@ bool Player::Start() {
 	texture = Engine::GetInstance().textures.get()->Load(textureName.c_str());
 
 	animator = new Sprite(texture);
-	animator->SetNumberAnimations(2);
+	animator->SetNumberAnimations(8);
 	// RUN
 	animator->AddKeyFrame(0, { 0 * 64,1 * 64,64,64 });
 	animator->AddKeyFrame(0, { 1 * 64,1 * 64,64,64 });
@@ -81,7 +81,7 @@ bool Player::Start() {
 	animator->AddKeyFrame(5, { 5 * 64,5 * 64,64,64 });
 	animator->AddKeyFrame(5, { 6 * 64,5 * 64,64,64 });
 	animator->AddKeyFrame(5, { 7 * 64,5 * 64,64,64 });
-	animator->SetAnimationDelay(5, 100);
+	animator->SetAnimationDelay(5, 1000);
 
 	//COMBO PART1
 	animator->AddKeyFrame(6, { 0 * 64,6 * 64,64,64 });
@@ -146,26 +146,33 @@ bool Player::Update(float dt)
 {
 	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		velocity.x = -0.2 * dt;
-		animator->LookLeft();
-		state = PlayerState::RUNNING;
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		velocity.x = 0.2 * dt;
-		animator->LookRight();
-		state = PlayerState::RUNNING;
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-		if (canJump) {
-			velocity.y = 0;
-			body->body->SetLinearVelocity(velocity);
-			body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
-			canJump = false;
-			state = PlayerState::JUMPING;
+	if (state != PlayerState::DYING && state != PlayerState::DEAD)
+	{
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -0.2 * dt;
+			animator->LookLeft();
+			state = PlayerState::RUNNING;
 		}
+
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = 0.2 * dt;
+			animator->LookRight();
+			state = PlayerState::RUNNING;
+		}
+
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+			if (canJump) {
+				velocity.y = 0;
+				body->body->SetLinearVelocity(velocity);
+				body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
+				canJump = false;
+				state = PlayerState::JUMPING;
+			}
+		}
+	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_REPEAT) {
+		
+		state = PlayerState::DYING;
 	}
 
 	body->body->SetLinearVelocity(velocity);
@@ -173,29 +180,47 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-	//Grounded
-	if (velocity.y < 0) {
-		if (animator->GetAnimation() != 2)
-			animator->SetAnimation(2);
-	}
-	else if (velocity.y > 0) {
-		if (animator->GetAnimation() != 3)
-			animator->SetAnimation(3);
-	}
-	else if (velocity.x == 0 && velocity.y == 0) {
-		if (animator->GetAnimation() != 1)
-		{
-			animator->SetAnimation(1);
-			state = PlayerState::IDLE;
+	if (state != PlayerState::DYING)
+	{
+		//Grounded
+		if (velocity.y < 0) {
+			if (animator->GetAnimation() != 2) {
+				animator->SetAnimation(2);
+			}
+		}
+		else if (velocity.y > 0) {
+			if (animator->GetAnimation() != 3) {
+				animator->SetAnimation(3);
+			}
+		}
+		else if (velocity.x == 0 && velocity.y == 0) {
+			if (animator->GetAnimation() != 1)
+			{
+				animator->SetAnimation(1);
+				state = PlayerState::IDLE;
+			}
+		}
+		else if (velocity.x != 0 && velocity.y == 0) {
+			if (animator->GetAnimation() != 0)
+			{
+				animator->SetAnimation(0);
+
+			}
 		}
 	}
-	else if(velocity.x != 0 && velocity.y == 0) {
-		if (animator->GetAnimation() != 0)
+	else if (state == PlayerState::DYING)
+	{
+		if (animator->GetAnimation() == -1)
 		{
-			animator->SetAnimation(0);
-			
+			state = PlayerState::DEAD;
 		}
+		if (animator->GetAnimation() != 5) {
+			animator->SetAnimation(5);
+			animator->SetLoop(false);
+		}	
+		
 	}
+	
 	
 
 	animator->Update();
@@ -210,9 +235,12 @@ bool Player::Update(float dt)
 	/*case JUMPING:
 		break;
 	case FALLING:
+		break;*/
+	case DYING:
+		animator->Draw((int)position.getX(), (int)position.getY(),0, 7);
 		break;
 	case DEAD:
-		break;*/
+		break;
 	default:
 		animator->Draw((int)position.getX(), (int)position.getY());
 		break;
