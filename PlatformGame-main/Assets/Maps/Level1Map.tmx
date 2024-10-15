@@ -2,6 +2,68 @@
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="150" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="36">
  <tileset firstgid="1" name="forest_tileset" tilewidth="32" tileheight="32" margin="1" tilecount="1080" columns="27">
   <image source="forest_tileset2.png" width="866" height="1282"/>
+  <tile id="529">
+   <animation>
+    <frame tileid="529" duration="100"/>
+    <frame tileid="530" duration="100"/>
+    <frame tileid="531" duration="100"/>
+    <frame tileid="532" duration="100"/>
+    <frame tileid="533" duration="100"/>
+    <frame tileid="555" duration="100"/>
+    <frame tileid="556" duration="100"/>
+    <frame tileid="557" duration="100"/>
+    <frame tileid="558" duration="100"/>
+    <frame tileid="559" duration="100"/>
+    <frame tileid="581" duration="100"/>
+    <frame tileid="582" duration="100"/>
+    <frame tileid="583" duration="100"/>
+    <frame tileid="584" duration="100"/>
+    <frame tileid="585" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="852">
+   <animation>
+    <frame tileid="852" duration="100"/>
+    <frame tileid="853" duration="100"/>
+    <frame tileid="854" duration="100"/>
+    <frame tileid="855" duration="100"/>
+    <frame tileid="856" duration="100"/>
+    <frame tileid="879" duration="100"/>
+    <frame tileid="880" duration="100"/>
+    <frame tileid="881" duration="100"/>
+    <frame tileid="882" duration="100"/>
+    <frame tileid="883" duration="100"/>
+    <frame tileid="906" duration="100"/>
+    <frame tileid="907" duration="100"/>
+    <frame tileid="908" duration="100"/>
+    <frame tileid="909" duration="100"/>
+    <frame tileid="910" duration="100"/>
+    <frame tileid="933" duration="100"/>
+    <frame tileid="934" duration="100"/>
+    <frame tileid="935" duration="100"/>
+    <frame tileid="936" duration="100"/>
+    <frame tileid="937" duration="100"/>
+    <frame tileid="960" duration="100"/>
+    <frame tileid="961" duration="100"/>
+    <frame tileid="962" duration="100"/>
+    <frame tileid="963" duration="100"/>
+    <frame tileid="964" duration="100"/>
+    <frame tileid="987" duration="100"/>
+    <frame tileid="988" duration="100"/>
+    <frame tileid="989" duration="100"/>
+    <frame tileid="990" duration="100"/>
+    <frame tileid="991" duration="100"/>
+    <frame tileid="1014" duration="100"/>
+    <frame tileid="1016" duration="100"/>
+    <frame tileid="1017" duration="100"/>
+    <frame tileid="1018" duration="100"/>
+    <frame tileid="1041" duration="100"/>
+    <frame tileid="1042" duration="100"/>
+    <frame tileid="1043" duration="100"/>
+    <frame tileid="1044" duration="100"/>
+    <frame tileid="1045" duration="100"/>
+   </animation>
+  </tile>
  </tileset>
  <layer id="3" name="Tile layer 3" width="150" height="15">
   <properties>
@@ -5877,10 +5939,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="530"/>
+   <tile gid="530"/>
+   <tile gid="530"/>
+   <tile gid="530"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6122,7 +6184,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="853"/>
    <tile/>
    <tile/>
    <tile/>

@@ -30,7 +30,14 @@ void Sprite::AddKeyFrame(int id, const SDL_Rect& rect)
 {
     if (id >= 0 && id < animations.size())
     {
-        animations[id].frames.push_back(rect);
+        animations[id].frames.push_back({rect,-1});
+    }
+}
+void Sprite::AddKeyFrame(int id, const SDL_Rect& rect, int extraData)
+{
+    if (id >= 0 && id < animations.size())
+    {
+        animations[id].frames.push_back({ rect,extraData });
     }
 }
 void Sprite::SetAnimation(int id)
@@ -54,6 +61,11 @@ bool Sprite::LastFrame()
         return true;
     }
     return false;
+}
+
+Frame Sprite::GetCurrentFrame()
+{
+    return animations[current_anim].frames[current_frame];
 }
 
 void Sprite::SetLoop(bool _loop)
@@ -108,7 +120,7 @@ void Sprite::DrawTint(int x, int y, const SDL_Color& col) const
 {
     if (current_anim >= 0 && current_anim < animations.size())
     {
-        SDL_Rect rect = animations[current_anim].frames[current_frame];
+        SDL_Rect rect = animations[current_anim].frames[current_frame].rect;
         if (player_dir == direction::RIGHT) {
             Engine::GetInstance().render->DrawTexture(img, (float)x, (float)y, &rect,(SDL_RendererFlip)0);
         }

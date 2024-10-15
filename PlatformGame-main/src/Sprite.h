@@ -3,11 +3,16 @@
 #include <vector>
 #include "Timer.h"
 
+struct Frame {
+    SDL_Rect rect;
+    int extraData;
+};
+
 struct Animation
 {
     int delay;
     bool loop = true;
-    std::vector<SDL_Rect> frames;
+    std::vector<Frame> frames;
 };
 enum direction{ RIGHT,LEFT};
 class Sprite
@@ -19,9 +24,11 @@ public:
     void SetNumberAnimations(int num);
     void SetAnimationDelay(int id, int delay);
     void AddKeyFrame(int id, const SDL_Rect& rect);
+    void AddKeyFrame(int id, const SDL_Rect& rect, int extraData);
     void SetAnimation(int id);
     int GetAnimation();
     bool LastFrame();
+    Frame GetCurrentFrame();
     void SetLoop(bool _loop);
 
     void Update();

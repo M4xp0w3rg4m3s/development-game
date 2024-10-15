@@ -4,6 +4,8 @@
 #include <list>
 #include <box2d/box2d.h>
 #include <vector>
+#include <unordered_map>
+#include "Sprite.h"
 
 struct Properties
 {
@@ -123,6 +125,13 @@ public:
 
     // L09: TODO 6: Load a group of properties 
     bool LoadProperties(xml_node& node, Properties& properties);
+
+    std::unordered_map<int, Sprite*> tileAnimator;
+
+    struct TileAnimationData
+    {
+        
+    };
 
 public: 
     std::string mapName;

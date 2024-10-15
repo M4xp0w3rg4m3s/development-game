@@ -16,7 +16,12 @@ Map::Map() : Module(), mapLoaded(false)
 
 // Destructor
 Map::~Map()
-{}
+{
+    for (const auto anim : tileAnimator) {
+        delete anim.second;
+    }
+    tileAnimator.clear();
+}
 
 // Called before render is available
 bool Map::Awake(pugi::xml_node config)
@@ -38,6 +43,10 @@ bool Map::Update(float dt)
 
     if (mapLoaded) {
 
+        for (const auto anim : tileAnimator) {
+            anim.second->Update();
+        }
+
         for (const auto& mapLayer : mapData.layers) {
             //Check if the property Draw exist get the value, if it's true draw the lawyer
             if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
@@ -50,6 +59,9 @@ bool Map::Update(float dt)
                         if (gid != 0) {
                             TileSet* tileSet = GetTilesetFromTileId(gid);
                             if (tileSet != nullptr) {
+                                if (tileAnimator.find(gid) != tileAnimator.end()) {
+                                    gid = tileAnimator.at(gid)->GetCurrentFrame().extraData;
+                                }
                                 //Get the Rect from the tileSetTexture;
                                 SDL_Rect tileRect = tileSet->GetRect(gid);
                                 //Get the screen coordinates from the tile coordinates
@@ -146,6 +158,22 @@ bool Map::Load(std::string path, std::string fileName)
             //Load the tileset image
             std::string imgName = tilesetNode.child("image").attribute("source").as_string();
             tileSet->texture = Engine::GetInstance().textures->Load((mapPath + imgName).c_str());
+
+            //Load tileset anims
+            for (xml_node tileAnimated = tilesetNode.child("tile"); tileAnimated != NULL; tileAnimated = tileAnimated.next_sibling("tile")) {
+                int gid = tileAnimated.attribute("id").as_int()+1;
+                for (xml_node animationData = tileAnimated.child("animation"); animationData != NULL; animationData = animationData.next_sibling("animation")) {
+                    Sprite* animation = new Sprite(tileSet->texture);
+                    animation->SetNumberAnimations(1);
+                    for (xml_node animationFrame = animationData.child("frame"); animationFrame != NULL; animationFrame = animationFrame.next_sibling("frame")) {
+                        int frameGid = animationFrame.attribute("tileid").as_int()+1;
+                        animation->AddKeyFrame(0, {0,0,0,0}, frameGid);
+                        animation->SetAnimationDelay(0, animationFrame.attribute("duration").as_int());
+                    }
+                    animation->SetAnimation(0);
+                    tileAnimator.emplace(gid, animation);
+                }
+            }
 
             mapData.tilesets.push_back(tileSet);
         }
