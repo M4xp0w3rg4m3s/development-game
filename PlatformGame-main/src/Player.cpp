@@ -27,7 +27,7 @@ bool Player::Awake() {
 
 bool Player::Start() {
 
-	texture = Engine::GetInstance().textures.get()->Load(textureName.c_str());
+	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(8);
