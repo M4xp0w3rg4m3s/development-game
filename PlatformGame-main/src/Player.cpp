@@ -69,7 +69,7 @@ bool Player::Start() {
 	//FALL FINISH
 	animator->AddKeyFrame(4, { 6 * 64,3 * 64,64,64 });
 	animator->AddKeyFrame(4, { 5 * 64,3 * 64,64,64 });
-	animator->SetAnimationDelay(4, 80);
+	animator->SetAnimationDelay(4, 100);
 
 	////LAND
 	//animator->AddKeyFrame(4, { 1 * 64,4 * 64,64,64 });
@@ -111,12 +111,14 @@ bool Player::Start() {
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
 
+	/*
 	// Create SHAPE
 	b2PolygonShape box;
-	box.SetAsBox(PIXEL_TO_METERS(width) * 0.25f, PIXEL_TO_METERS(height) * 0.15f);
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.25f, PIXEL_TO_METERS(height) * 0.05f);
 
 	bodyBottom.shape = &box;
 	body->body->CreateFixture(&bodyBottom);
+	*/
 
 	/*bodyBot = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height*0.25, bodyType::DYNAMIC);
 
@@ -199,7 +201,7 @@ bool Player::Update(float dt)
 			if (animator->GetAnimation() != 0)
 			{
 				animator->SetAnimation(0);
-
+				state = PlayerState::RUNNING;
 			}
 		}
 		else if (velocity.y != 0)
@@ -208,6 +210,7 @@ bool Player::Update(float dt)
 			{
 				animator->SetAnimation(3);
 				animator->SetLoop(false);
+				state = PlayerState::JUMPING;
 			}
 			////Grounded
 			//if (velocity.y < 0) {
