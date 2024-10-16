@@ -162,6 +162,7 @@ bool Map::Load(std::string path, std::string fileName)
             //Load tileset anims
             for (xml_node tileAnimated = tilesetNode.child("tile"); tileAnimated != NULL; tileAnimated = tileAnimated.next_sibling("tile")) {
                 int gid = tileAnimated.attribute("id").as_int()+1;
+                bool isLoop = tileAnimated.child("properties").find_child_by_attribute("property", "name", "Loop").attribute("value").as_bool();
                 for (xml_node animationData = tileAnimated.child("animation"); animationData != NULL; animationData = animationData.next_sibling("animation")) {
                     Sprite* animation = new Sprite(tileSet->texture);
                     animation->SetNumberAnimations(1);
@@ -171,6 +172,7 @@ bool Map::Load(std::string path, std::string fileName)
                         animation->SetAnimationDelay(0, animationFrame.attribute("duration").as_int());
                     }
                     animation->SetAnimation(0);
+                    animation->SetLoop(isLoop);
                     tileAnimator.emplace(gid, animation);
                 }
             }

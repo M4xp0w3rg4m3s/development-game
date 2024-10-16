@@ -68,6 +68,7 @@ Frame Sprite::GetCurrentFrame()
     return animations[current_anim].frames[current_frame];
 }
 
+// Cambiar y pasar la id de la animación
 void Sprite::SetLoop(bool _loop)
 {
     animations[current_anim].loop = _loop;
@@ -98,8 +99,7 @@ void Sprite::Update()
                     current_frame = 0;
                     break;
                 default:
-                    current_anim = -1;
-                    current_frame = 0;
+                    current_frame = current_frame - 1;
                     break;
                 }
             }
