@@ -166,6 +166,13 @@ bool Player::Update(float dt)
 		state = PlayerState::DYING;
 	}
 
+	if (velocity.y == 0) {
+		canJump = true;
+	}
+	else {
+		canJump = false;
+	}
+
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
@@ -268,6 +275,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision PLATFORM");
 		canJump = true;
 		break;
+	case ColliderType::WALL:
+		LOG("Collision WALL");
+		break;
+	case ColliderType::KILL:
+		LOG("Collision KILL");
+		KillPlayer();
+		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
@@ -277,4 +291,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	default:
 		break;
 	}
+}
+
+void Player::KillPlayer()
+{
+	state = PlayerState::DYING;
 }
