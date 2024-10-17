@@ -220,9 +220,6 @@ bool Map::Load(std::string path, std::string fileName)
                 if (groupName == "Collisions") {
                     collider->ctype = ColliderType::PLATFORM;
                 }
-                else if (groupName == "Walls") {
-                    collider->ctype = ColliderType::WALL;
-                }
                 else if (groupName == "Kill") {
                     collider->ctype = ColliderType::KILL;
                 }

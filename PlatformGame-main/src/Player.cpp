@@ -93,17 +93,7 @@ bool Player::Start() {
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
 
-	/*
-	// Create SHAPE
-	b2PolygonShape box;
-	box.SetAsBox(PIXEL_TO_METERS(width) * 0.25f, PIXEL_TO_METERS(height) * 0.05f);
-
-	bodyBottom.shape = &box;
-	body->body->CreateFixture(&bodyBottom);
-	*/
-
-	/*
-	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width, height*0.25, bodyType::DYNAMIC);
+	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width*0.8, height*0.25, bodyType::DYNAMIC);
 
 	b2WeldJointDef jointDef;
 	jointDef.bodyA = body->body;
@@ -115,7 +105,6 @@ bool Player::Start() {
 	jointDef.damping = 0.0f;
 
 	b2Joint* weldJoint = Engine::GetInstance().physics.get()->GetWorld()->CreateJoint(&jointDef);
-	*/
 
 	b2MassData playerMass;
 	playerMass.mass = 1.15f;
@@ -126,9 +115,11 @@ bool Player::Start() {
 
 	// Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	body->listener = this;
+	bodyBot->listener = this;
 
 	// Assign collider type
 	body->ctype = ColliderType::PLAYER;
+	bodyBot->ctype = ColliderType::GROUND_CHECK;
 
 	return true;
 }
@@ -136,6 +127,8 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
+
+	isGrounded = bodyBot->activeCollisions != 0;
 
 	if (state != PlayerState::DYING && state != PlayerState::DEAD)
 	{
@@ -152,11 +145,11 @@ bool Player::Update(float dt)
 		}
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-			if (canJump) {
+			if (isGrounded) {
 				velocity.y = 0;
 				body->body->SetLinearVelocity(velocity);
 				body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
-				canJump = false;
+				isGrounded = false;
 				state = PlayerState::JUMPING;
 			}
 		}
@@ -166,13 +159,6 @@ bool Player::Update(float dt)
 		state = PlayerState::DYING;
 	}
 
-	if (velocity.y == 0) {
-		canJump = true;
-	}
-	else {
-		canJump = false;
-	}
-
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
@@ -180,41 +166,29 @@ bool Player::Update(float dt)
 
 	if (state != PlayerState::DYING)
 	{
-		
-		if (velocity.x == 0 && velocity.y == 0) {
-			if (animator->GetAnimation() != 1)
-			{
-				animator->SetAnimation(1);
-				state = PlayerState::IDLE;
+		if (isGrounded) {
+			if (velocity.x == 0) {
+				if (animator->GetAnimation() != 1)
+				{
+					animator->SetAnimation(1);
+					state = PlayerState::IDLE;
+				}
+			}
+			else {
+				if (animator->GetAnimation() != 0)
+				{
+					animator->SetAnimation(0);
+					state = PlayerState::RUNNING;
+				}
 			}
 		}
-		else if (velocity.x != 0 && velocity.y == 0) {
-			if (animator->GetAnimation() != 0)
-			{
-				animator->SetAnimation(0);
-				state = PlayerState::RUNNING;
-			}
-		}
-		else if (velocity.y != 0)
-		{
+		else {
 			if (animator->GetAnimation() != 2)
 			{
 				animator->SetAnimation(2);
 				animator->SetLoop(false);
 				state = PlayerState::JUMPING;
 			}
-
-			////Grounded
-			//if (velocity.y < 0) {
-			//	if (animator->GetAnimation() != 2) {
-			//		animator->SetAnimation(3);
-			//	}
-			//}
-			//else if (velocity.y > 0) {
-			//	if (animator->GetAnimation() != 3) {
-			//		animator->SetAnimation(3);
-			//	}
-			//}
 		}
 	}
 	else if (state == PlayerState::DYING)
@@ -230,8 +204,6 @@ bool Player::Update(float dt)
 		}
 		
 	}
-	
-	
 
 	animator->Update();
 	switch (state)
@@ -240,14 +212,12 @@ bool Player::Update(float dt)
 		animator->Draw((int)position.getX(), (int)position.getY(), 0, -7);
 		break;
 	case RUNNING:
-		animator->Draw((int)position.getX(), (int)position.getY(), 0, -5);
+		animator->Draw((int)position.getX(), (int)position.getY(), 0, -4);
 		break;
-	/*case JUMPING:
+	case JUMPING:
+		animator->Draw((int)position.getX(), (int)position.getY(), 0, 1);
 		break;
-	case FALLING:
-		break;*/
 	case DYING:
-
 		animator->Draw((int)position.getX(), (int)position.getY(), 6, 8);
 		break;
 	case DEAD:
@@ -271,13 +241,6 @@ bool Player::CleanUp()
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
-	case ColliderType::PLATFORM:
-		LOG("Collision PLATFORM");
-		canJump = true;
-		break;
-	case ColliderType::WALL:
-		LOG("Collision WALL");
-		break;
 	case ColliderType::KILL:
 		LOG("Collision KILL");
 		KillPlayer();

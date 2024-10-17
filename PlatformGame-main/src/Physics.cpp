@@ -160,7 +160,7 @@ PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bo
 	// Create our custom PhysBody class
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
-	//b->SetUserData(pbody);
+	b->GetUserData().pointer = (uintptr_t)pbody;
 	pbody->width = width;
 	pbody->height = height;
 
@@ -208,6 +208,46 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 
 	// Return our PhysBody class
 	return pbody;
+}
+
+PhysBody* Physics::CreatePlayer(int x, int y, int width, int height, bodyType type)
+{
+	b2BodyDef body;
+
+	if (type == DYNAMIC) body.type = b2_dynamicBody;
+	if (type == STATIC) body.type = b2_staticBody;
+	if (type == KINEMATIC) body.type = b2_kinematicBody;
+
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
+	b2PolygonShape bottomBox;
+	bottomBox.SetAsBox(PIXEL_TO_METERS(width) * 0.35f, PIXEL_TO_METERS(height) * 0.1f, {0, PIXEL_TO_METERS(height)*0.5f }, 0);
+
+	b2FixtureDef fixture;
+	fixture.shape = &box;
+	fixture.density = 1.0f;
+	b2FixtureDef bottomFixture;
+	bottomFixture.shape = &bottomBox;
+	bottomFixture.density = 1.0f;
+
+	b->ResetMassData();
+
+	b->CreateFixture(&fixture);
+	b->CreateFixture(&bottomFixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->GetUserData().pointer = (uintptr_t)pbody;
+	pbody->width = width * 0.5f;
+	pbody->height = height * 0.5f;
+
+	return pbody;
+
+	return nullptr;
 }
 
 // 
@@ -345,6 +385,7 @@ void Physics::BeginContact(b2Contact* contact)
 		if (physB) // Ensure physB is also valid
 		{
 			physA->listener->OnCollision(physA, physB);
+			physA->activeCollisions++;
 		}
 	}
 
@@ -352,6 +393,30 @@ void Physics::BeginContact(b2Contact* contact)
 		if (physA) // Ensure physA is also valid
 		{
 			physB->listener->OnCollision(physB, physA);
+			physB->activeCollisions++;
+		}
+	}
+}
+
+void Physics::EndContact(b2Contact* contact)
+{
+	// Call the OnCollision listener function to bodies A and B, passing as inputs our custom PhysBody classes
+	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
+	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
+
+	if (physA && physA->listener != NULL) {
+		if (physB) // Ensure physB is also valid
+		{
+			//physA->listener->OnCollision(physA, physB);
+			physA->activeCollisions--;
+		}
+	}
+
+	if (physB && physB->listener != NULL) {
+		if (physA) // Ensure physA is also valid
+		{
+			//physB->listener->OnCollision(physB, physA);
+			physB->activeCollisions--;
 		}
 	}
 }

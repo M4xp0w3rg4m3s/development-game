@@ -15,7 +15,6 @@ public:
 		IDLE = 1,
 		RUNNING,
 		JUMPING,
-		FALLING,
 		DYING,
 		DEAD
 		
@@ -49,10 +48,9 @@ public:
 
 	int pickCoinFxId;
 
-	bool canJump = false;
+	bool isGrounded = false;
 	PhysBody* body;
 	PhysBody* bodyBot;
-	b2FixtureDef bodyBottom;
 
 	PlayerState state = IDLE;
 
