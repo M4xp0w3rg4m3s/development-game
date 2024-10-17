@@ -209,14 +209,24 @@ bool Map::Load(std::string path, std::string fileName)
 
         // In case of memory leaks make a list to store the collider pointers and then free them at the end of the code
 
-        xml_node objectGroup = mapFileXML.child("map").child("objectgroup");
-        for (xml_node objectNode = objectGroup.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
-            int x = objectNode.attribute("x").as_int();
-            int y = objectNode.attribute("y").as_int();
-            int h = objectNode.attribute("height").as_int();
-            int w = objectNode.attribute("width").as_int();
-            PhysBody* collider = Engine::GetInstance().physics.get()->CreateRectangle(x + w / 2, y + h / 2, w, h, STATIC);
-            collider->ctype = ColliderType::PLATFORM;
+        for (xml_node objectGroup = mapFileXML.child("map").child("objectgroup"); objectGroup != NULL; objectGroup = objectGroup.next_sibling("objectgroup")) {
+            std::string groupName = objectGroup.attribute("name").as_string();
+            for (xml_node objectNode = objectGroup.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
+                int x = objectNode.attribute("x").as_int();
+                int y = objectNode.attribute("y").as_int();
+                int h = objectNode.attribute("height").as_int();
+                int w = objectNode.attribute("width").as_int();
+                PhysBody* collider = Engine::GetInstance().physics.get()->CreateRectangle(x + w / 2, y + h / 2, w, h, STATIC);
+                if (groupName == "Collisions") {
+                    collider->ctype = ColliderType::PLATFORM;
+                }
+                else if (groupName == "Walls") {
+                    collider->ctype = ColliderType::WALL;
+                }
+                else if (groupName == "Kill") {
+                    collider->ctype = ColliderType::KILL;
+                }
+            }
         }
 
         ret = true;

@@ -35,6 +35,7 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	void KillPlayer();
 
 public:
 
