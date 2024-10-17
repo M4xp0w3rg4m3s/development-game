@@ -49,58 +49,40 @@ bool Player::Start() {
 	animator->AddKeyFrame(1, { 3 * 64,0 * 64,64,64 });
 	animator->SetAnimationDelay(1, 100);
 
-	/*JUMP UP
-	animator->AddKeyFrame(2, { 0 * 64,2 * 64,64,64 });
-	animator->AddKeyFrame(2, { 1 * 64,2 * 64,64,64 });
-	animator->AddKeyFrame(2, { 2 * 64,2 * 64,64,64 });
-	animator->AddKeyFrame(2, { 3 * 64,2 * 64,64,64 });
-	animator->SetAnimationDelay(2, 100);*/
-
 	//FALL
-	animator->AddKeyFrame(3, { 0 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 1 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 2 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 3 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 4 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 5 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(3, { 6 * 64,3 * 64,64,64 });
-	animator->SetAnimationDelay(3, 100);
-
-	//FALL FINISH
-	animator->AddKeyFrame(4, { 6 * 64,3 * 64,64,64 });
-	animator->AddKeyFrame(4, { 5 * 64,3 * 64,64,64 });
-	animator->SetAnimationDelay(4, 100);
-
-	////LAND
-	//animator->AddKeyFrame(4, { 1 * 64,4 * 64,64,64 });
-	//animator->AddKeyFrame(4, { 2 * 64,4 * 64,64,64 });
-	//animator->AddKeyFrame(4, { 3 * 64,4 * 64,64,64 });
-	//animator->SetAnimationDelay(4, 100);
+	animator->AddKeyFrame(2, { 0 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(2, { 1 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(2, { 2 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(2, { 3 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(2, { 4 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(2, { 5 * 64,3 * 64,64,64 });
+	animator->AddKeyFrame(2, { 6 * 64,3 * 64,64,64 });
+	animator->SetAnimationDelay(2, 100);
 
 	//DIE
-	animator->AddKeyFrame(5, { 0 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 1 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 2 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 3 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 4 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 5 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 6 * 64,5 * 64,64,64 });
-	animator->AddKeyFrame(5, { 7 * 64,5 * 64,64,64 });
-	animator->SetAnimationDelay(5, 100);
+	animator->AddKeyFrame(3, { 0 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 1 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 2 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 3 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 4 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 5 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 6 * 64,5 * 64,64,64 });
+	animator->AddKeyFrame(3, { 7 * 64,5 * 64,64,64 });
+	animator->SetAnimationDelay(3, 100);
 
 	//COMBO PART1
-	animator->AddKeyFrame(6, { 0 * 64,6 * 64,64,64 });
-	animator->AddKeyFrame(6, { 1 * 64,6 * 64,64,64 });
-	animator->AddKeyFrame(6, { 2 * 64,6 * 64,64,64 });
-	animator->AddKeyFrame(6, { 3 * 64,6 * 64,64,64 });
-	animator->SetAnimationDelay(6, 100);
+	animator->AddKeyFrame(4, { 0 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(4, { 1 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(4, { 2 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(4, { 3 * 64,6 * 64,64,64 });
+	animator->SetAnimationDelay(4, 100);
 
 	//COMBO PART2
-	animator->AddKeyFrame(7, { 4 * 64,6 * 64,64,64 });
-	animator->AddKeyFrame(7, { 5 * 64,6 * 64,64,64 });
-	animator->AddKeyFrame(7, { 6 * 64,6 * 64,64,64 });
-	animator->AddKeyFrame(7, { 7 * 64,6 * 64,64,64 });
-	animator->SetAnimationDelay(7, 100);
+	animator->AddKeyFrame(5, { 4 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(5, { 5 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(5, { 6 * 64,6 * 64,64,64 });
+	animator->AddKeyFrame(5, { 7 * 64,6 * 64,64,64 });
+	animator->SetAnimationDelay(5, 100);
 
 	animator->SetAnimation(0);
 
@@ -120,18 +102,20 @@ bool Player::Start() {
 	body->body->CreateFixture(&bodyBottom);
 	*/
 
-	/*bodyBot = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height*0.25, bodyType::DYNAMIC);
+	/*
+	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width, height*0.25, bodyType::DYNAMIC);
 
 	b2WeldJointDef jointDef;
 	jointDef.bodyA = body->body;
 	jointDef.bodyB = bodyBot->body;
 	jointDef.localAnchorA.Set(0.0f, 0.0f);
-	jointDef.localAnchorB.Set(0.0f, (float)PIXEL_TOM((-height/2)));
+	jointDef.localAnchorB.Set(0.0f, (float)PIXEL_TO_METERS((-height/2)));
 	jointDef.referenceAngle = 0.0f;
 	jointDef.stiffness = 0.0f;
 	jointDef.damping = 0.0f;
 
-	b2Joint* weldJoint = Engine::GetInstance().physics.get()->GetWorld()->CreateJoint(&jointDef);*/
+	b2Joint* weldJoint = Engine::GetInstance().physics.get()->GetWorld()->CreateJoint(&jointDef);
+	*/
 
 	b2MassData playerMass;
 	playerMass.mass = 1.15f;
@@ -206,12 +190,13 @@ bool Player::Update(float dt)
 		}
 		else if (velocity.y != 0)
 		{
-			if (animator->GetAnimation() != 3 && animator->GetAnimation() != 4)
+			if (animator->GetAnimation() != 2)
 			{
-				animator->SetAnimation(3);
+				animator->SetAnimation(2);
 				animator->SetLoop(false);
 				state = PlayerState::JUMPING;
 			}
+
 			////Grounded
 			//if (velocity.y < 0) {
 			//	if (animator->GetAnimation() != 2) {
@@ -227,14 +212,15 @@ bool Player::Update(float dt)
 	}
 	else if (state == PlayerState::DYING)
 	{
-		if (animator->GetAnimation() == -1)
-		{
-			state = PlayerState::DEAD;
-		}
-		if (animator->GetAnimation() != 5) {
-			animator->SetAnimation(5);
+		if (animator->GetAnimation() != 3) {
+			animator->SetAnimation(3);
 			animator->SetLoop(false);
 		}	
+		else if (animator->isAnimFinished())
+		{
+			state = PlayerState::DEAD;
+			//animator->SetAnimation(0);
+		}
 		
 	}
 	
@@ -254,9 +240,11 @@ bool Player::Update(float dt)
 	case FALLING:
 		break;*/
 	case DYING:
-		animator->Draw((int)position.getX(), (int)position.getY(),0, 7);
+
+		animator->Draw((int)position.getX(), (int)position.getY(), 6, 8);
 		break;
 	case DEAD:
+		animator->Draw((int)position.getX(), (int)position.getY(), 6, 8);
 		break;
 	default:
 		animator->Draw((int)position.getX(), (int)position.getY());

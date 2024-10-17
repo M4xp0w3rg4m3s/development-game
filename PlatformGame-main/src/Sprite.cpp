@@ -54,15 +54,6 @@ int Sprite::GetAnimation()
     return current_anim;
 }
 
-bool Sprite::LastFrame()
-{
-    if (current_frame >= animations[current_anim].frames.size())
-    {
-        return true;
-    }
-    return false;
-}
-
 Frame Sprite::GetCurrentFrame()
 {
     return animations[current_anim].frames[current_frame];
@@ -92,16 +83,8 @@ void Sprite::Update()
         else {
             current_frame++;
             if (current_frame >= animations[current_anim].frames.size()) {
-                switch (current_anim)
-                {
-                case 3:
-                    current_anim = 4;
-                    current_frame = 0;
-                    break;
-                default:
-                    current_frame = current_frame - 1;
-                    break;
-                }
+                current_frame = current_frame - 1;
+                animFinished = true;
             }
             timer.Start();
         }
@@ -114,7 +97,7 @@ void Sprite::Draw(int x, int y) const
 }
 void Sprite::Draw(int x, int y, int offsetX, int offsetY) const
 {
-    DrawTint(x + offsetX, y + offsetY, { 255,255,255,255 });
+    DrawTint(x + offsetX * (player_dir==LEFT ? -1 : 1), y + offsetY, { 255,255,255,255 });
 }
 void Sprite::DrawTint(int x, int y, const SDL_Color& col) const
 {

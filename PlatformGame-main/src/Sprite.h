@@ -27,7 +27,6 @@ public:
     void AddKeyFrame(int id, const SDL_Rect& rect, int extraData);
     void SetAnimation(int id);
     int GetAnimation();
-    bool LastFrame();
     Frame GetCurrentFrame();
     void SetLoop(bool _loop);
 
@@ -42,10 +41,15 @@ public:
 
     void Release();
 
+    bool isAnimFinished() const {
+        return animFinished;
+    }
+
 private:
     int current_anim;
     int current_frame;
     direction player_dir;
+    bool animFinished = false;
 
     SDL_Texture*img;
     std::vector<Animation> animations;
