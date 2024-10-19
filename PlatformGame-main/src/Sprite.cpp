@@ -8,7 +8,7 @@ Sprite::Sprite(SDL_Texture*texture)
     img = texture;
     current_anim = -1;
     current_frame = 0;
-
+    animFinished = false;
 }
 Sprite::~Sprite()
 {
