@@ -164,7 +164,7 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-	if (state != PlayerState::DYING)
+	if (state != PlayerState::DYING && state != PlayerState::DEAD)
 	{
 		if (isGrounded) {
 			if (velocity.x == 0) {
@@ -200,10 +200,19 @@ bool Player::Update(float dt)
 		else if (animator->isAnimFinished())
 		{
 			state = PlayerState::DEAD;
-			//animator->SetAnimation(0);
+			deadTimer.Start();
 		}
-		
 	}
+	else if (state == PlayerState::DEAD) {
+		if (deadTimer.ReadSec() == deadTime) {
+			Disable();
+			position = Vector2D(192, 384);
+			Engine::GetInstance().scene->CameraReset();
+			state = PlayerState::IDLE;
+			Enable();
+		}
+	}
+
 
 	animator->Update();
 	switch (state)
@@ -234,16 +243,22 @@ bool Player::Update(float dt)
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
+	body->body->DestroyFixture(body->body->GetFixtureList());
+	bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	return true;
 }
 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
+	if (physA->ctype == ColliderType::GROUND_CHECK) {
+		if (physB->ctype == ColliderType::KILL) {
+			KillPlayer();
+		}
+	}
 	switch (physB->ctype)
 	{
 	case ColliderType::KILL:
 		LOG("Collision KILL");
-		KillPlayer();
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");

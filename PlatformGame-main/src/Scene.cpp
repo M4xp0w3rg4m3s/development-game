@@ -73,7 +73,7 @@ bool Scene::Update(float dt)
 	}
 
 	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
-		Engine::GetInstance().render.get()->camera.x = -(player->position.getX() - (Engine::GetInstance().window.get()->width)/2);
+		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width/2) - (Engine::GetInstance().window.get()->width) / 2);
 	}
 
 	return true;
@@ -99,4 +99,10 @@ bool Scene::CleanUp()
 	SDL_DestroyTexture(img);
 
 	return true;
+}
+
+void Scene::CameraReset()
+{
+	Engine::GetInstance().render.get()->camera.x = 0;
+	Engine::GetInstance().render.get()->camera.y = 0;
 }

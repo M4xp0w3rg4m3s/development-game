@@ -31,6 +31,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void CameraReset();
+
 	b2World* world;
 
 private:
