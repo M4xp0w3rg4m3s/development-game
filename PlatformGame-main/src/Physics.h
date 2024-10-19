@@ -26,6 +26,7 @@ enum class ColliderType {
 	PLAYER,
 	GROUND_CHECK,
 	ITEM,
+	BOULDER,
 	PLATFORM,
 	KILL,
 	UNKNOWN,

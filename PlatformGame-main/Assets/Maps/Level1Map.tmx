@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="150" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="171">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="150" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="178">
  <tileset firstgid="1" name="forest_tileset" tilewidth="32" tileheight="32" margin="1" tilecount="1080" columns="27">
   <image source="forest_tileset2.png" width="866" height="1282"/>
   <tile id="99">
@@ -6248,9 +6248,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1"/>
+   <tile gid="2"/>
+   <tile gid="2"/>
    <tile/>
    <tile gid="61"/>
    <tile gid="10"/>
@@ -6385,6 +6385,7 @@
    <tile gid="232"/>
    <tile gid="140"/>
    <tile gid="2"/>
+   <tile gid="3"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6397,10 +6398,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="28"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile/>
    <tile gid="29"/>
    <tile gid="37"/>
@@ -6535,6 +6535,8 @@
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
+   <tile gid="87"/>
+   <tile gid="3"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6546,11 +6548,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="36"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile/>
    <tile gid="29"/>
    <tile gid="29"/>
@@ -6685,6 +6685,8 @@
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="30"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6696,11 +6698,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="36"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile/>
    <tile gid="29"/>
    <tile gid="29"/>
@@ -6835,22 +6835,22 @@
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="29"/>
+   <tile gid="61"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="62"/>
+   <tile gid="63"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile/>
   </data>
  </layer>
@@ -6861,7 +6861,6 @@
   <object id="37" x="608" y="352" width="256" height="32"/>
   <object id="41" x="2016" y="384" width="192" height="32"/>
   <object id="46" x="2208" y="352" width="224" height="32"/>
-  <object id="55" x="3200" y="352" width="1056" height="32"/>
   <object id="109" x="864" y="320" width="128" height="32"/>
   <object id="136" x="3072" y="320" width="128" height="160"/>
   <object id="137" x="2432" y="320" width="256" height="160"/>
@@ -6891,6 +6890,10 @@
   <object id="166" x="1088" y="0" width="128" height="128"/>
   <object id="167" x="256" y="0" width="384" height="32"/>
   <object id="170" x="1216" y="-32" width="3040" height="32"/>
+  <object id="172" x="3200" y="352" width="1088" height="32"/>
+  <object id="173" x="4288" y="384" width="32" height="64"/>
+  <object id="176" x="4672" y="320" width="96" height="128"/>
+  <object id="177" x="4320" y="448" width="352" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="Kill">
   <object id="168" x="1632" y="416" width="192" height="32"/>

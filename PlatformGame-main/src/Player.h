@@ -43,7 +43,7 @@ public:
 	std::string textureName; 
 	SDL_Texture* texture = NULL;
 	int texW, texH;
-	int width = 20;
+	int width = 16;
 	int height = 45;
 
 	int pickCoinFxId;
