@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Item.h"
+#include "Boulder.h"
 
 Scene::Scene() : Module()
 {
@@ -39,12 +40,17 @@ bool Scene::Awake()
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
 	Engine::GetInstance().map.get()->mapPath = configParameters.child("map").attribute("path").as_string();
 
+	//Create a new item using the entity manager and set the position to (256, 320)
+	//Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	//item->position = Vector2D(256, 320);
+
+	//Create the boulders the player will push
+	Boulder* boulder = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
+	boulder->position = Vector2D(136*32, 11*32);
+
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 
-	//Create a new item using the entity manager and set the position to (200, 672) to test
-	Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	item->position = Vector2D(256, 320);
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 	return ret;
 }
