@@ -55,4 +55,7 @@ public:
 	PlayerState state = IDLE;
 
 	Sprite* animator;
+
+	Timer deadTimer;
+	int deadTime = 2;
 };
