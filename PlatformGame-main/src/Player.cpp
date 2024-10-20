@@ -206,6 +206,8 @@ bool Player::Update(float dt)
 	else if (state == PlayerState::DEAD) {
 		if (deadTimer.ReadSec() == deadTime) {
 			Disable();
+			body->body->DestroyFixture(body->body->GetFixtureList());
+			bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
 			position = Vector2D(192, 384);
 			Engine::GetInstance().scene->CameraReset();
 			state = PlayerState::IDLE;
@@ -243,8 +245,6 @@ bool Player::Update(float dt)
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
-	body->body->DestroyFixture(body->body->GetFixtureList());
-	bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	return true;
 }
