@@ -148,7 +148,7 @@ bool Player::Update(float dt)
 			if (isGrounded) {
 				velocity.y = 0;
 				body->body->SetLinearVelocity(velocity);
-				body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
+				body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-0.55) * dt }, true);
 				isGrounded = false;
 				state = PlayerState::JUMPING;
 			}
