@@ -97,6 +97,9 @@ bool Player::Start() {
 
 	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
 
+	body->body->SetFixedRotation(true);
+	bodyBot->body->SetFixedRotation(true);
+
 	b2MassData playerMass;
 	playerMass.mass = 1.15f;
 	playerMass.center = body->body->GetLocalCenter();
@@ -138,7 +141,7 @@ bool Player::Update(float dt)
 				if (isGrounded) {
 					velocity.y = 0;
 					body->body->SetLinearVelocity(velocity);
-					body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-0.55) * dt }, true);
+					body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9)}, true);
 					isGrounded = false;
 					state = PlayerState::JUMPING;
 				}
