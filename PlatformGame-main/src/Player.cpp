@@ -95,16 +95,7 @@ bool Player::Start() {
 
 	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width*0.8, height*0.25, bodyType::DYNAMIC);
 
-	b2WeldJointDef jointDef;
-	jointDef.bodyA = body->body;
-	jointDef.bodyB = bodyBot->body;
-	jointDef.localAnchorA.Set(0.0f, 0.0f);
-	jointDef.localAnchorB.Set(0.0f, (float)PIXEL_TO_METERS((-height/2)));
-	jointDef.referenceAngle = 0.0f;
-	jointDef.stiffness = 0.0f;
-	jointDef.damping = 0.0f;
-
-	b2Joint* weldJoint = Engine::GetInstance().physics.get()->GetWorld()->CreateJoint(&jointDef);
+	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
 
 	b2MassData playerMass;
 	playerMass.mass = 1.15f;
@@ -205,13 +196,7 @@ bool Player::Update(float dt)
 	}
 	else if (state == PlayerState::DEAD) {
 		if (deadTimer.ReadSec() == deadTime) {
-			Disable();
-			body->body->DestroyFixture(body->body->GetFixtureList());
-			bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
-			position = Vector2D(192, 384);
-			Engine::GetInstance().scene->CameraReset();
-			state = PlayerState::IDLE;
-			Enable();
+			ResetPlayer();
 		}
 	}
 
@@ -274,4 +259,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 void Player::KillPlayer()
 {
 	state = PlayerState::DYING;
+}
+
+void Player::ResetPlayer()
+{
+	Disable();
+	body->body->DestroyFixture(body->body->GetFixtureList());
+	bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
+	position = Vector2D(192, 384);
+	Engine::GetInstance().scene->CameraReset();
+	state = PlayerState::IDLE;
+	Enable();
 }

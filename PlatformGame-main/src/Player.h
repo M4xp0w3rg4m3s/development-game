@@ -36,6 +36,8 @@ public:
 
 	void KillPlayer();
 
+	void ResetPlayer();
+
 public:
 
 	//Declare player parameters

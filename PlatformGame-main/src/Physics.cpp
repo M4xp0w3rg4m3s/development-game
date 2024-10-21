@@ -484,3 +484,17 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 
 	return ret;
 }
+
+void PhysBody::CreateWeld(PhysBody* pbody, float position)
+{
+	b2WeldJointDef jointDef;
+	jointDef.bodyA = this->body;
+	jointDef.bodyB = pbody->body;
+	jointDef.localAnchorA.Set(0.0f, 0.0f);
+	jointDef.localAnchorB.Set(0.0f, position);
+	jointDef.referenceAngle = 0.0f;
+	jointDef.stiffness = 0.0f;
+	jointDef.damping = 0.0f;
+
+	b2Joint* weldJoint = Engine::GetInstance().physics.get()->GetWorld()->CreateJoint(&jointDef);
+}
