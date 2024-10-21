@@ -97,6 +97,9 @@ bool Player::Start() {
 
 	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
 
+	body->body->SetFixedRotation(true);
+	bodyBot->body->SetFixedRotation(true);
+
 	b2MassData playerMass;
 	playerMass.mass = 1.15f;
 	playerMass.center = body->body->GetLocalCenter();
@@ -120,35 +123,70 @@ bool Player::Update(float dt)
 	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
 
 	isGrounded = bodyBot->activeCollisions != 0;
-
-	if (state != PlayerState::DYING && state != PlayerState::DEAD)
-	{
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -0.2 * dt;
-			animator->LookLeft();
-			state = PlayerState::RUNNING;
-		}
-
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = 0.2 * dt;
-			animator->LookRight();
-			state = PlayerState::RUNNING;
-		}
-
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-			if (isGrounded) {
-				velocity.y = 0;
-				body->body->SetLinearVelocity(velocity);
-				body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-0.55) * dt }, true);
-				isGrounded = false;
-				state = PlayerState::JUMPING;
+	
+	if (!godMode) {
+		if (state != PlayerState::DYING && state != PlayerState::DEAD)
+		{
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+				velocity.x = -0.2 * dt;
+				animator->LookLeft();
+				state = PlayerState::RUNNING;
+			}
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				velocity.x = 0.2 * dt;
+				animator->LookRight();
+				state = PlayerState::RUNNING;
+			}
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+				if (isGrounded) {
+					velocity.y = 0;
+					body->body->SetLinearVelocity(velocity);
+					body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9)}, true);
+					isGrounded = false;
+					state = PlayerState::JUMPING;
+				}
 			}
 		}
-	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_REPEAT) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_REPEAT) {
 		
-		state = PlayerState::DYING;
+			state = PlayerState::DYING;
+		}
 	}
+	else {
+		body->body->SetGravityScale(0);
+		bodyBot->body->SetGravityScale(0);
+
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -0.3 * dt;
+			animator->LookLeft();
+		}
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = 0.3 * dt;
+			animator->LookRight();
+		}
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			velocity.y = -0.3 * dt;
+		}
+		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			velocity.y = 0.3 * dt;
+		}
+		else {
+			velocity.y = 0;
+		}
+
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+		if (!godMode) {
+			godMode = true;
+		}
+		else {
+			godMode = false;
+			body->body->SetGravityScale(1);
+			bodyBot->body->SetGravityScale(1);
+		}
+	}
+
 
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
@@ -258,7 +296,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 void Player::KillPlayer()
 {
-	state = PlayerState::DYING;
+	if(!godMode)	state = PlayerState::DYING;
 }
 
 void Player::ResetPlayer()

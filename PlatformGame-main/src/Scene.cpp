@@ -47,6 +47,7 @@ bool Scene::Awake()
 	//Create the boulders the player will push
 	Boulder* boulder = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
 	boulder->position = Vector2D(136*32, 11*32);
+	boulder->position = Vector2D(256, 320);
 
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
@@ -73,11 +74,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN){
-		if (player->active == true) player->Disable();
-		else player->Enable();
-	}
-
 	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width/2) - (Engine::GetInstance().window.get()->width) / 2);
 	}

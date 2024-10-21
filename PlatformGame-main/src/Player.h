@@ -16,8 +16,7 @@ public:
 		RUNNING,
 		JUMPING,
 		DYING,
-		DEAD
-		
+		DEAD	
 	};
 
 	Player();
@@ -60,4 +59,6 @@ public:
 
 	Timer deadTimer;
 	int deadTime = 2;
+
+	bool godMode = false;
 };

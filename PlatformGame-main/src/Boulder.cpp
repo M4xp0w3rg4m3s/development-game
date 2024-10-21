@@ -10,7 +10,7 @@
 
 Boulder::Boulder() : Entity(EntityType::BOULDER)
 {
-	name = "item";
+	name = "boulder";
 }
 
 Boulder::~Boulder() {}
@@ -28,13 +28,15 @@ bool Boulder::Start() {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 	pbody = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texW-4, texH-2, bodyType::DYNAMIC);
 
-	// Add friction and weight
+	//// Add friction and weight
 	b2MassData boulderMass;
-	boulderMass.mass = 15.0f;
+	boulderMass.mass = 20.0f;
 	boulderMass.center = pbody->body->GetLocalCenter();
 	pbody->body->SetMassData(&boulderMass);
 
-	pbody->body->GetFixtureList()[0].SetFriction(5.0f);
+	pbody->body->SetFixedRotation(true);
+
+	pbody->body->GetFixtureList()[0].SetFriction(10.0f);
 
 	// Assign collider type
 	pbody->ctype = ColliderType::BOULDER;
