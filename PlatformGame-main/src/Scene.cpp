@@ -73,11 +73,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN){
-		if (player->active == true) player->Disable();
-		else player->Enable();
-	}
-
 	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width/2) - (Engine::GetInstance().window.get()->width) / 2);
 	}
