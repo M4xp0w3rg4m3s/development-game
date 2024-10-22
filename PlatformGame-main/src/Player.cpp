@@ -195,30 +195,58 @@ bool Player::Update(float dt)
 
 	if (state != PlayerState::DYING && state != PlayerState::DEAD)
 	{
-		if (isGrounded) {
-			if (velocity.x == 0) {
-				if (animator->GetAnimation() != 1)
-				{
-					animator->SetAnimation(1);
-					state = PlayerState::IDLE;
-				}
-			}
-			else {
-				if (animator->GetAnimation() != 0)
-				{
-					animator->SetAnimation(0);
-					state = PlayerState::RUNNING;
-				}
-			}
-		}
-		else {
-			if (animator->GetAnimation() != 2)
+		if (state != PlayerState::WOMBO && state != PlayerState::COMBO)
+		{
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 			{
-				animator->SetAnimation(2);
-				animator->SetLoop(false);
-				state = PlayerState::JUMPING;
+				if (animator->GetAnimation() != 4) {
+					animator->SetAnimation(4);
+					animator->SetLoop(false);
+					state = PlayerState::WOMBO;
+				}
+			}
+			else{
+				if (isGrounded) {
+					if (velocity.x == 0) {
+						if (animator->GetAnimation() != 1)
+						{
+							animator->SetAnimation(1);
+							state = PlayerState::IDLE;
+						}
+					}
+					else {
+						if (animator->GetAnimation() != 0)
+						{
+							animator->SetAnimation(0);
+							state = PlayerState::RUNNING;
+						}
+					}
+				}
+				else {
+					if (animator->GetAnimation() != 2)
+					{
+						animator->SetAnimation(2);
+						animator->SetLoop(false);
+						state = PlayerState::JUMPING;
+					}
+				}
 			}
 		}
+		else if (state == PlayerState::WOMBO  && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+			if (animator->isAnimFinished() && animator->GetAnimation() != 5)
+			{
+				animator->SetAnimation(5);
+				animator->SetLoop(false);
+				state = PlayerState::COMBO;
+			}
+		}
+		/*else if (state == PlayerState::COMBO) {
+			if (animator->isAnimFinished() && animator->GetAnimation() == 5) {
+				animator->SetAnimation(1);
+				animator->SetLoop(true);
+				state = PlayerState::IDLE;
+			}
+		}*/
 	}
 	else if (state == PlayerState::DYING)
 	{
@@ -250,6 +278,12 @@ bool Player::Update(float dt)
 		break;
 	case JUMPING:
 		animator->Draw((int)position.getX(), (int)position.getY(), 0, 1);
+		break;
+	case WOMBO:
+		animator->Draw((int)position.getX(), (int)position.getY(), 0, -7);
+		break;
+	case COMBO:
+		animator->Draw((int)position.getX(), (int)position.getY(), 0, -7);
 		break;
 	case DYING:
 		animator->Draw((int)position.getX(), (int)position.getY(), 6, 8);

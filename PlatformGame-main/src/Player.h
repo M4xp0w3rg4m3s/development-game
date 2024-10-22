@@ -15,6 +15,8 @@ public:
 		IDLE = 1,
 		RUNNING,
 		JUMPING,
+		WOMBO,
+		COMBO,
 		DYING,
 		DEAD	
 	};
@@ -61,4 +63,5 @@ public:
 	int deadTime = 2;
 
 	bool godMode = false;
+
 };
