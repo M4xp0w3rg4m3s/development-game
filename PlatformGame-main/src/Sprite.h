@@ -28,6 +28,7 @@ public:
     void SetAnimation(int id);
     int GetAnimation();
     Frame GetCurrentFrame();
+    int GetCurrentFrame_int();
     void SetLoop(bool _loop);
 
     void Update();

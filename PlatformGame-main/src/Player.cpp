@@ -193,9 +193,23 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-	if (state != PlayerState::DYING && state != PlayerState::DEAD)
-	{
-		if (state != PlayerState::WOMBO && state != PlayerState::COMBO)
+	if (state != PlayerState::DYING && state != PlayerState::DEAD){
+		if (state == PlayerState::WOMBO  && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+			if (animator->isAnimFinished() && animator->GetAnimation() != 5)
+			{
+				animator->SetAnimation(5);
+				animator->SetLoop(false);
+				state = PlayerState::COMBO;
+			}
+		}
+		else if (state == PlayerState::COMBO) {
+			if (animator->GetCurrentFrame_int() == 3) {
+				SDL_Delay(100);
+				state = PlayerState::IDLE;
+			}
+		}
+	
+		else if (state != PlayerState::WOMBO && state != PlayerState::COMBO)
 		{
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 			{
@@ -232,21 +246,6 @@ bool Player::Update(float dt)
 				}
 			}
 		}
-		else if (state == PlayerState::WOMBO  && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
-			if (animator->isAnimFinished() && animator->GetAnimation() != 5)
-			{
-				animator->SetAnimation(5);
-				animator->SetLoop(false);
-				state = PlayerState::COMBO;
-			}
-		}
-		/*else if (state == PlayerState::COMBO) {
-			if (animator->isAnimFinished() && animator->GetAnimation() == 5) {
-				animator->SetAnimation(1);
-				animator->SetLoop(true);
-				state = PlayerState::IDLE;
-			}
-		}*/
 	}
 	else if (state == PlayerState::DYING)
 	{
