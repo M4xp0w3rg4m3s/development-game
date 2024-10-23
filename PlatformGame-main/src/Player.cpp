@@ -128,22 +128,66 @@ bool Player::Update(float dt)
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
 		{
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				velocity.x = -0.2 * dt;
-				animator->LookLeft();
-				state = PlayerState::RUNNING;
+				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				{
+					if (animator->GetPlayerDir() == RIGHT)
+					{
+						velocity.x = -0.2 * dt;
+						animator->LookLeft();
+						state = PlayerState::RUNNING;
+					}
+					else
+					{
+						velocity.x = -0.2 * dt;
+						animator->LookLeft();
+					}
+				}
+				else
+				{
+					velocity.x = -0.2 * dt;
+					animator->LookLeft();
+					state = PlayerState::RUNNING;
+				}
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				velocity.x = 0.2 * dt;
-				animator->LookRight();
-				state = PlayerState::RUNNING;
+				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				{
+					if (animator->GetPlayerDir() == LEFT)
+					{
+						velocity.x = 0.2 * dt;
+						animator->LookRight();
+						state = PlayerState::RUNNING;
+					}
+					else {
+						velocity.x = 0.2 * dt;
+						animator->LookRight();
+					}
+				}
+				else
+				{
+					velocity.x = 0.2 * dt;
+					animator->LookRight();
+					state = PlayerState::RUNNING;
+				}
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-				if (isGrounded) {
-					velocity.y = 0;
-					body->body->SetLinearVelocity(velocity);
-					body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9)}, true);
-					isGrounded = false;
-					state = PlayerState::JUMPING;
+				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				{
+					if (isGrounded) {
+						velocity.y = 0;
+						body->body->SetLinearVelocity(velocity);
+						body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
+						isGrounded = false;
+					}
+				}
+				else {
+					if (isGrounded) {
+						velocity.y = 0;
+						body->body->SetLinearVelocity(velocity);
+						body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9)}, true);
+						isGrounded = false;
+						state = PlayerState::JUMPING;
+					}
 				}
 			}
 		}

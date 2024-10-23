@@ -125,6 +125,10 @@ void Sprite::LookLeft()
 {
     player_dir = direction::LEFT;
 }
+direction Sprite::GetPlayerDir()
+{
+    return player_dir;
+}
 void Sprite::Release()
 {
     //Release each animation's frames

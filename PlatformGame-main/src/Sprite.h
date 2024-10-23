@@ -39,6 +39,7 @@ public:
 
     void LookRight();
     void LookLeft();
+    direction GetPlayerDir();
 
     void Release();
 
