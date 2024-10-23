@@ -64,7 +64,9 @@ public:
 	int deadTime = 2;
 
 	Timer attackReactionTimer;
+	Timer attackCooldownTimer;
 	int reactionTimeMs = 500;
+	int attackCooldown = 0;
 
 	bool godMode = false;
 

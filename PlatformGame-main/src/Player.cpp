@@ -244,10 +244,12 @@ bool Player::Update(float dt)
 				animator->SetAnimation(5);
 				animator->SetLoop(false);
 				state = PlayerState::COMBO;
+				attackCooldownTimer.Start();
 			}
 			else if(animator->isAnimFinished() && animator->GetAnimation() != 5 && attackReactionTimer.ReadMSec() > reactionTimeMs){
 				animator->SetAnimation(1);
 				state = PlayerState::IDLE;
+				attackCooldownTimer.Start();
 			}
 		}
 		else if (state == PlayerState::COMBO) {
@@ -259,7 +261,7 @@ bool Player::Update(float dt)
 	
 		else if (state != PlayerState::WOMBO && state != PlayerState::COMBO)
 		{
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackCooldownTimer.ReadMSec() > attackCooldown)
 			{
 				if (animator->GetAnimation() != 4) {
 					animator->SetAnimation(4);
