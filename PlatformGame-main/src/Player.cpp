@@ -238,12 +238,16 @@ bool Player::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
-		if (state == PlayerState::WOMBO  && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
-			if (animator->isAnimFinished() && animator->GetAnimation() != 5)
+		if (state == PlayerState::WOMBO ) {
+			if (animator->isAnimFinished() && animator->GetAnimation() != 5 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackReactionTimer.ReadMSec() < reactionTimeMs)
 			{
 				animator->SetAnimation(5);
 				animator->SetLoop(false);
 				state = PlayerState::COMBO;
+			}
+			else if(animator->isAnimFinished() && animator->GetAnimation() != 5 && attackReactionTimer.ReadMSec() > reactionTimeMs){
+				animator->SetAnimation(1);
+				state = PlayerState::IDLE;
 			}
 		}
 		else if (state == PlayerState::COMBO) {
@@ -261,6 +265,7 @@ bool Player::Update(float dt)
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
 					state = PlayerState::WOMBO;
+					attackReactionTimer.Start();
 				}
 			}
 			else{

@@ -38,6 +38,7 @@ public:
 	void KillPlayer();
 
 	void ResetPlayer();
+	
 
 public:
 
@@ -61,6 +62,9 @@ public:
 
 	Timer deadTimer;
 	int deadTime = 2;
+
+	Timer attackReactionTimer;
+	int reactionTimeMs = 500;
 
 	bool godMode = false;
 
