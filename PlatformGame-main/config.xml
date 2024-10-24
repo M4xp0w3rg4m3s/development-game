@@ -19,6 +19,13 @@
 
   <scene>
     <player x="100" y="100" texturePath="Assets/Textures/Character/chara-spritesheet.png"/>
+	<layers>
+		<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
+		<two texturePath="Assets/Maps/background_parallax/normal_BG/layer2.png" />
+		<three texturePath="Assets/Maps/background_parallax/normal_BG/layer3.png" />
+		<four texturePath="Assets/Maps/background_parallax/normal_BG/layer4.png" />
+		<five texturePath="Assets/Maps/background_parallax/normal_BG/layer5.png" />
+	</layers>
     <map path="Assets/Maps/" name="Level1Map.tmx"/>
   </scene>
   

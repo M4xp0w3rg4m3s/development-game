@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Player.h"
+#include "Parallax.h"
 #include <box2d/box2d.h>
 
 class Scene : public Module
@@ -39,4 +40,5 @@ private:
 	SDL_Texture* img;
 
 	Player* player;
+	Parallax* parallax;
 };

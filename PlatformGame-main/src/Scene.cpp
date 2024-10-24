@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Item.h"
 #include "Boulder.h"
+#include "Parallax.h"
 
 Scene::Scene() : Module()
 {
@@ -33,7 +34,13 @@ bool Scene::Awake()
 
 	world = new b2World({ 0, 10 });
 
-	//Get the player texture name from the config file and assigns the value
+	parallax = Engine::GetInstance().parallax.get();
+
+	parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
+	parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
+	parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
+	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
+	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 
 
 	//Get the map name from the config file and assigns the value
@@ -47,12 +54,14 @@ bool Scene::Awake()
 	//Create the boulders the player will push
 	Boulder* boulder = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
 	boulder->position = Vector2D(136*32, 11*32);
-	boulder->position = Vector2D(256, 320);
+	//boulder->position = Vector2D(256, 320);
 
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 
+	//Get the player texture name from the config file and assigns the value
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
+
 	return ret;
 }
 

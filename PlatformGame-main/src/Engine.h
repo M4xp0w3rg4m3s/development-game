@@ -19,6 +19,7 @@ class Scene;
 class EntityManager;
 class Map;
 class Physics;
+class Parallax;
 
 class Engine
 {
@@ -41,6 +42,9 @@ public:
 
 	// Called before quitting
 	bool CleanUp();
+
+	// Get the delta time
+	float GetDeltaTime() const;
 
 private:
 
@@ -95,6 +99,7 @@ public:
 	std::shared_ptr<EntityManager> entityManager;
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
+	std::shared_ptr<Parallax> parallax;
 
 private: 
 
