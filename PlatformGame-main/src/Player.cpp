@@ -171,23 +171,12 @@ bool Player::Update(float dt)
 				}
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
-				{
-					if (isGrounded) {
-						velocity.y = 0;
-						body->body->SetLinearVelocity(velocity);
-						body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9) }, true);
-						isGrounded = false;
-					}
-				}
-				else {
-					if (isGrounded) {
-						velocity.y = 0;
-						body->body->SetLinearVelocity(velocity);
-						body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9)}, true);
-						isGrounded = false;
-						state = PlayerState::JUMPING;
-					}
+				if (isGrounded) {
+					velocity.y = 0;
+					body->body->SetLinearVelocity(velocity);
+					body->body->ApplyForceToCenter(b2Vec2{ 0, (float)METERS_TO_PIXELS(-9)}, true);
+					isGrounded = false;
+					state = PlayerState::JUMPING;
 				}
 			}
 		}

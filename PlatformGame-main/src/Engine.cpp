@@ -13,6 +13,7 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
+#include "Parallax.h"
 
 // Constructor
 Engine::Engine() {
@@ -35,6 +36,7 @@ Engine::Engine() {
     physics = std::make_shared<Physics>();
     scene = std::make_shared<Scene>();
     map = std::make_shared<Map>();
+    parallax = std::make_shared<Parallax>();
     entityManager = std::make_shared<EntityManager>();
 
     // Ordered for awake / Start / Update
@@ -44,6 +46,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures));
     AddModule(std::static_pointer_cast<Module>(audio));
     AddModule(std::static_pointer_cast<Module>(physics));
+    AddModule(std::static_pointer_cast<Module>(parallax));
     AddModule(std::static_pointer_cast<Module>(scene));
     // Add the map module
     AddModule(std::static_pointer_cast<Module>(map));
@@ -287,4 +290,9 @@ bool Engine::LoadConfig()
     }
 
     return ret;
+}
+
+float Engine::GetDeltaTime() const
+{
+    return dt;
 }
