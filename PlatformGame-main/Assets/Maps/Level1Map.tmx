@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="300" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="212">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="300" height="15" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="220">
  <tileset firstgid="1" name="forest_tileset" tilewidth="32" tileheight="32" margin="1" tilecount="1080" columns="27">
   <image source="forest_tileset2.png" width="866" height="1282"/>
   <tile id="99">
@@ -83,7 +83,6 @@
    </animation>
   </tile>
  </tileset>
- <tileset firstgid="1081" source="../../../../../Vid.Dev/PlatformGame-L7_TileMap_Drawing_Solution/PlatformGame-L7_TileMap_Drawing_Solution/Assets/Maps/Platformer Assets.tsx"/>
  <layer id="3" name="Tile layer 3" width="300" height="15">
   <properties>
    <property name="Draw" type="bool" value="true"/>
@@ -12003,8 +12002,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="145"/>
+   <tile gid="93"/>
    <tile gid="91"/>
    <tile gid="145"/>
    <tile gid="92"/>
@@ -12303,9 +12302,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile gid="1081"/>
-   <tile gid="1082"/>
+   <tile gid="1"/>
+   <tile gid="2"/>
+   <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
@@ -12578,7 +12577,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1168"/>
+   <tile gid="88"/>
    <tile/>
    <tile/>
    <tile/>
@@ -12603,9 +12602,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile gid="1108"/>
-   <tile gid="1109"/>
+   <tile gid="28"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
@@ -12878,7 +12877,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1111"/>
+   <tile gid="31"/>
    <tile/>
    <tile/>
    <tile/>
@@ -12903,9 +12902,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile gid="1108"/>
-   <tile gid="1109"/>
+   <tile gid="28"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
@@ -13178,7 +13177,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1111"/>
+   <tile gid="31"/>
    <tile/>
    <tile/>
    <tile/>
@@ -13203,9 +13202,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile gid="1193"/>
-   <tile gid="1109"/>
+   <tile gid="28"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
@@ -13478,7 +13477,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1111"/>
+   <tile gid="31"/>
    <tile/>
    <tile/>
    <tile/>
@@ -13503,9 +13502,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile gid="1108"/>
-   <tile gid="1109"/>
+   <tile gid="28"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
@@ -13643,8 +13642,6 @@
   <object id="177" x="4320" y="448" width="352" height="32"/>
   <object id="178" x="800" y="128" width="160" height="64"/>
   <object id="179" x="960" y="128" width="128" height="32"/>
-  <object id="182" x="4768" y="448" width="1696" height="32"/>
-  <object id="184" x="6464" y="320" width="160" height="160"/>
   <object id="187" x="4896" y="256" width="64" height="96"/>
   <object id="188" x="5088" y="192" width="32" height="128"/>
   <object id="189" x="5248" y="128" width="32" height="160"/>
@@ -13654,11 +13651,13 @@
   <object id="205" x="6240" y="320" width="32" height="96"/>
   <object id="207" x="5472" y="384" width="128" height="32"/>
   <object id="209" x="5920" y="384" width="32" height="32"/>
-  <object id="211" x="5600" y="352" width="32" height="64"/>
+  <object id="213" x="5600" y="352" width="32" height="64"/>
+  <object id="216" x="6400" y="320" width="224" height="160"/>
+  <object id="219" x="4768" y="448" width="1632" height="32"/>
  </objectgroup>
  <objectgroup id="8" name="Kill">
   <object id="168" x="1632" y="416" width="192" height="32"/>
   <object id="169" x="2688" y="416" width="384" height="32"/>
-  <object id="180" x="4768" y="416" width="1696" height="32"/>
+  <object id="217" x="4768" y="416" width="1632" height="32"/>
  </objectgroup>
 </map>
