@@ -15,6 +15,8 @@
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f
 
+#include <list>
+
 // types of bodies
 enum bodyType {
 	DYNAMIC,
@@ -86,6 +88,8 @@ public:
 	void BeginContact(b2Contact* contact);
 	void EndContact(b2Contact* contact);
 
+	void DeletePhysBody(PhysBody* physBody);
+
 	b2World* GetWorld() const {
 		return world;
 	}
@@ -97,4 +101,7 @@ private:
 
 	// Box2D World
 	b2World* world;
+
+	// List of bodies for deleting them later
+	std::list<PhysBody*> bodiesToDelete;
 };

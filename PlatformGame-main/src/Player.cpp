@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Physics.h"
+#include "EntityManager.h"
 
 
 Player::Player() : Entity(EntityType::PLAYER)
@@ -359,6 +360,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
+		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);
+		//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

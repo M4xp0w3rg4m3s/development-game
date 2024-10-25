@@ -363,6 +363,11 @@ bool Physics::PostUpdate()
 	}
 
 
+	for (PhysBody* physBody : bodiesToDelete) {
+		world->DestroyBody(physBody->body);
+	}
+	bodiesToDelete.clear();
+
 	return ret;
 }
 
@@ -422,6 +427,11 @@ void Physics::EndContact(b2Contact* contact)
 			physB->activeCollisions--;
 		}
 	}
+}
+
+void Physics::DeletePhysBody(PhysBody* physBody)
+{
+	bodiesToDelete.push_back(physBody);
 }
 
 //--------------- PhysBody
