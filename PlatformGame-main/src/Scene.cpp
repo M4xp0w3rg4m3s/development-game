@@ -82,7 +82,6 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
-	world->Step(1 / 60.0f, 8, 3);
 	return true;
 }
 

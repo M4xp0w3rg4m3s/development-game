@@ -139,6 +139,11 @@ bool Engine::Update() {
     if (ret == true)
         ret = PreUpdate();
 
+    if (input.get()->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
+        if (maxFrameDuration == 16) maxFrameDuration = 32;
+        else maxFrameDuration = 16;
+    }
+
     if (ret == true)
         ret = DoUpdate();
 
