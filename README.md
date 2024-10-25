@@ -18,6 +18,7 @@ Controls :
 ● F11 : Enable/Disable FPS cap to 30.
 
 
+
 Description :
 
 A young man, searching for mushrooms for his village, becomes lost in a vast cave. 
@@ -46,3 +47,4 @@ Features :
 ● Debug Mode.
 ● God Mode.
 ● Framerate cap.
+● Fullscreen
