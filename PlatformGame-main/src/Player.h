@@ -66,7 +66,7 @@ public:
 	Timer attackReactionTimer;
 	Timer attackCooldownTimer;
 	int reactionTimeMs = 500;
-	int attackCooldown = 0;
+	int attackCooldown = 2000;
 
 	bool godMode = false;
 
