@@ -145,6 +145,17 @@ bool Engine::Update() {
         else maxFrameDuration = 16;
     }
 
+    if (input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
+        Uint32 flags = SDL_GetWindowFlags(window->window);
+
+        if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
+            SDL_SetWindowFullscreen(window->window, 0);
+        }
+        else {
+            SDL_SetWindowFullscreen(window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        }
+    }
+
     if (ret == true)
         ret = DoUpdate();
 
