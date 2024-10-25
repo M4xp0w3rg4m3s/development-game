@@ -53,12 +53,10 @@ bool Scene::Awake()
 
 	//Create the boulders the player will push
 	Boulder* boulder = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
-	boulder->position = Vector2D(136*32, 11*32);
-	//boulder->position = Vector2D(256, 320);
+	boulder->position = Vector2D(117*32, 11*32);
 
 	Boulder* boulder2 = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
-	boulder2->position = Vector2D(136 * 32, 11 * 32);
-	boulder2->position = Vector2D(5532, 50);
+	boulder2->position = Vector2D(153*32, 1*32);
 
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
