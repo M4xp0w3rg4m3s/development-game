@@ -56,6 +56,10 @@ bool Scene::Awake()
 	boulder->position = Vector2D(136*32, 11*32);
 	//boulder->position = Vector2D(256, 320);
 
+	Boulder* boulder2 = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
+	boulder2->position = Vector2D(136 * 32, 11 * 32);
+	boulder2->position = Vector2D(5532, 50);
+
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 
