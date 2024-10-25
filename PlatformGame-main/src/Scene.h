@@ -38,6 +38,7 @@ public:
 
 private:
 	SDL_Texture* img;
+	SDL_Texture* caveBg;
 
 	Player* player;
 	Parallax* parallax;

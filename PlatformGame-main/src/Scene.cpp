@@ -70,6 +70,8 @@ bool Scene::Start()
 {
 	Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
 
+	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
+
 	return true;
 }
 
@@ -86,6 +88,8 @@ bool Scene::Update(float dt)
 	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width/2) - (Engine::GetInstance().window.get()->width) / 2);
 	}
+
+	Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
 
 	return true;
 }
@@ -108,6 +112,7 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	SDL_DestroyTexture(img);
+	SDL_DestroyTexture(caveBg);
 
 	return true;
 }

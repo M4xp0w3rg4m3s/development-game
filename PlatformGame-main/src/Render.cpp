@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "Render.h"
 #include "Log.h"
+#include "Textures.h"
+#include "Input.h"
 
 #define VSYNC true
 
@@ -57,6 +59,9 @@ bool Render::Awake()
 bool Render::Start()
 {
 	LOG("render start");
+
+	keysMenuTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/controls.png");
+
 	// back background
 	SDL_RenderGetViewport(renderer, &viewport);
 	return true;
@@ -71,6 +76,15 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
+		if (!keysMenuOn) keysMenuOn = true;
+		else keysMenuOn = false;
+	}
+
+	if (keysMenuOn) {
+		DrawTexture(keysMenuTexture, -camera.x, camera.y);
+	}
+
 	return true;
 }
 
@@ -84,6 +98,7 @@ bool Render::PostUpdate()
 // Called before quitting
 bool Render::CleanUp()
 {
+	SDL_DestroyTexture(keysMenuTexture);
 	LOG("Destroying SDL render");
 	SDL_DestroyRenderer(renderer);
 	return true;
