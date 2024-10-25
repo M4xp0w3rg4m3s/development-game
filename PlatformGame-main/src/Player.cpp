@@ -132,19 +132,19 @@ bool Player::Update(float dt)
 				{
 					if (animator->GetPlayerDir() == RIGHT)
 					{
-						velocity.x = -0.2 * dt;
+						velocity.x = -4;
 						animator->LookLeft();
 						state = PlayerState::RUNNING;
 					}
 					else
 					{
-						velocity.x = -0.2 * dt;
+						velocity.x = -4;
 						animator->LookLeft();
 					}
 				}
 				else
 				{
-					velocity.x = -0.2 * dt;
+					velocity.x = -4;
 					animator->LookLeft();
 					state = PlayerState::RUNNING;
 				}
@@ -154,18 +154,18 @@ bool Player::Update(float dt)
 				{
 					if (animator->GetPlayerDir() == LEFT)
 					{
-						velocity.x = 0.2 * dt;
+						velocity.x = 4;
 						animator->LookRight();
 						state = PlayerState::RUNNING;
 					}
 					else {
-						velocity.x = 0.2 * dt;
+						velocity.x = 4;
 						animator->LookRight();
 					}
 				}
 				else
 				{
-					velocity.x = 0.2 * dt;
+					velocity.x = 4;
 					animator->LookRight();
 					state = PlayerState::RUNNING;
 				}
@@ -190,18 +190,18 @@ bool Player::Update(float dt)
 		bodyBot->body->SetGravityScale(0);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -0.3 * dt;
+			velocity.x = -6;
 			animator->LookLeft();
 		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = 0.3 * dt;
+			velocity.x = 6;
 			animator->LookRight();
 		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			velocity.y = -0.3 * dt;
+			velocity.y = -6;
 		}
 		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			velocity.y = 0.3 * dt;
+			velocity.y = 6;
 		}
 		else {
 			velocity.y = 0;
