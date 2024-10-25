@@ -88,6 +88,7 @@ bool Engine::Awake() {
         gameTitle = configFile.child("config").child("app").child("title").child_value();
         window->SetTitle(gameTitle.c_str());
         maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
+        vsync = configFile.child("config").child("render").child("vsync").attribute("value").as_bool();
 
         //Iterates the module list and calls Awake on each module
         bool result = true;
@@ -223,7 +224,8 @@ void Engine::FinishUpdate()
         << " Last sec frames: " << framesPerSecond
         << " Last dt: " << std::fixed << std::setprecision(3) << dt
         << " Time since startup: " << secondsSinceStartup
-        << " Frame Count: " << frameCount;
+        << " Frame Count: " << frameCount
+        << " Vsync: " << vsync;
 
     std::string titleStr = ss.str();
 

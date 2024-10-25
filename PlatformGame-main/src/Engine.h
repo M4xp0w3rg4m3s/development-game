@@ -108,6 +108,8 @@ private:
 	//Frames since startup
 	int frames;
 
+	bool vsync;
+
 	// Calculate timing measures
 	// required variables are provided:
 	Timer startupTime;
