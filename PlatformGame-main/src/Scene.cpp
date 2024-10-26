@@ -42,22 +42,18 @@ bool Scene::Awake()
 	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 
-	parallax_level2 = Engine::GetInstance().parallax.get();
+	//parallax_level2 = Engine::GetInstance().parallax.get();
 
-	parallax_level2->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+	/*parallax_level2->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
 	parallax_level2->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
 	parallax_level2->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
 	parallax_level2->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
-	parallax_level2->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+	parallax_level2->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();*/
 
 
 	//Get the map name from the config file and assigns the value
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
 	Engine::GetInstance().map.get()->mapPath = configParameters.child("map").attribute("path").as_string();
-
-	Engine::GetInstance().map.get()->mapName = configParameters.child("map2").attribute("name").as_string();
-	Engine::GetInstance().map.get()->mapPath = configParameters.child("map2").attribute("path").as_string();
-
 
 	//Create a new item using the entity manager and set the position to (256, 320)
 	//Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
