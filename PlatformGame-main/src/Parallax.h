@@ -7,6 +7,7 @@
 #include "Sprite.h"
 #include "Engine.h"
 #include "Textures.h"
+#include "Log.h"
 
 
 class Parallax : public Module {
@@ -26,6 +27,32 @@ public:
 		float speed;
 		SDL_Texture* texture;
 	};
+
+	bool ChangeTextures() {
+		layer1.texture = Engine::GetInstance().textures->Load(textureName1.c_str());
+		layer1.speed = 0;
+		layer1.offset = 0;
+
+		layer2.texture = Engine::GetInstance().textures->Load(textureName2.c_str());
+		layer2.speed = 0.1;
+		layer2.offset = 0;
+
+		layer3.texture = Engine::GetInstance().textures->Load(textureName3.c_str());
+		layer3.speed = 0.3;
+		layer3.offset = 0;
+
+		layer4.texture = Engine::GetInstance().textures->Load(textureName4.c_str());
+		layer4.speed = 0.5;
+		layer4.offset = 0;
+
+		layer5.texture = Engine::GetInstance().textures->Load(textureName5.c_str());
+		layer5.speed = 0.7;
+		layer5.offset = 0;
+
+		return true;
+
+		return true;
+	}
 
 	bool Start() {
 		layer1.texture = Engine::GetInstance().textures->Load(textureName1.c_str());

@@ -90,10 +90,10 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width/2) - (Engine::GetInstance().window.get()->width) / 2);
 	}
 
-	Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
+	if (current_level == 1) {
+		Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
+	}
 
-
-	///
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_0) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
@@ -104,11 +104,14 @@ bool Scene::Update(float dt)
 		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
 		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		SDL_DestroyTexture(caveBg);
+
+		current_level = 2;
 
 		player->ResetPlayer();
 	}
-
-	///
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
@@ -119,6 +122,11 @@ bool Scene::Update(float dt)
 		parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
 		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
+
+		current_level = 1;
 
 		player->ResetPlayer();
 	}
