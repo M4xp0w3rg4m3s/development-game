@@ -16,7 +16,7 @@ Controls :
 ● F9 : Visualize the colliders / logic (Debug Mode).
 ● F10 : God Mode (fly around, cannot be killed).
 ● F11 : Enable/Disable FPS cap to 30.
-
+● 0 : Level 2
 
 
 Description :
