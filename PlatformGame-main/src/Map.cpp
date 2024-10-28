@@ -6,6 +6,9 @@
 #include "Log.h"
 #include "Scene.h"
 #include "Physics.h"
+#include "Boulder.h"
+#include "Item.h"
+#include "EntityManager.h"
 
 #include <math.h>
 
@@ -114,14 +117,19 @@ bool Map::CleanUp()
     {
         Engine::GetInstance().physics->DeletePhysBody(collider);
     }
-
     colliders.clear();
+
+    for (const auto& object : objects)
+    {
+        Engine::GetInstance().entityManager->DeleteEntity(object);
+    }
+    objects.clear();
 
     return true;
 }
 
 // Load new map
-bool Map::Load(std::string path, std::string fileName)
+bool Map::Load(std::string path, std::string fileName, bool doCallsToObjects)
 {
     bool ret = false;
     mapLoaded = ret;
@@ -223,15 +231,27 @@ bool Map::Load(std::string path, std::string fileName)
                 int y = objectNode.attribute("y").as_int();
                 int h = objectNode.attribute("height").as_int();
                 int w = objectNode.attribute("width").as_int();
-                PhysBody* collider = Engine::GetInstance().physics.get()->CreateRectangle(x + w / 2, y + h / 2, w, h, STATIC);
                 if (groupName == "Collisions") {
+                    PhysBody* collider = Engine::GetInstance().physics.get()->CreateRectangle(x + w / 2, y + h / 2, w, h, STATIC);
                     collider->ctype = ColliderType::PLATFORM;
+                    colliders.emplace_back(collider);
                 }
                 else if (groupName == "Kill") {
+                    PhysBody* collider = Engine::GetInstance().physics.get()->CreateRectangle(x + w / 2, y + h / 2, w, h, STATIC);
                     collider->ctype = ColliderType::KILL;
+                    colliders.emplace_back(collider);
                 }
-
-                colliders.emplace_back(collider);
+                else if (groupName == "Objects") {
+                    std::string objType = objectNode.child("properties").child("property").attribute("value").as_string();
+                    if (objType == "Boulder") {
+                        Boulder* boulder = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER, doCallsToObjects);
+                        if (doCallsToObjects)
+                            boulder->SetNewPos({ (float)x,(float)y });
+                        else
+                            boulder->position = Vector2D(x,y);
+                        objects.emplace_back(boulder);
+                    }
+                }
             }
         }
 

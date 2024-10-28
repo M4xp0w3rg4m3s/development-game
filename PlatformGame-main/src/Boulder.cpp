@@ -45,6 +45,12 @@ bool Boulder::Start() {
 	return true;
 }
 
+void Boulder::SetNewPos(b2Vec2 pos)
+{
+	pbody->body->SetTransform({ PIXEL_TO_METERS(pos.x) + 1, PIXEL_TO_METERS(pos.y) }, 0);
+
+}
+
 bool Boulder::Update(float dt)
 {
 	// Boulder physics - update the position of the object from the physics.  
@@ -60,5 +66,8 @@ bool Boulder::Update(float dt)
 
 bool Boulder::CleanUp()
 {
+
+	Engine::GetInstance().physics->DeletePhysBody(pbody);
+
 	return true;
 }

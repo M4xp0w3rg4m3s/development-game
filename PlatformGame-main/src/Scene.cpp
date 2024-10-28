@@ -11,7 +11,6 @@
 #include "Player.h"
 #include "Map.h"
 #include "Item.h"
-#include "Boulder.h"
 #include "Parallax.h"
 #include <string>
 
@@ -46,17 +45,6 @@ bool Scene::Awake()
 	//Get the map name from the config file and assigns the value
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
 	Engine::GetInstance().map.get()->mapPath = configParameters.child("map").attribute("path").as_string();
-
-	//Create a new item using the entity manager and set the position to (256, 320)
-	//Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	//item->position = Vector2D(256, 320);
-
-	//Create the boulders the player will push
-	Boulder* boulder = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
-	boulder->position = Vector2D(117*32, 11*32);
-
-	Boulder* boulder2 = (Boulder*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOULDER);
-	boulder2->position = Vector2D(153*32, 1*32);
 
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
@@ -97,7 +85,7 @@ bool Scene::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_0) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx");
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
@@ -115,7 +103,7 @@ bool Scene::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx",true);
 
 		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
@@ -152,7 +140,9 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	SDL_DestroyTexture(img);
+	if (current_level = 1) {
+		SDL_DestroyTexture(img);
+	}
 	SDL_DestroyTexture(caveBg);
 
 	return true;

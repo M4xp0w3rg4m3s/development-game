@@ -8,6 +8,7 @@
 #include "Sprite.h"
 
 class PhysBody;
+class Entity;
 
 struct Properties
 {
@@ -117,7 +118,7 @@ public:
     bool CleanUp();
 
     // Load new map
-    bool Load(std::string path, std::string mapFileName);
+    bool Load(std::string path, std::string mapFileName, bool doCallsToObjects=false);
 
     //Create a method that translates x,y coordinates from map positions to world positions
     Vector2D MapToWorld(int x, int y) const;
@@ -147,4 +148,5 @@ private:
     b2Body* mapBody;
 
     std::vector<PhysBody*> colliders;
+    std::vector<Entity*> objects;
 };
