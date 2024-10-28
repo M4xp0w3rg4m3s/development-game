@@ -98,7 +98,7 @@ bool Scene::Update(float dt)
 
 		current_level = 2;
 
-		player->ResetPlayer();
+		player->ResetPlayer(current_level);
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 
@@ -116,7 +116,7 @@ bool Scene::Update(float dt)
 
 		current_level = 1;
 
-		player->ResetPlayer();
+		player->ResetPlayer(current_level);
 	}
 
 
@@ -141,9 +141,9 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	if (current_level = 1) {
-		SDL_DestroyTexture(img);
+		SDL_DestroyTexture(caveBg);
 	}
-	SDL_DestroyTexture(caveBg);
+	SDL_DestroyTexture(img);
 
 	return true;
 }

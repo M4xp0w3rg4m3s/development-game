@@ -379,9 +379,25 @@ void Player::KillPlayer()
 void Player::ResetPlayer()
 {
 	Disable();
-	body->body->DestroyFixture(body->body->GetFixtureList());
-	bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
+	Engine::GetInstance().physics->DeletePhysBody(body);
+	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
 	position = Vector2D(192, 384);
+	Engine::GetInstance().scene->CameraReset();
+	state = PlayerState::IDLE;
+	Enable();
+}
+
+void Player::ResetPlayer(int level)
+{
+	Disable();
+	Engine::GetInstance().physics->DeletePhysBody(body);
+	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
+	if (level == 1) {
+		position = Vector2D(192, 384);
+	}
+	if (level == 2) {
+		position = Vector2D(192, 320);
+	}
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
 	Enable();
