@@ -17,7 +17,7 @@ Controls :
 ● F10 : God Mode (fly around, cannot be killed).
 ● F11 : Enable/Disable FPS cap to 30.
 ● 0 : Level 2
-
+● 1 : Level 1
 
 Description :
 
