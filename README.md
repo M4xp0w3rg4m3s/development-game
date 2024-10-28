@@ -33,6 +33,7 @@ Features :
 ● Killing Colliders.
 ● Tilemap using Tiled.
 ● Level 1.
+● Level 2.
 ● Movable Object.
 ● Animated Tiles.
 
