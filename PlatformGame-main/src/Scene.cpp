@@ -13,6 +13,7 @@
 #include "Item.h"
 #include "Boulder.h"
 #include "Parallax.h"
+#include <string>
 
 Scene::Scene() : Module()
 {
@@ -41,15 +42,6 @@ bool Scene::Awake()
 	parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
 	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
-
-	//parallax_level2 = Engine::GetInstance().parallax.get();
-
-	/*parallax_level2->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
-	parallax_level2->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
-	parallax_level2->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
-	parallax_level2->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
-	parallax_level2->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();*/
-
 
 	//Get the map name from the config file and assigns the value
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
@@ -99,6 +91,38 @@ bool Scene::Update(float dt)
 	}
 
 	Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
+
+
+	///
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_0) == KEY_DOWN) {
+
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx");
+
+		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+
+		player->ResetPlayer();
+	}
+
+	///
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
+
+		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
+
+		player->ResetPlayer();
+	}
+
 
 	return true;
 }

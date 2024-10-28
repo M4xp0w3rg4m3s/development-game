@@ -110,6 +110,13 @@ bool Map::CleanUp()
 	}
     mapData.layers.clear();
 
+    for (const auto& collider : colliders)
+    {
+        Engine::GetInstance().physics->DeletePhysBody(collider);
+    }
+
+    colliders.clear();
+
     return true;
 }
 
@@ -117,7 +124,7 @@ bool Map::CleanUp()
 bool Map::Load(std::string path, std::string fileName)
 {
     bool ret = false;
-
+    mapLoaded = ret;
     // Assigns the name of the map file and the path
     mapName = fileName;
     mapPath = path;
@@ -223,6 +230,8 @@ bool Map::Load(std::string path, std::string fileName)
                 else if (groupName == "Kill") {
                     collider->ctype = ColliderType::KILL;
                 }
+
+                colliders.emplace_back(collider);
             }
         }
 

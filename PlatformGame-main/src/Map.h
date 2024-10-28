@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include "Sprite.h"
 
+class PhysBody;
+
 struct Properties
 {
     struct Property
@@ -143,4 +145,6 @@ private:
     bool mapLoaded;
 
     b2Body* mapBody;
+
+    std::vector<PhysBody*> colliders;
 };

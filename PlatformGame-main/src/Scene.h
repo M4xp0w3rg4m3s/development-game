@@ -42,5 +42,4 @@ private:
 
 	Player* player;
 	Parallax* parallax;
-	Parallax* parallax_level2;
 };
