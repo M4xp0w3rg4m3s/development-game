@@ -28,13 +28,21 @@
 	</layers>
     <map path="Assets/Maps/" name="Level1Map.tmx"/>
 	<layers2>
-		 <one texturePath="Assets/Maps/background_parallax/Autumn BG/layer1.png" />
-		 <two texturePath="Assets/Maps/background_parallax/Autumn BG/layer2.png" />
-		 <three texturePath="Assets/Maps/background_parallax/Autumn BG/layer3.png" />
-		 <four texturePath="Assets/Maps/background_parallax/Autumn BG/layer4.png" />
-		 <five texturePath="Assets/Maps/background_parallax/Autumn BG/layer5.png" />
+		 <one texturePath="Assets/Maps/background_parallax/autumn_BG/layer1.png" />
+		 <two texturePath="Assets/Maps/background_parallax/autumn_BG/layer2.png" />
+		 <three texturePath="Assets/Maps/background_parallax/autumn_BG/layer3.png" />
+		 <four texturePath="Assets/Maps/background_parallax/autumn_BG/layer4.png" />
+		 <five texturePath="Assets/Maps/background_parallax/autumn_BG/layer5.png" />
 	</layers2>
 	<map2 path="Assets/Maps/" name="Level2Map.tmx"/>
+	<layers3>
+		<one texturePath="Assets/Maps/background_parallax/winter_BG/layer1.png" />
+		<two texturePath="Assets/Maps/background_parallax/winter_BG/layer2.png" />
+		<three texturePath="Assets/Maps/background_parallax/winter_BG/layer3.png" />
+		<four texturePath="Assets/Maps/background_parallax/winter_BG/layer4.png" />
+		<five texturePath="Assets/Maps/background_parallax/winter_BG/layer5.png" />
+	</layers3>
+	<map3 path="Assets/Maps/" name="Level3Map.tmx"/>
   </scene>
   
 </config>
