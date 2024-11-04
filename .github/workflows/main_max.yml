@@ -15,3 +15,7 @@ jobs:
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
+
+    - name: Build Solution
+      uses: msbuild .\PlatformGame.sln /p:Configuration=Release
+      
