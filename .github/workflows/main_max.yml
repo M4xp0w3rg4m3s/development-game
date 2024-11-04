@@ -17,5 +17,18 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build Solution
-      uses: msbuild .\PlatformGame.sln /p:Configuration=Release
-      
+      run: msbuild .\PlatformGame.sln /p:Configuration=Release
+
+    - name: Create artifact directory
+      run: |
+        mkdir ./artifact
+        mkdir ./artifact/PlatformGame
+
+    - name: Copy files
+      run: copy ./build/PlatformGame/Release/win32/PlatformGame.exe ./artifact/PlatformGame
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows-binary
+        path: ./artifact
