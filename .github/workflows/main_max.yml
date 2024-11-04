@@ -22,7 +22,7 @@ jobs:
     - name: Create artifact directory
       run: |
         mkdir ./artifact
-        mkdir ./artifact/PlatformGame
+        mkdir ./artifact/PlatformGame-main/PlatformGame
 
     - name: Copy files
       run: copy ./build/PlatformGame/Release/win32/PlatformGame.exe ./artifact/PlatformGame
