@@ -17,7 +17,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build Solution
-      run: msbuild .\PlatformGame.sln /p:Configuration=Release
+      run: msbuild .\PlatformGame-main\PlatformGame.sln /p:Configuration=Release
 
     - name: Create artifact directory
       run: |
