@@ -128,45 +128,18 @@ bool Player::Update(float dt)
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
 		{
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				velocity.x = -0.2 * 16;
+				animator->LookLeft();
+				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == RIGHT)
 				{
-					if (animator->GetPlayerDir() == RIGHT)
-					{
-						velocity.x = -0.2 * 16;
-						animator->LookLeft();
-						state = PlayerState::RUNNING;
-					}
-					else
-					{
-						velocity.x = -0.2 * 16;
-						animator->LookLeft();
-					}
-				}
-				else
-				{
-					velocity.x = -0.2 * 16;
-					animator->LookLeft();
 					state = PlayerState::RUNNING;
 				}
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				velocity.x = 0.2 * 16;
+				animator->LookRight();
+				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == LEFT)
 				{
-					if (animator->GetPlayerDir() == LEFT)
-					{
-						velocity.x = 0.2 * 16;
-						animator->LookRight();
-						state = PlayerState::RUNNING;
-					}
-					else {
-						velocity.x = 0.2 * 16;
-						animator->LookRight();
-					}
-				}
-				else
-				{
-					velocity.x = 0.2 * 16;
-					animator->LookRight();
 					state = PlayerState::RUNNING;
 				}
 			}
