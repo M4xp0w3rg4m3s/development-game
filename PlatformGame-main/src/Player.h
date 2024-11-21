@@ -72,4 +72,5 @@ public:
 
 	bool godMode = false;
 
+	int lives = 3;
 };
