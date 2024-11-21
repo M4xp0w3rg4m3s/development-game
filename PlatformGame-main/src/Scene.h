@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Parallax.h"
 #include <box2d/box2d.h>
+#include "Enemy.h"
 
 class Scene : public Module
 {
@@ -34,14 +35,26 @@ public:
 
 	void CameraReset();
 
+	Vector2D GetPlayerPosition();
+
 	b2World* world;
 
+	std::string GetTilePosDebug() {
+		return tilePosDebug;
+
+	}
+
 private:
+	std::string tilePosDebug = "[0,0]";
+	bool once = false;
+
 	SDL_Texture* img;
 	SDL_Texture* caveBg;
 
 	Player* player;
 	Parallax* parallax;
+
+	std::vector<Enemy*> enemyList;
 
 	int current_level = 1;
 };

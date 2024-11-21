@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Item.h"
 #include "Boulder.h"
+#include "Enemy.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -78,6 +79,9 @@ Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 		break;
 	case EntityType::BOULDER:
 		entity = new Boulder();
+		break;
+	case EntityType::ENEMY:
+		entity = new Enemy();
 		break;
 	default:
 		break;

@@ -29,6 +29,7 @@ Map::~Map()
 // Called before render is available
 bool Map::Awake(pugi::xml_node config)
 {
+    name = "map";
     LOG("Loading Map Parser");
     bool ret = true;
 
@@ -303,6 +304,16 @@ Vector2D Map::MapToWorld(int x, int y) const
     return ret;
 }
 
+Vector2D Map::WorldToMap(int x, int y) {
+
+    Vector2D ret(0, 0);
+
+    ret.setX(x / mapData.tilewidth);
+    ret.setY(y / mapData.tileheight);
+
+    return ret;
+}
+
 bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
     bool ret = false;
@@ -317,6 +328,17 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
     }
 
     return ret;
+}
+
+MapLayer* Map::GetNavigationLayer() {
+    for (const auto& layer : mapData.layers) {
+        if (layer->properties.GetProperty("Navigation") != NULL &&
+            layer->properties.GetProperty("Navigation")->value) {
+            return layer;
+        }
+    }
+
+    return nullptr;
 }
 
 Properties::Property* Properties::GetProperty(const char* name)

@@ -15,6 +15,7 @@ Enemy::Enemy() : Entity(EntityType::ENEMY)
 }
 
 Enemy::~Enemy() {
+	delete animator;
 	delete pathfinding;
 }
 
@@ -24,16 +25,18 @@ bool Enemy::Awake() {
 
 bool Enemy::Start() {
 
-	//initilize textures
-	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	texture = Engine::GetInstance().textures->Load(textureName.c_str());
+
+	animator = new Sprite(texture);
+	animator->SetNumberAnimations(2);
+
 	position.setX(parameters.attribute("x").as_int());
 	position.setY(parameters.attribute("y").as_int());
-	texW = parameters.attribute("w").as_int();
-	texH = parameters.attribute("h").as_int();
 
-	//Load animations
-	idle.LoadAnimations(parameters.child("animations").child("idle"));
-	currentAnimation = &idle;
+	animator->AddKeyFrame(0, { 0 * 64,1 * 64,64,64 });
+	animator->AddKeyFrame(0, { 1 * 64,1 * 64,64,64 });
+	animator->AddKeyFrame(0, { 2 * 64,1 * 64,64,64 });
+	animator->SetAnimationDelay(0, 100);
 	
 	//Add a physics to an item - initialize the physics body
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
@@ -112,8 +115,7 @@ bool Enemy::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	currentAnimation->Update();
+	
 
 	// Draw pathfinding 
 	pathfinding->DrawPath();
