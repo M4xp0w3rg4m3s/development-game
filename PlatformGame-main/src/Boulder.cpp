@@ -28,20 +28,27 @@ bool Boulder::Start() {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 	pbody = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texW-4, texH-2, bodyType::DYNAMIC);
 
+	pbody->body->GetFixtureList()[0].SetFriction(100.0f);
+
+	// Assign collider type
+	pbody->ctype = ColliderType::BOULDER;
+
 	//// Add friction and weight
 	b2MassData boulderMass;
-	boulderMass.mass = 20.0f;
+	boulderMass.mass = 500.0f;
 	boulderMass.center = pbody->body->GetLocalCenter();
 	pbody->body->SetMassData(&boulderMass);
 
 	pbody->body->SetFixedRotation(true);
 
-	pbody->body->GetFixtureList()[0].SetFriction(10.0f);
-
-	// Assign collider type
-	pbody->ctype = ColliderType::BOULDER;
 
 	return true;
+}
+
+void Boulder::SetNewPos(b2Vec2 pos)
+{
+	pbody->body->SetTransform({ PIXEL_TO_METERS(pos.x) + 1, PIXEL_TO_METERS(pos.y) }, 0);
+
 }
 
 bool Boulder::Update(float dt)
@@ -59,5 +66,8 @@ bool Boulder::Update(float dt)
 
 bool Boulder::CleanUp()
 {
+
+	Engine::GetInstance().physics->DeletePhysBody(pbody);
+
 	return true;
 }

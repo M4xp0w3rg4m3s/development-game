@@ -63,7 +63,7 @@ bool EntityManager::CleanUp()
 	return ret;
 }
 
-Entity* EntityManager::CreateEntity(EntityType type)
+Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 {
 	Entity* entity = nullptr; 
 
@@ -81,6 +81,11 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	default:
 		break;
+	}
+
+	if (doCalls) {
+		entity->Awake();
+		entity->Start();
 	}
 
 	entities.push_back(entity);
@@ -101,6 +106,11 @@ void EntityManager::DestroyEntity(Entity* entity)
 	}
 }
 
+void EntityManager::DeleteEntity(Entity* entity)
+{
+	entitiesToDelete.push_back(entity);
+}
+
 void EntityManager::AddEntity(Entity* entity)
 {
 	if ( entity != nullptr) entities.push_back(entity);
@@ -115,4 +125,14 @@ bool EntityManager::Update(float dt)
 		ret = entity->Update(dt);
 	}
 	return ret;
+}
+
+bool EntityManager::PostUpdate()
+{
+	for (Entity* entity : entitiesToDelete) {
+		Engine::GetInstance().entityManager->DestroyEntity(entity);
+	}
+	entitiesToDelete.clear();
+
+	return true;
 }

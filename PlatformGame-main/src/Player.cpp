@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Physics.h"
+#include "EntityManager.h"
 
 
 Player::Player() : Entity(EntityType::PLAYER)
@@ -328,6 +329,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
+		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);
+		//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
@@ -345,9 +348,25 @@ void Player::KillPlayer()
 void Player::ResetPlayer()
 {
 	Disable();
-	body->body->DestroyFixture(body->body->GetFixtureList());
-	bodyBot->body->DestroyFixture(bodyBot->body->GetFixtureList());
+	Engine::GetInstance().physics->DeletePhysBody(body);
+	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
 	position = Vector2D(192, 384);
+	Engine::GetInstance().scene->CameraReset();
+	state = PlayerState::IDLE;
+	Enable();
+}
+
+void Player::ResetPlayer(int level)
+{
+	Disable();
+	Engine::GetInstance().physics->DeletePhysBody(body);
+	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
+	if (level == 1) {
+		position = Vector2D(192, 384);
+	}
+	if (level == 2) {
+		position = Vector2D(192, 320);
+	}
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
 	Enable();

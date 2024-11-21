@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.h"
+#include <box2d/box2d.h>
 #include "SDL2/SDL.h"
 
 struct SDL_Texture;
@@ -15,6 +16,8 @@ public:
 	bool Awake();
 
 	bool Start();
+
+	void SetNewPos(b2Vec2 pos);
 
 	bool Update(float dt);
 

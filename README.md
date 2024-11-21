@@ -16,7 +16,8 @@ Controls :
 ● F9 : Visualize the colliders / logic (Debug Mode).
 ● F10 : God Mode (fly around, cannot be killed).
 ● F11 : Enable/Disable FPS cap to 30.
-
+● 0 : Level 2
+● 1 : Level 1
 
 Description :
 
@@ -32,6 +33,7 @@ Features :
 ● Killing Colliders.
 ● Tilemap using Tiled.
 ● Level 1.
+● Level 2.
 ● Movable Object.
 ● Animated Tiles.
 
@@ -46,3 +48,4 @@ Features :
 ● Debug Mode.
 ● God Mode.
 ● Framerate cap.
+● Fullscreen

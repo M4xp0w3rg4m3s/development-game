@@ -38,6 +38,8 @@ public:
 	void KillPlayer();
 
 	void ResetPlayer();
+
+	void ResetPlayer(int level);
 	
 
 public:

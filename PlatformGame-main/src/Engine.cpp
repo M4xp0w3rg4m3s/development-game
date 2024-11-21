@@ -88,6 +88,7 @@ bool Engine::Awake() {
         gameTitle = configFile.child("config").child("app").child("title").child_value();
         window->SetTitle(gameTitle.c_str());
         maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
+        vsync = configFile.child("config").child("render").child("vsync").attribute("value").as_bool();
 
         //Iterates the module list and calls Awake on each module
         bool result = true;
@@ -142,6 +143,17 @@ bool Engine::Update() {
     if (input.get()->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
         if (maxFrameDuration == 16) maxFrameDuration = 32;
         else maxFrameDuration = 16;
+    }
+
+    if (input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
+        Uint32 flags = SDL_GetWindowFlags(window->window);
+
+        if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
+            SDL_SetWindowFullscreen(window->window, 0);
+        }
+        else {
+            SDL_SetWindowFullscreen(window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        }
     }
 
     if (ret == true)
@@ -223,7 +235,8 @@ void Engine::FinishUpdate()
         << " Last sec frames: " << framesPerSecond
         << " Last dt: " << std::fixed << std::setprecision(3) << dt
         << " Time since startup: " << secondsSinceStartup
-        << " Frame Count: " << frameCount;
+        << " Frame Count: " << frameCount
+        << " Vsync: " << vsync;
 
     std::string titleStr = ss.str();
 

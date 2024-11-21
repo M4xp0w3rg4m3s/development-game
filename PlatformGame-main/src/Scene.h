@@ -42,4 +42,6 @@ private:
 
 	Player* player;
 	Parallax* parallax;
+
+	int current_level = 1;
 };
