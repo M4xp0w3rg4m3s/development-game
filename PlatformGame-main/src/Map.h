@@ -123,6 +123,9 @@ public:
     //Create a method that translates x,y coordinates from map positions to world positions
     Vector2D MapToWorld(int x, int y) const;
 
+    // Method WorldToMap to obtain  map coordinates from screen coordinates
+    Vector2D WorldToMap(int x, int y);
+
     // L09: TODO 2: Implement function to the Tileset based on a tile id
     TileSet* GetTilesetFromTileId(int gid) const;
 
@@ -135,6 +138,24 @@ public:
     {
         
     };
+
+    int GetWidth() {
+        return mapData.width;
+    }
+
+    int GetHeight() {
+        return mapData.height;
+    }
+
+    int GetTileWidth() {
+        return mapData.tilewidth;
+    }
+
+    int GetTileHeight() {
+        return mapData.tileheight;
+    }
+
+    MapLayer* GetNavigationLayer();
 
 public: 
     std::string mapName;

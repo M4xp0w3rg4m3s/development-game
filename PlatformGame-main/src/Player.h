@@ -41,6 +41,9 @@ public:
 
 	void ResetPlayer(int level);
 	
+	void SetPosition(Vector2D pos);
+
+	Vector2D GetPosition();
 
 public:
 

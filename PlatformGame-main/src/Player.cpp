@@ -129,45 +129,18 @@ bool Player::Update(float dt)
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
 		{
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				velocity.x = -0.2 * 16;
+				animator->LookLeft();
+				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == RIGHT)
 				{
-					if (animator->GetPlayerDir() == RIGHT)
-					{
-						velocity.x = -0.2 * 16;
-						animator->LookLeft();
-						state = PlayerState::RUNNING;
-					}
-					else
-					{
-						velocity.x = -0.2 * 16;
-						animator->LookLeft();
-					}
-				}
-				else
-				{
-					velocity.x = -0.2 * 16;
-					animator->LookLeft();
 					state = PlayerState::RUNNING;
 				}
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+				velocity.x = 0.2 * 16;
+				animator->LookRight();
+				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == LEFT)
 				{
-					if (animator->GetPlayerDir() == LEFT)
-					{
-						velocity.x = 0.2 * 16;
-						animator->LookRight();
-						state = PlayerState::RUNNING;
-					}
-					else {
-						velocity.x = 0.2 * 16;
-						animator->LookRight();
-					}
-				}
-				else
-				{
-					velocity.x = 0.2 * 16;
-					animator->LookRight();
 					state = PlayerState::RUNNING;
 				}
 			}
@@ -222,24 +195,23 @@ bool Player::Update(float dt)
 		}
 	}
 
-
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
-		if (state == PlayerState::WOMBO ) {
-			if (animator->isAnimFinished() && animator->GetAnimation() != 5 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackReactionTimer.ReadMSec() < reactionTimeMs)
-			{
-				animator->SetAnimation(5);
-				animator->SetLoop(false);
-				state = PlayerState::COMBO;
-				attackCooldownTimer.Start();
-			}
-			else if(animator->isAnimFinished() && animator->GetAnimation() != 5 && attackReactionTimer.ReadMSec() > reactionTimeMs){
-				animator->SetAnimation(1);
-				state = PlayerState::IDLE;
+		if (state == PlayerState::WOMBO) {
+			if (animator->isAnimFinished() && animator->GetAnimation() != 5) {
+				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackReactionTimer.ReadMSec() < reactionTimeMs) {
+					animator->SetAnimation(5);
+					animator->SetLoop(false);
+					state = PlayerState::COMBO;
+				}
+				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
+					animator->SetAnimation(1);
+					state = PlayerState::IDLE;
+				}
 				attackCooldownTimer.Start();
 			}
 		}
@@ -249,11 +221,11 @@ bool Player::Update(float dt)
 				state = PlayerState::IDLE;
 			}
 		}
-	
-		else if (state != PlayerState::WOMBO && state != PlayerState::COMBO)
-		{
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackCooldownTimer.ReadMSec() > attackCooldown)
-			{
+		else {
+			bool keyQPressed = Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN;
+			bool canAttack = attackCooldownTimer.ReadMSec() > attackCooldown;
+
+			if (keyQPressed && canAttack) {
 				if (animator->GetAnimation() != 4) {
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
@@ -261,26 +233,23 @@ bool Player::Update(float dt)
 					attackReactionTimer.Start();
 				}
 			}
-			else{
+			else {
 				if (isGrounded) {
 					if (velocity.x == 0) {
-						if (animator->GetAnimation() != 1)
-						{
+						if (animator->GetAnimation() != 1) {
 							animator->SetAnimation(1);
 							state = PlayerState::IDLE;
 						}
 					}
 					else {
-						if (animator->GetAnimation() != 0)
-						{
+						if (animator->GetAnimation() != 0) {
 							animator->SetAnimation(0);
 							state = PlayerState::RUNNING;
 						}
 					}
 				}
 				else {
-					if (animator->GetAnimation() != 2)
-					{
+					if (animator->GetAnimation() != 2) {
 						animator->SetAnimation(2);
 						animator->SetLoop(false);
 						state = PlayerState::JUMPING;
@@ -401,4 +370,17 @@ void Player::ResetPlayer(int level)
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
 	Enable();
+}
+
+void Player::SetPosition(Vector2D pos) {
+	pos.setX(pos.getX() + texW / 2);
+	pos.setY(pos.getY() + texH / 2);
+	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+	body->body->SetTransform(bodyPos, 0);
+}
+
+Vector2D Player::GetPosition() {
+	b2Vec2 bodyPos = body->body->GetTransform().p;
+	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	return pos;
 }
