@@ -12,8 +12,13 @@ public:
 		FLYING,
 		COLLIDED
 	};
+	enum ProjectileType
+	{
+		ENEMY,
+		PLAYER
+	};
 
-	Projectile();
+	Projectile(b2Vec2 position, b2Vec2 direction);
 
 	~Projectile();
 
@@ -33,10 +38,13 @@ private:
 	SDL_Texture* texture = NULL;
 
 	int texW = 0, texH = 0;
-	int width = 16;
-	int height = 45;
+	int width = 8;
+	int height = 8;
 
-	Vector2D position;
+	b2Vec2 position;
+	b2Vec2 direction;
 
 	PhysBody* body;
+
+	int speed = 10;
 };
