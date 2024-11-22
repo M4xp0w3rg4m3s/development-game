@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "Entity.h"
 #include <list>
+#include "box2d/box2d.h"
 
 class EntityManager : public Module
 {
@@ -29,7 +30,8 @@ public:
 
 	// Additional methods
 	Entity* CreateEntity(EntityType type, bool doCalls = false);
-
+	Entity* CreateProjectile( b2Vec2 position, b2Vec2 direction, bool doCalls = false);
+	
 	void DestroyEntity(Entity* entity);
 
 	void DeleteEntity(Entity* entity);

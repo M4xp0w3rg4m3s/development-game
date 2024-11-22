@@ -36,7 +36,7 @@ bool Projectile::Start()
 {
 	animator->SetNumberAnimations(1);
 	
-	animator->AddKeyFrame(0, { 0 * 8,1 * 8,8,8 });
+	animator->AddKeyFrame(0, { 0 * 8,0 * 8,8,8 });
 	/*animator->AddKeyFrame(0, { 0 * 64,1 * 64,64,64 });
 	animator->AddKeyFrame(0, { 1 * 64,1 * 64,64,64 });
 	animator->AddKeyFrame(0, { 2 * 64,1 * 64,64,64 });
@@ -48,6 +48,7 @@ bool Projectile::Start()
 	animator->SetAnimationDelay(0, 100);
 
 	animator->SetAnimation(0);
+	animator->SetLoop(true);
 
 	// Add physics to the projectile - initialize physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
@@ -77,14 +78,15 @@ bool Projectile::Update(float dt)
 
 	velocity.x = direction.x * speed;
 	velocity.y = direction.y * speed;
-
+	
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
 	position.x = (METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
 	position.y = (METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
 
+	animator->Update();
 	animator->Draw((int)position.x, (int)position.y, 0, 0);
-
+	
 	return true;
 }
 
@@ -92,6 +94,7 @@ bool Projectile::CleanUp()
 {
 	LOG("Cleanup Projectile");
 	Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().physics->DeletePhysBody(body);
 	return true;
 }
 
@@ -101,14 +104,15 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER:
-		CleanUp();
-
+		
+		break;
 	case ColliderType::BOULDER:
 		CleanUp();
-
+		break;
 	case ColliderType::PLATFORM:
+		LOG("Collision PLATFORM PROJECTILE");
 		CleanUp();
-
+		break;
 	case ColliderType::KILL:
 		LOG("Collision KILL");
 		CleanUp();

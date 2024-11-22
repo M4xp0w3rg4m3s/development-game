@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "EntityManager.h"
-
+#include "Projectile.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -200,6 +200,9 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN) {
+		Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(b2Vec2{ position.getX(),position.getY()}, b2Vec2{1,0},true);
+	}
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
 		if (state == PlayerState::WOMBO) {
 			if (animator->isAnimFinished() && animator->GetAnimation() != 5) {

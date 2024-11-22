@@ -4,7 +4,7 @@
 #include "Entity.h"
 #include "Sprite.h"
 
-class Projectile : Entity{
+class Projectile : public Entity{
 public:
 
 	enum ProjectileState
@@ -46,5 +46,5 @@ private:
 
 	PhysBody* body;
 
-	int speed = 10;
+	int speed = 1;
 };

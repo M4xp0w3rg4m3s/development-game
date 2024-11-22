@@ -7,6 +7,7 @@
 #include "Item.h"
 #include "Boulder.h"
 #include "Enemy.h"
+#include "Projectile.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -86,6 +87,22 @@ Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 	default:
 		break;
 	}
+
+	if (doCalls) {
+		entity->Awake();
+		entity->Start();
+	}
+
+	entities.push_back(entity);
+
+	return entity;
+}
+
+Entity* EntityManager::CreateProjectile(b2Vec2 position, b2Vec2 direction, bool doCalls)
+{
+	Entity* entity = nullptr;
+
+	entity = new Projectile(position,direction);
 
 	if (doCalls) {
 		entity->Awake();
