@@ -180,3 +180,9 @@ void Scene::CameraReset()
 	Engine::GetInstance().render.get()->camera.x = 0;
 	Engine::GetInstance().render.get()->camera.y = 0;
 }
+
+// Return the player position
+Vector2D Scene::GetPlayerPosition()
+{
+	return player->GetPosition();
+}
