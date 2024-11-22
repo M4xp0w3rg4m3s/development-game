@@ -43,6 +43,12 @@
 		<five texturePath="Assets/Maps/background_parallax/winter_BG/layer5.png" />
 	</layers3>
 	<map3 path="Assets/Maps/" name="Level3Map.tmx"/>
+	<entities>
+		<enemies>
+			<enemy name="badguy" x="448" y="350" w="32" h="32" texture="Assets/Textures/enemy/Idle.png" gravity="true">
+			</enemy>
+		</enemies>
+	</entities>
   </scene>
   
 </config>
