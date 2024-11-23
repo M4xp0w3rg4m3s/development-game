@@ -36,15 +36,8 @@ bool Projectile::Start()
 {
 	animator->SetNumberAnimations(1);
 	
-	animator->AddKeyFrame(0, { 0 * 8,0 * 8,8,8 });
-	/*animator->AddKeyFrame(0, { 0 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 1 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 2 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 3 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 4 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 5 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 6 * 64,1 * 64,64,64 });
-	animator->AddKeyFrame(0, { 7 * 64,1 * 64,64,64 });*/
+	animator->AddKeyFrame(0, { 0,0,13,13 });
+	animator->AddKeyFrame(0, { 1 * 13,0,13,13 });
 	animator->SetAnimationDelay(0, 100);
 
 	animator->SetAnimation(0);

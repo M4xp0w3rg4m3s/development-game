@@ -38,8 +38,8 @@ private:
 	SDL_Texture* texture = NULL;
 
 	int texW = 0, texH = 0;
-	int width = 8;
-	int height = 8;
+	int width = 13;
+	int height = 13;
 
 	b2Vec2 position;
 	b2Vec2 direction;
