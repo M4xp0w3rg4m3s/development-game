@@ -36,6 +36,7 @@ bool Enemy::Start() {
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 
+	// IDLE
 	animator->AddKeyFrame(0, { 0, 0,width,height });
 	animator->AddKeyFrame(0, { 1 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
@@ -125,7 +126,7 @@ bool Enemy::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
+	animator->Draw((int)position.getX()-5, (int)position.getY(), 0, 0);
 
 	// Draw pathfinding 
 	pathfinding->DrawPath();
