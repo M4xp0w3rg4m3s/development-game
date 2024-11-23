@@ -29,8 +29,8 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
-
 	animator = new Sprite(texture);
+
 	animator->SetNumberAnimations(8);
 	// RUN
 	animator->AddKeyFrame(0, { 0 * 64,1 * 64,64,64 });
@@ -93,8 +93,7 @@ bool Player::Start() {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
-
-	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width*0.8, height*0.25, bodyType::DYNAMIC);
+	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 0.8, height * 0.25, bodyType::DYNAMIC);
 
 	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
 
@@ -200,8 +199,11 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN) {
-		Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(b2Vec2{ position.getX(),position.getY()}, b2Vec2{1,0},true);
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
+		b2Vec2 direction = { Engine::GetInstance().input.get()->GetMousePosition().getX() - position.getX(),Engine::GetInstance().input.get()->GetMousePosition().getY() - position.getY()};
+		b2Vec2 projectilePos = {GetCenterPosition().getX() - height,GetCenterPosition().getY() - height };
+		Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction,true);
+		attackShurikenTimer.Start();
 	}
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
 		if (state == PlayerState::WOMBO) {
@@ -386,4 +388,11 @@ Vector2D Player::GetPosition() {
 	b2Vec2 bodyPos = body->body->GetTransform().p;
 	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
 	return pos;
+}
+
+Vector2D Player::GetCenterPosition()
+{
+	b2Vec2 bodyPos = body->body->GetTransform().p;
+	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(bodyPos.x + width / 2) , METERS_TO_PIXELS(bodyPos.y + height / 2));
+	return centerPos;
 }

@@ -49,7 +49,7 @@ bool Projectile::Start()
 	body->body->SetFixedRotation(true);
 
 	b2MassData projectileMass;
-	projectileMass.mass = 1.15f;
+	projectileMass.mass = 1.0f;
 	projectileMass.center = body->body->GetLocalCenter();
 	body->body->SetMassData(&projectileMass);
 
@@ -69,8 +69,8 @@ bool Projectile::Update(float dt)
 {
 	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
 
-	velocity.x = direction.x * speed;
-	velocity.y = direction.y * speed;
+	velocity.x = direction.x * speed / dt;
+	velocity.y = direction.y * speed / dt;
 	
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
@@ -118,6 +118,7 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
+		CleanUp();
 		break;
 
 	default:

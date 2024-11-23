@@ -45,25 +45,27 @@ public:
 
 	Vector2D GetPosition();
 
+	Vector2D GetCenterPosition();
+
 public:
 
 	//Declare player parameters
 	float speed = 150.0f;
 	std::string textureName; 
 	SDL_Texture* texture = NULL;
-	int texW, texH;
+	int texW = 0, texH = 0;
 	int width = 16;
 	int height = 45;
 
-	int pickCoinFxId;
+	int pickCoinFxId = -1;
 
 	bool isGrounded = false;
-	PhysBody* body;
-	PhysBody* bodyBot;
+	PhysBody* body = nullptr;
+	PhysBody* bodyBot = nullptr;
 
 	PlayerState state = IDLE;
 
-	Sprite* animator;
+	Sprite* animator = nullptr;
 
 	Timer deadTimer;
 	int deadTime = 2;
@@ -72,6 +74,9 @@ public:
 	Timer attackCooldownTimer;
 	int reactionTimeMs = 500;
 	int attackCooldown = 2000;
+
+	Timer attackShurikenTimer;
+	int attackShurikenTime = 2000;
 
 	bool godMode = false;
 
