@@ -11,7 +11,7 @@ class Mushroom : public Enemy
 {
 public:
 
-	Mushroom(Vector2D position);
+	Mushroom();
 	virtual ~Mushroom();
 
 	bool Awake();

@@ -11,7 +11,7 @@ class Boar : public Enemy
 {
 public:
 
-	Boar(Vector2D position);
+	Boar();
 	virtual ~Boar();
 
 	bool Awake();

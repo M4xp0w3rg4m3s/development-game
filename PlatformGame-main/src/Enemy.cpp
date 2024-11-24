@@ -9,7 +9,7 @@
 #include "Physics.h"
 #include "Map.h"
 
-Enemy::Enemy() : Entity(EntityType::ENEMY)
+Enemy::Enemy(EntityType type) : Entity(type)
 {
 
 }
@@ -61,8 +61,6 @@ bool Enemy::Start() {
 	pathfinding = new Pathfinding();
 	ResetPath();
 
-	pathfinding->SetEnemyType(EnemyType::FLOOR);
-
 	return true;
 }
 
@@ -82,7 +80,7 @@ bool Enemy::Update(float dt)
 	pathfinding->Compute();
 
 	animator->Update();
-	animator->Draw((int)position.getX()-5, (int)position.getY(), 0, 0);
+	animator->Draw((int)position.getX() - 5, (int)position.getY(), 0, 0);
 
 	// Draw pathfinding 
 	pathfinding->DrawPath();
@@ -112,4 +110,9 @@ void Enemy::ResetPath() {
 	Vector2D pos = GetPosition();
 	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
 	pathfinding->ResetPath(tilePos);
+}
+
+void Enemy::SetPathfindingType(EnemyType type)
+{
+	pathfinding->SetEnemyType(type);
 }

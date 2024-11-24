@@ -7,7 +7,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 
-Mushroom::Mushroom(Vector2D position) : Enemy()
+Mushroom::Mushroom() : Enemy(EntityType::MUSHROOM)
 {
 	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Mushroom.png");
 	animator = new Sprite(texture);*/

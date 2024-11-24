@@ -11,7 +11,7 @@ class Enemy : public Entity
 {
 public:
 
-	Enemy();
+	Enemy(EntityType type);
 	virtual ~Enemy();
 
 	bool Awake();
@@ -31,6 +31,8 @@ public:
 	Vector2D GetPosition();
 
 	void ResetPath();
+
+	void SetPathfindingType(EnemyType type);
 
 public:
 

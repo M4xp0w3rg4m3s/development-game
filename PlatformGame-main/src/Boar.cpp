@@ -7,7 +7,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 
-Boar::Boar(Vector2D position) : Enemy()
+Boar::Boar() : Enemy(EntityType::BOAR)
 {
 	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Boar.png");
 	animator = new Sprite(texture);*/
@@ -15,8 +15,6 @@ Boar::Boar(Vector2D position) : Enemy()
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
 	texW = width, texH = height;
-
-	this->position = position;
 
 }
 
@@ -72,7 +70,7 @@ bool Boar::Start()
 
 bool Boar::Update(float dt)
 {
-	
+	Enemy::Update(dt);
 	return true;
 }
 

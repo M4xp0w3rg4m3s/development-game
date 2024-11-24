@@ -7,7 +7,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 
-Hedgehog::Hedgehog(Vector2D position) : Enemy()
+Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
 	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Hedgehog.png");
 	animator = new Sprite(texture);*/
@@ -15,8 +15,6 @@ Hedgehog::Hedgehog(Vector2D position) : Enemy()
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
 	texW = width, texH = height;
-
-	this->position = position;
 
 }
 

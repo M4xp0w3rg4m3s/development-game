@@ -7,7 +7,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 
-Wizard::Wizard(Vector2D position) : Enemy()
+Wizard::Wizard() : Enemy(EntityType::WIZARD)
 {
 	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Wizard/wizard_idle.png");
 	animator = new Sprite(texture);*/
@@ -15,8 +15,6 @@ Wizard::Wizard(Vector2D position) : Enemy()
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
 	texW = width, texH = height;
-
-	this->position = position;
 
 }
 

@@ -6,7 +6,10 @@
 enum class EntityType
 {
 	PLAYER,
-	ENEMY,
+	BOAR,
+	WIZARD,
+	HEDGEHOG,
+	MUSHROOM,
 	ITEM,
 	BOULDER,
 	PROJECTILE,

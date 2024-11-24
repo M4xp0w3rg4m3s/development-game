@@ -11,7 +11,7 @@ class Wizard : public Enemy
 {
 public:
 
-	Wizard(Vector2D position);
+	Wizard();
 	virtual ~Wizard();
 
 	bool Awake();

@@ -11,7 +11,7 @@ class Hedgehog : public Enemy
 {
 public:
 
-	Hedgehog(Vector2D position);
+	Hedgehog();
 	virtual ~Hedgehog();
 
 	bool Awake();

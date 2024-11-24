@@ -15,6 +15,11 @@
 #include "Enemy.h"
 #include <string>
 
+#include "Boar.h"
+#include "Mushroom.h"
+#include "Wizard.h"
+#include "Hedgehog.h"
+
 Scene::Scene() : Module()
 {
 	name = "scene";
@@ -55,9 +60,31 @@ bool Scene::Awake()
 
 	for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
 	{
-		Enemy* enemy = (Enemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY);
-		enemy->SetParameters(enemyNode);
-		enemyList.push_back(enemy);
+		std::string name = enemyNode.attribute("name").as_string();
+		if (name == "boar") {
+			Boar* enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
+			enemy->SetParameters(enemyNode);
+			enemy->SetPathfindingType(EnemyType::FLOOR);
+			enemyList.push_back(enemy);
+		}
+		else if (name == "mushroom") {
+			Mushroom* enemy = (Mushroom*)Engine::GetInstance().entityManager->CreateEntity(EntityType::MUSHROOM);
+			enemy->SetParameters(enemyNode);
+			enemy->SetPathfindingType(EnemyType::WATER);
+			enemyList.push_back(enemy);
+		}
+		else if (name == "wizard") {
+			Wizard* enemy = (Wizard*)Engine::GetInstance().entityManager->CreateEntity(EntityType::WIZARD);
+			enemy->SetParameters(enemyNode);
+			enemy->SetPathfindingType(EnemyType::AIR);
+			enemyList.push_back(enemy);
+		}
+		else if (name == "hedgehog") {
+			Hedgehog* enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+			enemy->SetParameters(enemyNode);
+			enemy->SetPathfindingType(EnemyType::FLOOR);
+			enemyList.push_back(enemy);
+		}
 	}
 
 	return ret;
@@ -139,12 +166,6 @@ bool Scene::Update(float dt)
 	if (mouseTile.getX() >= 0 && mouseTile.getY() >= 0 || once) {
 		tilePosDebug = "[" + std::to_string((int)mouseTile.getX()) + "," + std::to_string((int)mouseTile.getY()) + "] ";
 		once = true;
-	}
-
-	//If mouse button is pressed modify enemy position
-	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
-		enemyList[0]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-		enemyList[0]->ResetPath();
 	}
 
 	return true;

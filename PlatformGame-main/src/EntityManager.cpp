@@ -9,6 +9,11 @@
 #include "Enemy.h"
 #include "Projectile.h"
 
+#include "Boar.h"
+#include "Hedgehog.h"
+#include "Mushroom.h"
+#include "Wizard.h"
+
 EntityManager::EntityManager() : Module()
 {
 	name = "entitymanager";
@@ -68,7 +73,6 @@ bool EntityManager::CleanUp()
 Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 {
 	Entity* entity = nullptr; 
-
 	//L03: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
 	switch (type)
 	{
@@ -81,8 +85,17 @@ Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 	case EntityType::BOULDER:
 		entity = new Boulder();
 		break;
-	case EntityType::ENEMY:
-		entity = new Enemy();
+	case EntityType::BOAR:
+		entity = new Boar();
+		break;
+	case EntityType::WIZARD:
+		entity = new Wizard();
+		break;
+	case EntityType::HEDGEHOG:
+		entity = new Hedgehog();
+		break;
+	case EntityType::MUSHROOM:
+		entity = new Mushroom();
 		break;
 	default:
 		break;
