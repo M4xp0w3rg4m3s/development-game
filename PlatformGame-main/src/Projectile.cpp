@@ -55,6 +55,7 @@ bool Projectile::Start()
 	body->body->SetMassData(&projectileMass);
 
 	body->body->GetFixtureList()[0].SetFriction(0);
+	body->body->GetFixtureList()[0].IsSensor();
 	body->body->SetGravityScale(0);
 
 	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
@@ -83,7 +84,7 @@ bool Projectile::Update(float dt)
 	
 	if (projectileDeadTimer.ReadSec() > projectileDeadTime)
 	{
-		CleanUp();
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 	}
 	
 	return true;
@@ -92,7 +93,6 @@ bool Projectile::Update(float dt)
 bool Projectile::CleanUp()
 {
 	LOG("Cleanup Projectile");
-	Engine::GetInstance().entityManager->DeleteEntity(this);
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(body);
 
@@ -108,25 +108,25 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 		
 		break;
 	case ColliderType::BOULDER:
-		CleanUp();
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM PROJECTILE");
-		CleanUp();
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	case ColliderType::KILL:
 		LOG("Collision KILL");
-		CleanUp();
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
-		CleanUp();
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
-		CleanUp();
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 
 	default:
