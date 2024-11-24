@@ -29,8 +29,8 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
-
 	animator = new Sprite(texture);
+
 	animator->SetNumberAnimations(8);
 	// RUN
 	animator->AddKeyFrame(0, { 0 * 64,1 * 64,64,64 });
@@ -93,8 +93,7 @@ bool Player::Start() {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
-
-	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width*0.8, height*0.25, bodyType::DYNAMIC);
+	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 0.8, height * 0.25, bodyType::DYNAMIC);
 
 	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
 
@@ -200,8 +199,40 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN) {
-		Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(b2Vec2{ position.getX(),position.getY()}, b2Vec2{1,0},true);
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
+
+		// Get mouse position
+		b2Vec2 mousePos = { Engine::GetInstance().input.get()->GetMousePosition().getX(),Engine::GetInstance().input.get()->GetMousePosition().getY() };
+
+		// Calculate direction vector from the object center to the mouse position
+		b2Vec2 direction = { mousePos.x - GetCenterPosition().getX(), mousePos.y - GetCenterPosition().getY() };
+
+		// Normalize the direction vector
+		float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+		if (length > 0.0f) { // Avoid division by zero
+			direction.x /= length;
+			direction.y /= length;
+		}
+
+		// Define projectile spawn position with an offset from the object's center
+		float offset = (float)height; // Adjust as needed
+		b2Vec2 projectilePos = { GetCenterPosition().getX() + direction.x * offset/2,GetCenterPosition().getY() + direction.y * offset };
+
+		// Make the player look into the projectile direction
+		if (direction.x < 0)
+		{
+			animator->LookLeft();
+		}
+		else
+		{
+			animator->LookRight();
+		}
+
+		// Create the projectile
+		Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+
+		// Reset the attack timer
+		attackShurikenTimer.Start();
 	}
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
 		if (state == PlayerState::WOMBO) {
@@ -386,4 +417,22 @@ Vector2D Player::GetPosition() {
 	b2Vec2 bodyPos = body->body->GetTransform().p;
 	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
 	return pos;
+}
+
+Vector2D Player::GetCenterPosition()
+{
+	// Get the body's position in meters
+	b2Vec2 bodyPos = body->body->GetTransform().p;
+
+	// Convert width and height to meters for accurate calculations
+	float halfWidthInMeters = PIXEL_TO_METERS(width) / 2.0f;
+	float halfHeightInMeters = PIXEL_TO_METERS(height) / 2.0f;
+
+	// Calculate the center position in meters
+	b2Vec2 centerPosInMeters = { bodyPos.x + halfWidthInMeters, bodyPos.y + halfHeightInMeters };
+
+	// Convert center position back to pixels
+	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));
+
+	return centerPos;
 }

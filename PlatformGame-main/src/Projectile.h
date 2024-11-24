@@ -46,5 +46,5 @@ private:
 
 	PhysBody* body;
 
-	int speed = 1;
+	int speed = 100;
 };
