@@ -55,7 +55,7 @@ bool Projectile::Start()
 	body->body->SetMassData(&projectileMass);
 
 	body->body->GetFixtureList()[0].SetFriction(0);
-	body->body->GetFixtureList()[0].IsSensor();
+	body->body->GetFixtureList()[0].SetSensor(true);
 	body->body->SetGravityScale(0);
 
 	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
