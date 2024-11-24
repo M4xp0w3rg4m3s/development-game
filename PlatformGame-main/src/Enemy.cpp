@@ -125,6 +125,13 @@ bool Enemy::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
+	if (pathfinding->finished) {
+		Vector2D pos = GetPosition();
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		pathfinding->ResetPath(tilePos);
+	}
+	pathfinding->Compute();
+
 	animator->Update();
 	animator->Draw((int)position.getX()-5, (int)position.getY(), 0, 0);
 

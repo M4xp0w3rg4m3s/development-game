@@ -16,6 +16,8 @@ Pathfinding::Pathfinding() {
 
     // Initialize the costSoFar with all elements set to 0
     costSoFar = std::vector<std::vector<int>>(map->GetWidth(), std::vector<int>(map->GetHeight(), 0));
+
+    computeTimer.Start();
 }
 
 Pathfinding::~Pathfinding() {
@@ -336,6 +338,25 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
         }
 
     }
+
+    if (frontierAStar.empty()) {
+        finished = true;
+        found = false;
+    }
+}
+
+void Pathfinding::Compute()
+{
+    while (!finished) {
+        PropagateAStar(MANHATTAN);
+    }
+    if (finished) {
+        if (computeTimer.ReadSec() >= computeTime) {
+            finished = false;
+            found = false;
+            computeTimer.Start();
+        }
+    }
 }
 
 int Pathfinding::MovementCost(int x, int y) 
@@ -378,6 +399,9 @@ void Pathfinding::ComputePath(int x, int y)
         // Find the position of the current tile in the visited list
         index = Find(visited, currentTile);
     }
+
+    finished = true;
+    found = true;
 }
 
 int Pathfinding::Find(std::vector<Vector2D> vector,Vector2D elem)
