@@ -348,6 +348,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+	case ColliderType::PROJECTILE:
+		LOG("Collision Projectile");
+		break;
 	default:
 		break;
 	}
@@ -408,7 +411,7 @@ Vector2D Player::GetCenterPosition()
 	float halfHeightInMeters = PIXEL_TO_METERS(height) / 2.0f;
 
 	// Calculate the center position in meters
-	b2Vec2 centerPosInMeters = { bodyPos.x + halfWidthInMeters, bodyPos.y + halfHeightInMeters };
+	b2Vec2 centerPosInMeters = { bodyPos.x , bodyPos.y };
 
 	// Convert center position back to pixels
 	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));

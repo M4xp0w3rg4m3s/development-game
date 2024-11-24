@@ -47,6 +47,12 @@
 		<enemies>
 			<enemy name="boar" x="640" y="280" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true">
 			</enemy>
+			<enemy name="mushroom" x="640" y="280" w="32" h="32" texture="Assets/Textures/Enemies/Mushroom.png" gravity="true">
+			</enemy>
+			<enemy name="Wizard" x="640" y="280" w="48" h="32" texture="Assets/Textures/Enemies/Wizard/wizard_idle.png" gravity="true">
+			</enemy>
+			<enemy name="Hedgehog" x="640" y="280" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true">
+			</enemy>
 		</enemies>
 	</entities>
   </scene>

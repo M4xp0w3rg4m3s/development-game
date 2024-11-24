@@ -67,6 +67,14 @@
     <ClCompile Include="src\Pathfinding.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Boar.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mushroom.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hedgehog.cpp" />
+    <ClCompile Include="src\Wizard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -140,6 +148,18 @@
     </ClInclude>
     <ClInclude Include="src\Pathfinding.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Boar.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mushroom.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hedgehog.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wizard.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
