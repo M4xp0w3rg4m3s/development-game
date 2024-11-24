@@ -78,7 +78,7 @@ public:
 	int attackCooldown = 2000;
 
 	Timer attackShurikenTimer;
-	int attackShurikenTime = 0;
+	int attackShurikenTime = 2000;
 
 	bool godMode = false;
 

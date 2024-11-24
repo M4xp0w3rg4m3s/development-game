@@ -146,14 +146,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio.cpp" />
+    <ClCompile Include="src\Boar.cpp" />
     <ClCompile Include="src\Boulder.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\Hedgehog.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\Mushroom.cpp" />
     <ClCompile Include="src\Pathfinding.cpp" />
     <ClCompile Include="src\PerfTimer.cpp" />
     <ClCompile Include="src\Physics.cpp" />
@@ -167,19 +170,23 @@
     <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Wizard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h" />
+    <ClInclude Include="src\Boar.h" />
     <ClInclude Include="src\Boulder.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\Hedgehog.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />
+    <ClInclude Include="src\Mushroom.h" />
     <ClInclude Include="src\Parallax.h" />
     <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />
@@ -193,6 +200,7 @@
     <ClInclude Include="src\Timer.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Wizard.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />
