@@ -47,4 +47,7 @@ private:
 	PhysBody* body;
 
 	int speed = 100;
+
+	Timer projectileDeadTimer;
+	int projectileDeadTime = 2;
 };
