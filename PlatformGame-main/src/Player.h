@@ -47,6 +47,8 @@ public:
 
 	Vector2D GetCenterPosition();
 
+	void Shoot();
+
 public:
 
 	//Declare player parameters
@@ -76,7 +78,7 @@ public:
 	int attackCooldown = 2000;
 
 	Timer attackShurikenTimer;
-	int attackShurikenTime = 2000;
+	int attackShurikenTime = 0;
 
 	bool godMode = false;
 

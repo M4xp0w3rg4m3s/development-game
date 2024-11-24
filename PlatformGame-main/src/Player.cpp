@@ -199,41 +199,16 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
 
-		// Get mouse position
-		b2Vec2 mousePos = { Engine::GetInstance().input.get()->GetMousePosition().getX(),Engine::GetInstance().input.get()->GetMousePosition().getY() };
-
-		// Calculate direction vector from the object center to the mouse position
-		b2Vec2 direction = { mousePos.x - GetCenterPosition().getX(), mousePos.y - GetCenterPosition().getY() };
-
-		// Normalize the direction vector
-		float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-		if (length > 0.0f) { // Avoid division by zero
-			direction.x /= length;
-			direction.y /= length;
-		}
-
-		// Define projectile spawn position with an offset from the object's center
-		float offset = (float)height; // Adjust as needed
-		b2Vec2 projectilePos = { GetCenterPosition().getX() + direction.x * offset/2,GetCenterPosition().getY() + direction.y * offset };
-
-		// Make the player look into the projectile direction
-		if (direction.x < 0)
-		{
-			animator->LookLeft();
-		}
-		else
-		{
-			animator->LookRight();
-		}
-
-		// Create the projectile
-		Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
-
-		// Reset the attack timer
-		attackShurikenTimer.Start();
+	if (lives <= 0)
+	{
+		KillPlayer();
 	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
+		Shoot();
+	}
+
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
 		if (state == PlayerState::WOMBO) {
 			if (animator->isAnimFinished() && animator->GetAnimation() != 5) {
@@ -366,6 +341,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);
 		//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
 		break;
+	case ColliderType::ENEMY:
+		LOG("Collision UNKNOWN");
+		lives--;
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
@@ -435,4 +414,50 @@ Vector2D Player::GetCenterPosition()
 	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));
 
 	return centerPos;
+}
+
+void Player::Shoot()
+{
+	// Get mouse position in world coordinates
+	b2Vec2 mousePos = {
+		Engine::GetInstance().input->GetMousePosition().getX() - Engine::GetInstance().render->camera.x,
+		Engine::GetInstance().input->GetMousePosition().getY() 
+	};
+
+	// Get the player's center position in world coordinates
+	b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
+	
+	// Calculate the direction vector from the player's center to the mouse position
+	b2Vec2 direction = {
+		mousePos.x - centerPos.x,
+		mousePos.y - centerPos.y
+	};
+
+	// Normalize the direction vector to make it a unit vector
+	float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+	if (length > 0.0f) { // Avoid division by zero
+		direction.x /= length;
+		direction.y /= length;
+	}
+
+	// Define the projectile spawn position with an offset in the normalized direction
+	float offset = static_cast<float>(height); // Offset distance to avoid overlapping with the player
+	b2Vec2 projectilePos = {
+		centerPos.x + direction.x * offset,
+		centerPos.y + direction.y * offset
+	};
+
+	// Adjust player orientation to face the direction of the projectile
+	if (direction.x < 0) {
+		animator->LookLeft();
+	}
+	else {
+		animator->LookRight();
+	}
+
+	// Create and initialize the projectile with its position and direction in world space
+	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+
+	// Reset the attack timer to manage firing rate
+	attackShurikenTimer.Start();
 }

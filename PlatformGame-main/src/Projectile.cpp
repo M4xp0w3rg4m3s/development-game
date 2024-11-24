@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Engine.h"
 #include "Textures.h"
+#include "EntityManager.h"
 
 Projectile::Projectile(b2Vec2 position, b2Vec2 direction) : Entity(EntityType::PROJECTILE)
 {
@@ -80,14 +81,21 @@ bool Projectile::Update(float dt)
 	animator->Update();
 	animator->Draw((int)position.x, (int)position.y, 0, 0);
 	
+	if (projectileDeadTimer.ReadSec() > projectileDeadTime)
+	{
+		CleanUp();
+	}
+	
 	return true;
 }
 
 bool Projectile::CleanUp()
 {
 	LOG("Cleanup Projectile");
+	Engine::GetInstance().entityManager->DeleteEntity(this);
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(body);
+
 	return true;
 }
 
