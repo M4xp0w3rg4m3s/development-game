@@ -9,8 +9,6 @@
 
 Wizard::Wizard() : Enemy(EntityType::WIZARD)
 {
-	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Wizard/wizard_idle.png");
-	animator = new Sprite(texture);*/
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
@@ -95,11 +93,15 @@ bool Wizard::Start()
 
 bool Wizard::Update(float dt)
 {
+	animator->Update();
+	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
 
 	return true;
 }
 
 bool Wizard::CleanUp()
 {
+	Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }

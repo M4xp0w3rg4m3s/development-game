@@ -9,8 +9,6 @@
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
-	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Hedgehog.png");
-	animator = new Sprite(texture);*/
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
@@ -96,10 +94,15 @@ bool Hedgehog::Start()
 bool Hedgehog::Update(float dt)
 {
 
+	animator->Update();
+	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
+
 	return true;
 }
 
 bool Hedgehog::CleanUp()
 {
+	Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }

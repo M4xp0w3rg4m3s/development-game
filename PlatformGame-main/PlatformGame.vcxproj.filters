@@ -73,8 +73,12 @@
     <ClCompile Include="src\Mushroom.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hedgehog.cpp" />
-    <ClCompile Include="src\Wizard.cpp" />
+    <ClCompile Include="src\Hedgehog.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wizard.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">

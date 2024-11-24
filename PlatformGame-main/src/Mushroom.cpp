@@ -9,8 +9,6 @@
 
 Mushroom::Mushroom() : Enemy(EntityType::MUSHROOM)
 {
-	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Mushroom.png");
-	animator = new Sprite(texture);*/
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
@@ -75,11 +73,15 @@ bool Mushroom::Start()
 
 bool Mushroom::Update(float dt)
 {
+	animator->Update();
+	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
 	
 	return true;
 }
 
 bool Mushroom::CleanUp()
 {
+	Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }

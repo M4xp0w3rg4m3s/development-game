@@ -9,8 +9,6 @@
 
 Boar::Boar() : Enemy(EntityType::BOAR)
 {
-	/*texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Boar.png");
-	animator = new Sprite(texture);*/
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
@@ -70,11 +68,16 @@ bool Boar::Start()
 
 bool Boar::Update(float dt)
 {
+	animator->Update();
+	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
+
 	Enemy::Update(dt);
 	return true;
 }
 
 bool Boar::CleanUp()
 {
+	Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }
