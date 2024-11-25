@@ -16,7 +16,7 @@
 #include <string>
 
 #include "Boar.h"
-#include "Mushroom.h"
+#include "Octopus.h"
 #include "Bee.h"
 #include "Hedgehog.h"
 
@@ -63,8 +63,8 @@ bool Scene::Awake()
 			enemy->SetParameters(enemyNode);
 			enemyList.push_back(enemy);
 		}
-		else if (name == "mushroom") {
-			Mushroom* enemy = (Mushroom*)Engine::GetInstance().entityManager->CreateEntity(EntityType::MUSHROOM);
+		else if (name == "octopus") {
+			Octopus* enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
 			enemy->SetParameters(enemyNode);
 			enemyList.push_back(enemy);
 		}

@@ -46,7 +46,7 @@
 	<entities>
 		<enemies>
 			<enemy name="boar" x="640" y="280" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
-			<enemy name="mushroom" x="672" y="280" w="32" h="32" texture="Assets/Textures/Enemies/Mushroom.png" gravity="true" />
+			<enemy name="octopus" x="672" y="280" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
 			<enemy name="bee" x="704" y="280" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="true" />
 			<enemy name="hedgehog" x="736" y="280" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" />
 		</enemies>

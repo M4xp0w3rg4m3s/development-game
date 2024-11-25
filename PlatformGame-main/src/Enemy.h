@@ -35,6 +35,7 @@ public:
 	void SetPathfindingType(EnemyType type);
 
 protected:
+	bool debug = false;
 
 	std::string textureName;
 	SDL_Texture* texture = nullptr;

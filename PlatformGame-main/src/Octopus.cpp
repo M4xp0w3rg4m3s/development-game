@@ -1,4 +1,4 @@
-#include "Mushroom.h"
+#include "Octopus.h"
 #include "Log.h"
 #include "Physics.h"
 #include "Render.h"
@@ -7,28 +7,28 @@
 #include "Textures.h"
 #include "EntityManager.h"
 
-Mushroom::Mushroom() : Enemy(EntityType::MUSHROOM)
+Octopus::Octopus() : Enemy(EntityType::OCTOPUS)
 {
 
 }
 
-Mushroom::~Mushroom()
+Octopus::~Octopus()
 {
 }
 
-bool Mushroom::Awake()
+bool Octopus::Awake()
 {
 	return true;
 }
 
-bool Mushroom::Start()
+bool Octopus::Start()
 {
 	position.setX(parameters.attribute("x").as_int());
 	position.setY(parameters.attribute("y").as_int());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 
-	texH = height, texW = width;
+	texH = height*2, texW = width*2;
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
@@ -42,7 +42,7 @@ bool Mushroom::Start()
 	pathfinding = new Pathfinding();
 	ResetPath();
 
-	SetPathfindingType(EnemyType::FLOOR);
+	SetPathfindingType(EnemyType::WATER);
 
 	textureName = parameters.attribute("texture").as_string();
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
@@ -50,19 +50,11 @@ bool Mushroom::Start()
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(1);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
-	height = parameters.attribute("h").as_int();
-	width = parameters.attribute("w").as_int();
-
 	// IDLE
-	animator->AddKeyFrame(0, { 0, 0,width,height });
-	animator->AddKeyFrame(0, { 1 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 4 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 5 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 6 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 0, 5 * texH,texW,texH });
+	animator->AddKeyFrame(0, { 1 * texW, 5 * texH,texW,texH });
+	animator->AddKeyFrame(0, { 2 * texW, 5 * texH,texW,texH });
+	animator->AddKeyFrame(0, { 3 * texW, 5 * texH,texW,texH });
 	animator->SetAnimationDelay(0, 100);
 
 	animator->SetAnimation(0);
@@ -71,12 +63,13 @@ bool Mushroom::Start()
 	return true;
 }
 
-bool Mushroom::Update(float dt)
+bool Octopus::Update(float dt)
 {
+
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
@@ -86,16 +79,22 @@ bool Mushroom::Update(float dt)
 	}
 	pathfinding->Compute();
 
-	// Draw pathfinding 
-	pathfinding->DrawPath();
+	// Activate or deactivate debug mode
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		debug = !debug;
+
+	if (debug) {
+		// Draw pathfinding 
+		pathfinding->DrawPath();
+	}
 
 	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
+	animator->Draw((int)position.getX(), (int)position.getY(), -4, -16);
 	
 	return true;
 }
 
-bool Mushroom::CleanUp()
+bool Octopus::CleanUp()
 {
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);

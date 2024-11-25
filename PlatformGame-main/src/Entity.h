@@ -9,7 +9,7 @@ enum class EntityType
 	BOAR,
 	BEE,
 	HEDGEHOG,
-	MUSHROOM,
+	OCTOPUS,
 	ITEM,
 	BOULDER,
 	PROJECTILE,
