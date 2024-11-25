@@ -83,4 +83,6 @@ public:
 	bool godMode = false;
 
 	int lives = 3;
+
+	int audioPlayerStepsId = -1; //AUDIO PEPE
 };

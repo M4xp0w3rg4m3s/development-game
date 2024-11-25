@@ -173,6 +173,9 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	Engine::GetInstance().audio.get()->Update(dt);		//AUDIO PEPE
+
+
 	return true;
 }
 
