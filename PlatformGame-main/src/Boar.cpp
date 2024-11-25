@@ -78,8 +78,14 @@ bool Boar::Update(float dt)
 	}
 	pathfinding->Compute();
 
-	// Draw pathfinding 
-	pathfinding->DrawPath();
+	// Activate or deactivate debug mode
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		debug = !debug;
+
+	if (debug) {
+		// Draw pathfinding 
+		pathfinding->DrawPath();
+	}
 
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);

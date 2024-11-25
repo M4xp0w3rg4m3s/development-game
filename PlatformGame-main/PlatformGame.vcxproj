@@ -156,7 +156,7 @@
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
-    <ClCompile Include="src\Mushroom.cpp" />
+    <ClCompile Include="src\Octopus.cpp" />
     <ClCompile Include="src\Pathfinding.cpp" />
     <ClCompile Include="src\PerfTimer.cpp" />
     <ClCompile Include="src\Physics.cpp" />
@@ -186,7 +186,7 @@
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />
-    <ClInclude Include="src\Mushroom.h" />
+    <ClInclude Include="src\Octopus.h" />
     <ClInclude Include="src\Parallax.h" />
     <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />
