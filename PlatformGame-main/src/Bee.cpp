@@ -10,10 +10,6 @@
 Bee::Bee() : Enemy(EntityType::BEE)
 {
 
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
-
-	texW = width, texH = height;
-
 }
 
 Bee::~Bee()
@@ -27,6 +23,27 @@ bool Bee::Awake()
 
 bool Bee::Start()
 {
+	position.setX(parameters.attribute("x").as_int());
+	position.setY(parameters.attribute("y").as_int());
+	height = parameters.attribute("h").as_int();
+	width = parameters.attribute("w").as_int();
+
+	texH = height, texW = width;
+
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
+
+	//Assign collider type
+	pbody->ctype = ColliderType::ENEMY;
+
+	// Set the gravity of the body
+	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+
+	// Initialize pathfinding
+	pathfinding = new Pathfinding();
+	ResetPath();
+
+	SetPathfindingType(EnemyType::FLOOR);
+
 	textureName = parameters.attribute("texture").as_string();
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
@@ -62,21 +79,6 @@ bool Bee::Start()
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
-
-	texH = height, texW = width;
-
-	//Add a physics to an item - initialize the physics body
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-
-	//Assign collider type
-	pbody->ctype = ColliderType::ENEMY;
-
-	// Set the gravity of the body
-	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
-
-	// Initialize pathfinding
-	pathfinding = new Pathfinding();
-	ResetPath();
 
 	return true;
 }
