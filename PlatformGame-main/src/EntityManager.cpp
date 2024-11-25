@@ -12,7 +12,7 @@
 #include "Boar.h"
 #include "Hedgehog.h"
 #include "Mushroom.h"
-#include "Wizard.h"
+#include "Bee.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -88,8 +88,8 @@ Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 	case EntityType::BOAR:
 		entity = new Boar();
 		break;
-	case EntityType::WIZARD:
-		entity = new Wizard();
+	case EntityType::BEE:
+		entity = new Bee();
 		break;
 	case EntityType::HEDGEHOG:
 		entity = new Hedgehog();

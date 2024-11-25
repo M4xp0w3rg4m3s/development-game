@@ -170,7 +170,7 @@
     <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\Wizard.cpp" />
+    <ClCompile Include="src\Bee.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h" />
@@ -200,7 +200,7 @@
     <ClInclude Include="src\Timer.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\Window.h" />
-    <ClInclude Include="src\Wizard.h" />
+    <ClInclude Include="src\Bee.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

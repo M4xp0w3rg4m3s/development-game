@@ -343,7 +343,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ENEMY:
 		LOG("Collision UNKNOWN");
-		/*body->body->ApplyForce({0,-10},{},true);*/
+		body->body->ApplyLinearImpulseToCenter({ 0,-10 }, true);
 		lives--;
 		break;
 	case ColliderType::UNKNOWN:
