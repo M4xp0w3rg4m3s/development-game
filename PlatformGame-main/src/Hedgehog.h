@@ -26,13 +26,8 @@ public:
 		this->parameters = parameters;
 	}
 
-	Vector2D GetCenterPosition();
-
-	void Shoot();
 public:
 
 private:
 
-	Timer attackTimer;
-	int attackTime = 2;
 };

@@ -50,24 +50,6 @@ Vector2D Enemy::GetPosition() {
 	return pos;
 }
 
-Vector2D Enemy::GetCenterPosition()
-{
-	// Get the body's position in meters
-	b2Vec2 bodyPos = pbody->body->GetTransform().p;
-
-	// Convert width and height to meters for accurate calculations
-	float halfWidthInMeters = PIXEL_TO_METERS(width) / 2.0f;
-	float halfHeightInMeters = PIXEL_TO_METERS(height) / 2.0f;
-
-	// Calculate the center position in meters
-	b2Vec2 centerPosInMeters = { bodyPos.x , bodyPos.y };
-
-	// Convert center position back to pixels
-	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));
-
-	return centerPos;
-}
-
 void Enemy::ResetPath() {
 	Vector2D pos = GetPosition();
 	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());

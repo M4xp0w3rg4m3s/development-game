@@ -30,8 +30,6 @@ public:
 
 	Vector2D GetPosition();
 
-	Vector2D GetCenterPosition();
-
 	void ResetPath();
 
 	void SetPathfindingType(EnemyType type);
