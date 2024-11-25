@@ -34,18 +34,16 @@ public:
 
 	void SetPathfindingType(EnemyType type);
 
-public:
-
 protected:
 
 	std::string textureName;
-	SDL_Texture* texture = NULL;
+	SDL_Texture* texture = nullptr;
 	int texW = 0, texH = 0;
 	int width = 0, height = 0;
 
 	pugi::xml_node parameters;
 
-	Sprite* animator = NULL;
-	PhysBody* pbody = NULL;
-	Pathfinding* pathfinding = NULL;
+	Sprite* animator = nullptr;
+	PhysBody* pbody = nullptr;
+	Pathfinding* pathfinding = nullptr;
 };

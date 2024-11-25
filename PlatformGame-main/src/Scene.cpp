@@ -17,7 +17,7 @@
 
 #include "Boar.h"
 #include "Mushroom.h"
-#include "Wizard.h"
+#include "Bee.h"
 #include "Hedgehog.h"
 
 Scene::Scene() : Module()
@@ -29,7 +29,6 @@ Scene::Scene() : Module()
 // Destructor
 Scene::~Scene()
 {
-	delete world;
 }
 
 // Called before render is available
@@ -37,8 +36,6 @@ bool Scene::Awake()
 {
 	LOG("Loading Scene");
 	bool ret = true;
-
-	world = new b2World({ 0, 10 });
 
 	parallax = Engine::GetInstance().parallax.get();
 
@@ -64,27 +61,23 @@ bool Scene::Awake()
 		if (name == "boar") {
 			Boar* enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
 			enemy->SetParameters(enemyNode);
-			enemy->SetPathfindingType(EnemyType::FLOOR);
 			enemyList.push_back(enemy);
 		}
-		else if (name == "mushroom") {
-			Mushroom* enemy = (Mushroom*)Engine::GetInstance().entityManager->CreateEntity(EntityType::MUSHROOM);
-			enemy->SetParameters(enemyNode);
-			enemy->SetPathfindingType(EnemyType::WATER);
-			enemyList.push_back(enemy);
-		}
-		else if (name == "wizard") {
-			Wizard* enemy = (Wizard*)Engine::GetInstance().entityManager->CreateEntity(EntityType::WIZARD);
-			enemy->SetParameters(enemyNode);
-			enemy->SetPathfindingType(EnemyType::AIR);
-			enemyList.push_back(enemy);
-		}
-		else if (name == "hedgehog") {
-			Hedgehog* enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
-			enemy->SetParameters(enemyNode);
-			enemy->SetPathfindingType(EnemyType::FLOOR);
-			enemyList.push_back(enemy);
-		}
+		//else if (name == "mushroom") {
+		//	Mushroom* enemy = (Mushroom*)Engine::GetInstance().entityManager->CreateEntity(EntityType::MUSHROOM);
+		//	enemy->SetParameters(enemyNode);
+		//	enemyList.push_back(enemy);
+		//}
+		//else if (name == "bee") {
+		//	Bee* enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
+		//	enemy->SetParameters(enemyNode);
+		//	enemyList.push_back(enemy);
+		//}
+		//else if (name == "hedgehog") {
+		//	Hedgehog* enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+		//	enemy->SetParameters(enemyNode);
+		//	enemyList.push_back(enemy);
+		//}
 	}
 
 	return ret;

@@ -37,8 +37,6 @@ public:
 
 	Vector2D GetPlayerPosition();
 
-	b2World* world;
-
 	std::string GetTilePosDebug() {
 		return tilePosDebug;
 

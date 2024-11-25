@@ -10,10 +10,6 @@
 Boar::Boar() : Enemy(EntityType::BOAR)
 {
 
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
-
-	texW = width, texH = height;
-
 }
 
 Boar::~Boar()
@@ -27,31 +23,14 @@ bool Boar::Awake()
 
 bool Boar::Start()
 {
-	textureName = parameters.attribute("texture").as_string();
-	texture = Engine::GetInstance().textures->Load(textureName.c_str());
-
-	animator = new Sprite(texture);
-	animator->SetNumberAnimations(1);
-
 	position.setX(parameters.attribute("x").as_int());
 	position.setY(parameters.attribute("y").as_int());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 
-	// IDLE
-	animator->AddKeyFrame(0, { 0, 0,width,height });
-	animator->AddKeyFrame(0, { 1 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
-	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
-	animator->SetAnimationDelay(0, 100);
-
-	animator->SetAnimation(0);
-	animator->SetLoop(true);
-
 	texH = height, texW = width;
 
-	//Add a physics to an item - initialize the physics body
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
@@ -63,15 +42,48 @@ bool Boar::Start()
 	pathfinding = new Pathfinding();
 	ResetPath();
 
+	SetPathfindingType(EnemyType::FLOOR);
+
+	textureName = parameters.attribute("texture").as_string();
+	texture = Engine::GetInstance().textures->Load(textureName.c_str());
+
+	animator = new Sprite(texture);
+	animator->SetNumberAnimations(1);
+	
+	// IDLE
+	animator->AddKeyFrame(0, { 0, 0,width,height });
+	animator->AddKeyFrame(0, { 1 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
+	animator->SetAnimationDelay(0, 100);
+
+	animator->SetAnimation(0);
+	animator->SetLoop(true);
+
 	return true;
 }
 
 bool Boar::Update(float dt)
 {
+	//Add a physics to an item - update the position of the object from the physics.  
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+
+	if (pathfinding->resetPathAfterEnd) {
+		Vector2D pos = GetPosition();
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		pathfinding->ResetPath(tilePos);
+		pathfinding->resetPathAfterEnd = false;
+	}
+	pathfinding->Compute();
+
+	// Draw pathfinding 
+	pathfinding->DrawPath();
+
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
 
-	Enemy::Update(dt);
 	return true;
 }
 
