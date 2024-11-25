@@ -161,6 +161,11 @@ bool Scene::Update(float dt)
 		once = true;
 	}
 
+	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
+		enemyList[0]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
+		enemyList[0]->ResetPath();
+	}
+
 	return true;
 }
 
