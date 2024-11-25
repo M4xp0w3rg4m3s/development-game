@@ -44,6 +44,7 @@ void Sprite::SetAnimation(int id)
 {
     if (id >= 0 && id < animations.size())
     {
+        last_frame = -1;
         current_anim = id;
         current_frame = 0;
         timer.Start();
@@ -64,6 +65,11 @@ int Sprite::GetCurrentFrame_int()
     return current_frame;
 }
 
+int Sprite::GetLastFrame_int()
+{
+    return last_frame;
+}
+
 // Cambiar y pasar la id de la animación
 void Sprite::SetLoop(bool _loop)
 {
@@ -73,26 +79,38 @@ void Sprite::SetLoop(bool _loop)
 void Sprite::Update()
 {
     if (current_anim == -1)
+    {
+        last_frame = -1;
         return;
+    }
+
+
+    last_frame = current_frame;
     if (timer.ReadMSec() >= animations[current_anim].delay)
     {
+        
         //Only automatic animation mode advances next frame
         if (animations[current_anim].loop)
         {
             current_frame++;
             if (current_frame >= animations[current_anim].frames.size()) {
+
                 current_frame = 0;
+                last_frame = -1;
             }
             timer.Start();
         }
         else {
             current_frame++;
             if (current_frame >= animations[current_anim].frames.size()) {
+                
                 current_frame = current_frame - 1;
                 animFinished = true;
+                last_frame = -1;
             }
             timer.Start();
         }
+
     }
 }
 

@@ -166,6 +166,9 @@ bool Scene::Update(float dt)
 		enemyList[0]->ResetPath();
 	}
 
+	Engine::GetInstance().audio.get()->Update(dt);		//AUDIO PEPE
+
+
 	return true;
 }
 

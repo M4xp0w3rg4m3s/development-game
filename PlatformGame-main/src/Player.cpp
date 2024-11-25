@@ -13,6 +13,9 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
+
+	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
+	
 }
 
 Player::~Player() {
@@ -122,8 +125,16 @@ bool Player::Update(float dt)
 {
 	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
 
+	bool wasGrounded = isGrounded;
+
 	isGrounded = bodyBot->activeCollisions != 0;
+
+	//Jump SoundFX
+	if (isGrounded && !wasGrounded) {
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);
+	}
 	
+
 	if (!godMode) {
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
 		{
@@ -134,6 +145,7 @@ bool Player::Update(float dt)
 				{
 					state = PlayerState::RUNNING;
 				}
+				
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 				velocity.x = 0.2 * 16;
@@ -285,6 +297,11 @@ bool Player::Update(float dt)
 		}
 	}
 
+	//Walking SoundFX
+	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
+		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);	//player steps audio updates every step	
+	}
 
 	animator->Update();
 	switch (state)
@@ -338,7 +355,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
-		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);
+		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);			//AUDIO PEPE
 		//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
 		break;
 	case ColliderType::ENEMY:

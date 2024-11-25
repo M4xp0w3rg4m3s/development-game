@@ -29,6 +29,7 @@ public:
     int GetAnimation();
     Frame GetCurrentFrame();
     int GetCurrentFrame_int();
+    int GetLastFrame_int();
     void SetLoop(bool _loop);
 
     void Update();
@@ -50,6 +51,7 @@ public:
 private:
     int current_anim;
     int current_frame;
+    int last_frame = -1;
     direction player_dir;
     bool animFinished = false;
 
