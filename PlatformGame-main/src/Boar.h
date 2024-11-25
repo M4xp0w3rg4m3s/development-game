@@ -30,16 +30,4 @@ public:
 
 private:
 
-	std::string textureName;
-	SDL_Texture* texture = NULL;
-
-	int texW, texH;
-	int width = 48;
-	int height = 32;
-
-	pugi::xml_node parameters;
-
-	Sprite* animator = NULL;
-	PhysBody* pbody = NULL;
-	Pathfinding* pathfinding = NULL;
 };

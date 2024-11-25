@@ -36,13 +36,12 @@ public:
 
 public:
 
-private:
+protected:
 
 	std::string textureName;
 	SDL_Texture* texture = NULL;
-	int texW, texH;
-	int width = 48;
-	int height = 32;
+	int texW = 0, texH = 0;
+	int width = 0, height = 0;
 
 	pugi::xml_node parameters;
 
