@@ -343,7 +343,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ENEMY:
 		LOG("Collision UNKNOWN");
-		body->body->ApplyLinearImpulseToCenter({ 0,-10 }, true);
+		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 		lives--;
 		break;
 	case ColliderType::UNKNOWN:
@@ -351,6 +351,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::PROJECTILE:
 		LOG("Collision Projectile");
+		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+		lives--;
 		break;
 	default:
 		break;

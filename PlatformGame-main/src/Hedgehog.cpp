@@ -90,7 +90,7 @@ bool Hedgehog::Start()
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
-
+	animator->LookLeft();
 	return true;
 }
 

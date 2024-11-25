@@ -105,7 +105,7 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER:
-		
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	case ColliderType::BOULDER:
 		Engine::GetInstance().entityManager->DeleteEntity(this);
