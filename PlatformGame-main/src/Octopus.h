@@ -7,12 +7,12 @@
 
 struct SDL_Texture;
 
-class Mushroom : public Enemy
+class Octopus : public Enemy
 {
 public:
 
-	Mushroom();
-	virtual ~Mushroom();
+	Octopus();
+	virtual ~Octopus();
 
 	bool Awake();
 
