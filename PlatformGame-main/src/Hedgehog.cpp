@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "EntityManager.h"
+#include "Projectile.h"
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
@@ -89,7 +90,7 @@ bool Hedgehog::Start()
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
-
+	animator->LookLeft();
 	return true;
 }
 
@@ -117,6 +118,12 @@ bool Hedgehog::Update(float dt)
 		pathfinding->DrawPath();
 	}
 
+	if (attackTimer.ReadSec() >= attackTime)
+	{
+		Shoot();
+		attackTimer.Start();
+	}
+
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
 
@@ -128,4 +135,33 @@ bool Hedgehog::CleanUp()
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
+}
+void Hedgehog::Shoot()
+{
+	b2Vec2 direction = { 0,0 };
+
+	if (animator->GetPlayerDir() == RIGHT)
+	{
+		direction = { 1,0 };
+	}
+	else
+	{
+		direction = { -1,0 };
+	}
+
+	b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
+
+	// Define the projectile spawn position with an offset in the normalized direction
+	float offset = static_cast<float>(height); // Offset distance to avoid overlapping with the player
+	b2Vec2 projectilePos = {
+		centerPos.x + direction.x * offset,
+		centerPos.y + direction.y * offset
+	};
+
+
+	// Create and initialize the projectile with its position and direction in world space
+	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+
+	// Reset the attack timer to manage firing rate
+	attackTimer.Start();
 }
