@@ -167,10 +167,8 @@ bool Scene::Update(float dt)
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
-		if (enemyList.size() > enemyIndex) {
-			enemyIndex++;
-		}
-		else {
+		enemyIndex++;
+		if (enemyIndex >= 4) {
 			enemyIndex = 0;
 		}
 	}
