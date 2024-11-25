@@ -76,7 +76,7 @@
     <ClCompile Include="src\Hedgehog.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\Wizard.cpp">
+    <ClCompile Include="src\Bee.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -162,7 +162,7 @@
     <ClInclude Include="src\Hedgehog.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="src\Wizard.h">
+    <ClInclude Include="src\Bee.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

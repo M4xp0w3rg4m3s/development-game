@@ -7,7 +7,7 @@ enum class EntityType
 {
 	PLAYER,
 	BOAR,
-	WIZARD,
+	BEE,
 	HEDGEHOG,
 	MUSHROOM,
 	ITEM,

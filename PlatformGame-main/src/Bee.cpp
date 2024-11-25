@@ -1,4 +1,4 @@
-#include "Wizard.h"
+#include "Bee.h"
 #include "Log.h"
 #include "Physics.h"
 #include "Render.h"
@@ -7,7 +7,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 
-Wizard::Wizard() : Enemy(EntityType::WIZARD)
+Bee::Bee() : Enemy(EntityType::BEE)
 {
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
@@ -16,16 +16,16 @@ Wizard::Wizard() : Enemy(EntityType::WIZARD)
 
 }
 
-Wizard::~Wizard()
+Bee::~Bee()
 {
 }
 
-bool Wizard::Awake()
+bool Bee::Awake()
 {
 	return true;
 }
 
-bool Wizard::Start()
+bool Bee::Start()
 {
 	textureName = parameters.attribute("texture").as_string();
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
@@ -39,36 +39,26 @@ bool Wizard::Start()
 	width = parameters.attribute("w").as_int();
 
 	// IDLE
-	animator->AddKeyFrame(0, { 0, 0,width,height });
-	animator->AddKeyFrame(0, { 1 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 0,  1 * height,width,height });
+	animator->AddKeyFrame(0, { 1 * width, 1 * height,width,height });
+	animator->AddKeyFrame(0, { 2 * width, 1 * height,width,height });
+	animator->AddKeyFrame(0, { 3 * width, 1 * height,width,height });
 	animator->SetAnimationDelay(0, 100);
 
-	// WALK
-	animator->AddKeyFrame(1, { 0, 1 * height,width,height });
-	animator->AddKeyFrame(1, { 1 * width, 1 * height,width,height });
-	animator->AddKeyFrame(1, { 2 * width, 1 * height,width,height });
-	animator->AddKeyFrame(1, { 3 * width, 1 * height,width,height });
-	animator->AddKeyFrame(1, { 4 * width, 1 * height,width,height });
-	animator->AddKeyFrame(1, { 5 * width, 1 * height,width,height });
+	// ATTACK
+	animator->AddKeyFrame(1, { 0,  0 * height,width,height });
+	animator->AddKeyFrame(1, { 1 * width, 0 * height,width,height });
+	animator->AddKeyFrame(1, { 2 * width, 0 * height,width,height });
+	animator->AddKeyFrame(1, { 3 * width, 0 * height,width,height });
 	animator->SetAnimationDelay(0, 100);
 
-	// SLEEPING
-	animator->AddKeyFrame(2, { 0, 2 * height,width,height });
+	// HIT
+	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
 	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
-	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
-	animator->AddKeyFrame(2, { 5 * width, 2 * height,width,height });
 	animator->SetAnimationDelay(0, 100);
-
-	// GOING TO SLEEP
-	animator->AddKeyFrame(2, { 0, 3 * height,width,height });
-	animator->AddKeyFrame(2, { 1 * width, 3 * height,width,height });
-	animator->AddKeyFrame(2, { 2 * width, 3 * height,width,height });
-	animator->AddKeyFrame(2, { 3 * width, 3 * height,width,height });
-	animator->AddKeyFrame(2, { 4 * width, 3 * height,width,height });
-	animator->AddKeyFrame(2, { 5 * width, 3 * height,width,height });
-	animator->SetAnimationDelay(0, 100);
+	
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
@@ -91,7 +81,7 @@ bool Wizard::Start()
 	return true;
 }
 
-bool Wizard::Update(float dt)
+bool Bee::Update(float dt)
 {
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
@@ -99,7 +89,7 @@ bool Wizard::Update(float dt)
 	return true;
 }
 
-bool Wizard::CleanUp()
+bool Bee::CleanUp()
 {
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);

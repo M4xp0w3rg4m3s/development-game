@@ -7,12 +7,12 @@
 
 struct SDL_Texture;
 
-class Wizard : public Enemy
+class Bee : public Enemy
 {
 public:
 
-	Wizard();
-	virtual ~Wizard();
+	Bee();
+	virtual ~Bee();
 
 	bool Awake();
 
