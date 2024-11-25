@@ -69,7 +69,7 @@ bool Projectile::Start()
 
 bool Projectile::Update(float dt)
 {
-	b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
+	b2Vec2 velocity = b2Vec2( 0, body->body->GetLinearVelocity().y );
 
 	velocity.x = direction.x * speed / dt;
 	velocity.y = direction.y * speed / dt;
