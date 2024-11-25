@@ -95,6 +95,21 @@ bool Hedgehog::Start()
 
 bool Hedgehog::Update(float dt)
 {
+	//Add a physics to an item - update the position of the object from the physics.  
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+
+	if (pathfinding->resetPathAfterEnd) {
+		Vector2D pos = GetPosition();
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		pathfinding->ResetPath(tilePos);
+		pathfinding->resetPathAfterEnd = false;
+	}
+	pathfinding->Compute();
+
+	// Draw pathfinding 
+	pathfinding->DrawPath();
 
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);

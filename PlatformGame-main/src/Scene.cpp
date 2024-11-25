@@ -63,21 +63,21 @@ bool Scene::Awake()
 			enemy->SetParameters(enemyNode);
 			enemyList.push_back(enemy);
 		}
-		//else if (name == "mushroom") {
-		//	Mushroom* enemy = (Mushroom*)Engine::GetInstance().entityManager->CreateEntity(EntityType::MUSHROOM);
-		//	enemy->SetParameters(enemyNode);
-		//	enemyList.push_back(enemy);
-		//}
-		//else if (name == "bee") {
-		//	Bee* enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
-		//	enemy->SetParameters(enemyNode);
-		//	enemyList.push_back(enemy);
-		//}
-		//else if (name == "hedgehog") {
-		//	Hedgehog* enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
-		//	enemy->SetParameters(enemyNode);
-		//	enemyList.push_back(enemy);
-		//}
+		else if (name == "mushroom") {
+			Mushroom* enemy = (Mushroom*)Engine::GetInstance().entityManager->CreateEntity(EntityType::MUSHROOM);
+			enemy->SetParameters(enemyNode);
+			enemyList.push_back(enemy);
+		}
+		else if (name == "bee") {
+			Bee* enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
+			enemy->SetParameters(enemyNode);
+			enemyList.push_back(enemy);
+		}
+		else if (name == "hedgehog") {
+			Hedgehog* enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+			enemy->SetParameters(enemyNode);
+			enemyList.push_back(enemy);
+		}
 	}
 
 	return ret;
@@ -162,8 +162,17 @@ bool Scene::Update(float dt)
 	}
 
 	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
-		enemyList[0]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-		enemyList[0]->ResetPath();
+		enemyList[enemyIndex]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
+		enemyList[enemyIndex]->ResetPath();
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
+		if (enemyList.size() > enemyIndex) {
+			enemyIndex++;
+		}
+		else {
+			enemyIndex = 0;
+		}
 	}
 
 	return true;

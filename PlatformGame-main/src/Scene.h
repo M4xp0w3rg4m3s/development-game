@@ -43,6 +43,8 @@ public:
 	}
 
 private:
+	int enemyIndex = 0;
+
 	std::string tilePosDebug = "[0,0]";
 	bool once = false;
 
