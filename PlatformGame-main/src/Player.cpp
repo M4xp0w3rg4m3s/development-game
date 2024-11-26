@@ -212,11 +212,6 @@ bool Player::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 
-	if (lives <= 0)
-	{
-		KillPlayer();
-	}
-
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
 		Shoot();
 	}
@@ -370,6 +365,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision Projectile");
 		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 		lives--;
+		if (lives <= 0)
+		{
+			KillPlayer();
+		}
 		break;
 	default:
 		break;
@@ -389,6 +388,7 @@ void Player::ResetPlayer()
 	position = Vector2D(192, 384);
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
+	lives = 3;
 	Enable();
 }
 
@@ -405,6 +405,7 @@ void Player::ResetPlayer(int level)
 	}
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
+	lives = 3;
 	Enable();
 }
 
