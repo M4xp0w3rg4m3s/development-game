@@ -134,7 +134,10 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 		LOG("Collision ITEM");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
-
+	case ColliderType::PROJECTILE:
+		LOG("Collision ITEM");
+		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		Engine::GetInstance().entityManager->DeleteEntity(this);

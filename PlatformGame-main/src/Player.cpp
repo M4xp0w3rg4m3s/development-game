@@ -497,6 +497,7 @@ void Player::Shoot()
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetAnimation(0);
+	projectile->SetGravity(0);
 
 	// Reset the attack timer to manage firing rate
 	attackShurikenTimer.Start();
