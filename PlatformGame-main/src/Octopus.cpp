@@ -124,7 +124,7 @@ void Octopus::Shoot()
 
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
-
+	projectile->SetGravity(3);
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
 }
