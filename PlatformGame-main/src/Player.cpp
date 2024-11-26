@@ -276,6 +276,7 @@ bool Player::Update(float dt)
 	}
 	else if (state == PlayerState::DYING)
 	{
+		lives = 100;
 		if (animator->GetAnimation() != 3) {
 			animator->SetAnimation(3);
 			animator->SetLoop(false);
@@ -356,7 +357,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ENEMY:
 		LOG("Collision UNKNOWN");
 		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-		lives--;
+
+		if (hitTimer.ReadMSec() > hitTime)
+		{
+			lives--;
+			if (lives <= 0)
+			{
+				KillPlayer();
+			}
+			hitTimer.Start();
+		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
@@ -364,10 +374,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PROJECTILE:
 		LOG("Collision Projectile");
 		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-		lives--;
-		if (lives <= 0)
+
+		if (hitTimer.ReadMSec() > hitTime)
 		{
-			KillPlayer();
+			lives--;
+			if (lives <= 0)
+			{
+				KillPlayer();
+			}
+			hitTimer.Start();
 		}
 		break;
 	default:
