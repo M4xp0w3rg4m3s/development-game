@@ -70,13 +70,13 @@
     <ClCompile Include="src\Boar.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mushroom.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hedgehog.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="src\Bee.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Octopus.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -156,13 +156,13 @@
     <ClInclude Include="src\Boar.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mushroom.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hedgehog.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="src\Bee.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Octopus.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

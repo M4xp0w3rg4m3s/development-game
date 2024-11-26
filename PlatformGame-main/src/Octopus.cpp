@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "EntityManager.h"
+#include "Projectile.h"
 
 Octopus::Octopus() : Enemy(EntityType::OCTOPUS)
 {
@@ -88,6 +89,12 @@ bool Octopus::Update(float dt)
 		pathfinding->DrawPath();
 	}
 
+	if (attackTimer.ReadSec() >= attackTime)
+	{
+		Shoot();
+		attackTimer.Start();
+	}
+
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), -4, -16);
 	
@@ -99,4 +106,25 @@ bool Octopus::CleanUp()
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
+}
+
+void Octopus::Shoot()
+{
+	b2Vec2 direction = { 0,-1 };
+
+	b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
+
+	// Define the projectile spawn position with an offset in the normalized direction
+	float offset = static_cast<float>(height); // Offset distance to avoid overlapping with the player
+	b2Vec2 projectilePos = {
+		centerPos.x + direction.x * offset,
+		centerPos.y + direction.y * offset
+	};
+
+
+	// Create and initialize the projectile with its position and direction in world space
+	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+
+	// Reset the attack timer to manage firing rate
+	attackTimer.Start();
 }

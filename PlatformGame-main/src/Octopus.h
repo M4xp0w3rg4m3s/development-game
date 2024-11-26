@@ -26,8 +26,10 @@ public:
 		this->parameters = parameters;
 	}
 
+	void Shoot();
 public:
 
 private:
-
+	Timer attackTimer;
+	int attackTime = 2;
 };
