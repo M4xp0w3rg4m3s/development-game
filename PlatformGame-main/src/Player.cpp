@@ -295,7 +295,6 @@ bool Player::Update(float dt)
 
 	//Walking SoundFX
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
-		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);	//player steps audio updates every step	
 	}
 

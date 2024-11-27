@@ -80,6 +80,10 @@ bool Octopus::Update(float dt)
 	}
 	pathfinding->Compute();
 
+	if (pathfinding->objectiveFound) {
+		GoToPath();
+	}
+
 	// Activate or deactivate debug mode
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
@@ -125,6 +129,47 @@ void Octopus::Shoot()
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetGravity(3);
+	projectile->SetAnimation(2);
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
+}
+
+void Octopus::GoToPath()
+{
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+
+	Vector2D destination = { NULL, NULL };
+
+	int index = 0;
+	for (const auto& tile : pathfinding->pathTiles) {
+		if (tilePos == tile) {
+			float destinationX = pathfinding->pathTiles[index - 1].getX();
+			float destinationY = pathfinding->pathTiles[index - 1].getY();
+
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+			break;
+		}
+		index++;
+	}
+
+	if (destination.getX() != NULL && destination.getY() != NULL) {
+		float currentPosX = pbody->body->GetPosition().x;
+		float currentPosY = pbody->body->GetPosition().y;
+		int direction = 0;
+
+		printf("antes %d, %d : %d\n", (int)METERS_TO_PIXELS(currentPosX), (int)currentPosY, (int)destination.getX());
+
+		if (METERS_TO_PIXELS(currentPosX) != destination.getX()) {
+			if (METERS_TO_PIXELS(currentPosX) < destination.getX()) {
+				direction = 1;
+			}
+			else {
+				direction = -1;
+			}
+			currentPosX = currentPosX + direction * 0.005;
+			
+			pbody->body->SetTransform({ (currentPosX), (currentPosY) }, 0);
+		}
+	}
 }

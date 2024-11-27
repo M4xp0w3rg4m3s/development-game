@@ -35,15 +35,22 @@ bool Projectile::Awake()
 
 bool Projectile::Start()
 {
-	animator->SetNumberAnimations(2);
+	animator->SetNumberAnimations(3);
 	
+	//Shuriken
 	animator->AddKeyFrame(0, { 0,0,13,13 });
 	animator->AddKeyFrame(0, { 1 * 13,0,13,13 });
 	animator->SetAnimationDelay(0, 100);
 
+	//Spike
 	animator->AddKeyFrame(1, { 0,1 * 13,13,13 });
 	animator->AddKeyFrame(1, { 1 * 13,1 * 13,13,13 });
 	animator->SetAnimationDelay(1, 100);
+
+	//Water
+	animator->AddKeyFrame(2, { 0,2 * 13,13,13 });
+	animator->AddKeyFrame(2, { 1 * 13,2 * 13,13,13 });
+	animator->SetAnimationDelay(2, 100);
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
@@ -144,6 +151,7 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 		break;
 
 	default:
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	}
 }

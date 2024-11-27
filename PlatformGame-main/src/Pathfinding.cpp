@@ -191,7 +191,7 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
     if (frontierAStar.empty()) {
         finished = true;
-        found = false;
+        objectiveFound = false;
     }
 }
 
@@ -203,7 +203,7 @@ void Pathfinding::Compute()
     if (finished) {
         if (computeTimer.ReadSec() >= computeTime) {
             finished = false;
-            found = false;
+            objectiveFound = false;
             resetPathAfterEnd = true;
             computeTimer.Start();
         }
@@ -252,7 +252,7 @@ void Pathfinding::ComputePath(int x, int y)
     }
 
     finished = true;
-    found = true;
+    objectiveFound = true;
 }
 
 void Pathfinding::SetEnemyType(EnemyType type)

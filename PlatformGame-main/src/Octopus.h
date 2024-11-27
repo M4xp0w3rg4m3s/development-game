@@ -27,6 +27,8 @@ public:
 	}
 
 	void Shoot();
+
+	void GoToPath();
 public:
 
 private:

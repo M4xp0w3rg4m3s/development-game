@@ -55,7 +55,7 @@ public:
 
     std::vector<Vector2D> breadcrumbs; //list of tiles that form the path
     std::vector<std::vector<int>> costSoFar; //matrix that stores the accumulated cost in the propagation of the Dijkstra algorithm
-    std::list<Vector2D> pathTiles; //list of tiles that form the path
+    std::vector<Vector2D> pathTiles; //list of tiles that form the path
     SDL_Texture* tileX = nullptr; //texture used to show the path 
 
     // L13: A* Pathfinding variables
@@ -69,7 +69,7 @@ public:
     int waterGid = 1084; //Gid of the tiles for the water enemies
 
     bool finished = false;
-    bool found = false;
+    bool objectiveFound = false;
     bool resetPathAfterEnd = false;
 
     Timer computeTimer;

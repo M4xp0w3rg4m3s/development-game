@@ -397,7 +397,7 @@ void Physics::BeginContact(b2Contact* contact)
 		}
 	}
 
-	if (physB && physB->listener != NULL) {
+	if (physB && physB->listener != NULL && physB && physB->listener != nullptr) {
 		if (physA) // Ensure physA is also valid
 		{
 			physB->listener->OnCollision(physB, physA);
