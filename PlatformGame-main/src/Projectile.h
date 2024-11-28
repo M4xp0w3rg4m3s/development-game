@@ -52,5 +52,5 @@ private:
 	int speed = 15;
 
 	Timer projectileDeadTimer;
-	int projectileDeadTime = 2;
+	int projectileDeadTime = 1;
 };
