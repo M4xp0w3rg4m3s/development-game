@@ -141,6 +141,12 @@ void Octopus::GoToPath()
 
 	Vector2D destination = { NULL, NULL };
 
+	//Change to this
+	//b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
+	//velocity.x = 0.3 * 16;
+	//body->body->SetLinearVelocity(velocity);
+
+
 	int index = 0;
 	for (const auto& tile : pathfinding->pathTiles) {
 		if (tilePos.getX() == tile.getX()) {
