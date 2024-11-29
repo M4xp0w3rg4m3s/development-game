@@ -69,7 +69,7 @@ bool Octopus::Update(float dt)
 
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - width );
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
@@ -143,11 +143,18 @@ void Octopus::GoToPath()
 
 	int index = 0;
 	for (const auto& tile : pathfinding->pathTiles) {
-		if (tilePos == tile) {
-			float destinationX = pathfinding->pathTiles[index - 1].getX();
-			float destinationY = pathfinding->pathTiles[index - 1].getY();
-
-			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+		if (tilePos.getX() == tile.getX()) {
+			float destinationX = NULL;
+			float destinationY = NULL;
+			if (index == 0) {
+				destinationX = pathfinding->pathTiles[index].getX();
+				destinationY = pathfinding->pathTiles[index].getY();
+			}
+			else {
+				destinationX = pathfinding->pathTiles[index - 1].getX();
+				destinationY = pathfinding->pathTiles[index - 1].getY();
+			}
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)tilePos.getY());
 			break;
 		}
 		index++;

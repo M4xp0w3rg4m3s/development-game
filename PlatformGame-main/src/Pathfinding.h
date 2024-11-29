@@ -45,7 +45,6 @@ private:
     int Find(std::vector<Vector2D> vector, Vector2D elem);
 
 public:
-    Vector2D savedPos;
 
     EnemyType currentType;
 

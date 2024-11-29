@@ -27,8 +27,6 @@ Pathfinding::~Pathfinding() {
 // L11: BFS Pathfinding methods
 void Pathfinding::ResetPath(Vector2D pos) {
 
-    savedPos = pos;
-
     // Clear the frontierAStar queue
     while (!frontierAStar.empty()) {
 		frontierAStar.pop();
@@ -121,7 +119,7 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
     Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
     if (currentType == EnemyType::WATER) {
-        playerPos = { Engine::GetInstance().scene.get()->GetPlayerPosition().getX(), savedPos.getY()};
+        playerPos = { Engine::GetInstance().scene.get()->GetPlayerPosition().getX(), Engine::GetInstance().scene.get()->GetPlayerPosition().getY() };
     }
     Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
     
