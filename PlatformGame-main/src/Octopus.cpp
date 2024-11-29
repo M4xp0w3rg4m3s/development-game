@@ -69,7 +69,7 @@ bool Octopus::Update(float dt)
 
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - width );
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
