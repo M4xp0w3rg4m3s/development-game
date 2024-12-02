@@ -153,15 +153,15 @@ void Bee::GoToPath()
 	}
 
 	if (destination.getX() != NULL && destination.getY() != NULL) {
-		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) /*- width / 5*/;
-		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().x) /*- width / 5*/;
+		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 5)*2;
+		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 5)*2;
 
 		if (currentPosX != destination.getX()) {
 			if (currentPosX < destination.getX()) {
-				velocity.x = 0.05 * 16;
+				velocity.x = 0.13 * 16;
 			}
 			else {
-				velocity.x = -0.05 * 16;
+				velocity.x = -0.13 * 16;
 			}
 		}
 		else if (currentPosX == destination.getX()) {
@@ -170,10 +170,10 @@ void Bee::GoToPath()
 
 		if (currentPosY != destination.getY()) {
 			if (currentPosY < destination.getY()) {
-				velocity.y = 0.05 * 16;
+				velocity.y = 0.13 * 16;
 			}
 			else {
-				velocity.y = -0.05 * 16;
+				velocity.y = -0.13 * 16;
 			}
 		}
 		else if (currentPosY == destination.getY()) {
