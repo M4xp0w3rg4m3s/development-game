@@ -139,6 +139,7 @@ bool Hedgehog::Update(float dt)
 
 bool Hedgehog::CleanUp()
 {
+	LOG("Cleanup Hedgehog");
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
@@ -173,4 +174,20 @@ void Hedgehog::Shoot()
 
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
+}
+
+void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
+{
+	switch (physB->ctype)
+	{
+	case ColliderType::PLAYER_ATTACK_LEFT:
+		LOG("Collision KILL");
+		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
+	case ColliderType::PLAYER_ATTACK_RIGHT:
+		LOG("Collision KILL");
+		break;
+	default:
+		break;
+	}
 }

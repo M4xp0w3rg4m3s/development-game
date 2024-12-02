@@ -28,6 +28,7 @@ public:
 
 	void Shoot();
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
 private:
 	Timer attackTimer;
 	int attackTime = 2;
