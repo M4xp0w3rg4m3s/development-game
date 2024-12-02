@@ -37,6 +37,8 @@ public:
 
 	Vector2D GetPlayerPosition();
 
+	Player* GetPlayer() const;
+
 	std::string GetTilePosDebug() {
 		return tilePosDebug;
 

@@ -215,3 +215,8 @@ Vector2D Scene::GetPlayerPosition()
 {
 	return player->GetPosition();
 }
+
+Player* Scene::GetPlayer() const
+{
+	return player;
+}

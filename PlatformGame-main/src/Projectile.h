@@ -30,6 +30,9 @@ public:
 	void SetAnimation(int id);
 
 	void SetGravity(float gravity);
+
+	void SetCollisionType(int type);
+
 private:
 	Sprite* animator;
 	std::string textureName;

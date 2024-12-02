@@ -34,7 +34,8 @@ enum class ColliderType {
 	BOULDER,
 	PLATFORM,
 	KILL,
-	PROJECTILE,
+	PROJECTILE_PLAYER,
+	PROJECTILE_ENEMY,
 	UNKNOWN,
 	// ..
 };

@@ -7,6 +7,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 #include "Projectile.h"
+#include "Player.h"
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
@@ -171,6 +172,7 @@ void Hedgehog::Shoot()
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetAnimation(1);
 	projectile->SetGravity(0.1);
+	projectile->SetCollisionType(1);
 
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
@@ -178,14 +180,22 @@ void Hedgehog::Shoot()
 
 void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 {
+	
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER_ATTACK_LEFT:
-		LOG("Collision KILL");
-		Engine::GetInstance().entityManager->DeleteEntity(this);
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
+		{
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
 		break;
 	case ColliderType::PLAYER_ATTACK_RIGHT:
-		LOG("Collision KILL");
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
+		{
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
 		break;
 	default:
 		break;

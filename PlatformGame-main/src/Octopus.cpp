@@ -137,6 +137,8 @@ void Octopus::Shoot()
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetGravity(3);
 	projectile->SetAnimation(2);
+	projectile->SetCollisionType(1);
+
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
 }

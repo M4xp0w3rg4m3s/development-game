@@ -71,10 +71,6 @@ bool Projectile::Start()
 	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	body->listener = this;
 
-	// Assign collider type
-	body->ctype = ColliderType::PROJECTILE;
-
-
 	body->body->ApplyLinearImpulseToCenter({ direction.x * speed, direction.y * speed }, true);
 
 	return true;
@@ -141,17 +137,19 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 		LOG("Collision ITEM");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
-	case ColliderType::PROJECTILE:
+	case ColliderType::PROJECTILE_ENEMY:
+		LOG("Collision ITEM");
+		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
+	case ColliderType::PROJECTILE_PLAYER:
 		LOG("Collision ITEM");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
-		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 
 	default:
-		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	}
 }
@@ -164,4 +162,16 @@ void Projectile::SetAnimation(int id)
 void Projectile::SetGravity(float gravity)
 {
 	body->body->SetGravityScale(gravity);
+}
+
+void Projectile::SetCollisionType(int type)
+{
+	if (type == 0)
+	{
+		body->ctype = ColliderType::PROJECTILE_PLAYER;
+	}
+	if (type == 1)
+	{
+		body->ctype = ColliderType::PROJECTILE_ENEMY;
+	}
 }

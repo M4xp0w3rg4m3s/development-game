@@ -49,6 +49,9 @@ public:
 
 	void Shoot();
 
+	bool IsAttackingLeft();
+	bool IsAttackingRight();
+
 public:
 
 	//Declare player parameters
@@ -88,6 +91,9 @@ public:
 	bool godMode = false;
 
 	int lives = 3;
+
+	bool isAttackingLeft = false;
+	bool isAttackingRight = false;
 
 	int audioPlayerStepsId = -1; //AUDIO PEPE
 };

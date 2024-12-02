@@ -101,8 +101,8 @@ bool Player::Start() {
 	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
 
 	body->CreateWeld(bodyBot, { 0,(float)PIXEL_TO_METERS((-height / 2)) });
-	body->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS((-width * 1.5)) ,(float)PIXEL_TO_METERS((height / 4)) });
-	body->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS((width * 1.5)),(float)PIXEL_TO_METERS((height / 4)) });
+	body->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS((width * 1.5)) ,(float)PIXEL_TO_METERS((height / 4)) });
+	body->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS((-width * 1.5)),(float)PIXEL_TO_METERS((height / 4)) });
 
 	body->body->SetFixedRotation(true);
 	bodyBot->body->SetFixedRotation(true);
@@ -238,6 +238,8 @@ bool Player::Update(float dt)
 				}
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
 					animator->SetAnimation(1);
+					isAttackingLeft = false;
+					isAttackingRight = false;
 					state = PlayerState::IDLE;
 				}
 				attackCooldownTimer.Start();
@@ -246,6 +248,8 @@ bool Player::Update(float dt)
 		else if (state == PlayerState::COMBO) {
 			if (animator->GetCurrentFrame_int() == 3) {
 				SDL_Delay(100);
+				isAttackingLeft = false;
+				isAttackingRight = false;
 				state = PlayerState::IDLE;
 			}
 		}
@@ -355,65 +359,57 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			KillPlayer();
 		}
 	}
-	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT ) {
-		if (physB->ctype == ColliderType::ENEMY) {
-			
-		}
-		if (physB->ctype == ColliderType::PROJECTILE) {
-
-		}
+	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT && physB->ctype == ColliderType::ENEMY && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+		isAttackingLeft = true;
 	}
-	if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT) {
-		if (physB->ctype == ColliderType::ENEMY) {
-			
-		}
-		if (physB->ctype == ColliderType::PROJECTILE) {
-
-		}
+	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::ENEMY && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+		isAttackingRight = true;
 	}
-	switch (physB->ctype)
-	{
-	case ColliderType::KILL:
-		LOG("Collision KILL");
-		break;
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
-		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);			//AUDIO PEPE
-		//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
-		break;
-	case ColliderType::ENEMY:
-		LOG("Collision UNKNOWN");
-		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-
-		if (hitTimer.ReadMSec() > hitTime)
+	if (physA->ctype != ColliderType::PLAYER_ATTACK_LEFT && physA->ctype != ColliderType::PLAYER_ATTACK_RIGHT){
+		switch (physB->ctype)
 		{
-			lives--;
-			if (lives <= 0)
-			{
-				KillPlayer();
-			}
-			hitTimer.Start();
-		}
-		break;
-	case ColliderType::PROJECTILE:
-		LOG("Collision Projectile");
-		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+		case ColliderType::KILL:
+			LOG("Collision KILL");
+			break;
+		case ColliderType::ITEM:
+			LOG("Collision ITEM");
+			//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);			//AUDIO PEPE
+			//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
+			break;
+		case ColliderType::ENEMY:
+			LOG("Collision UNKNOWN");
+			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 
-		if (hitTimer.ReadMSec() > hitTime)
-		{
-			lives--;
-			if (lives <= 0)
+			if (hitTimer.ReadMSec() > hitTime)
 			{
-				KillPlayer();
+				lives--;
+				if (lives <= 0)
+				{
+					KillPlayer();
+				}
+				hitTimer.Start();
 			}
-			hitTimer.Start();
+			break;
+		case ColliderType::PROJECTILE_ENEMY:
+			LOG("Collision Projectile");
+			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+
+			if (hitTimer.ReadMSec() > hitTime)
+			{
+				lives--;
+				if (lives <= 0)
+				{
+					KillPlayer();
+				}
+				hitTimer.Start();
+			}
+			break;
+		case ColliderType::UNKNOWN:
+			LOG("Collision UNKNOWN");
+			break;
+		default:
+			break;
 		}
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
-	default:
-		break;
 	}
 }
 
@@ -427,6 +423,8 @@ void Player::ResetPlayer()
 	Disable();
 	Engine::GetInstance().physics->DeletePhysBody(body);
 	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
 	position = Vector2D(192, 384);
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
@@ -439,6 +437,8 @@ void Player::ResetPlayer(int level)
 	Disable();
 	Engine::GetInstance().physics->DeletePhysBody(body);
 	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
 	if (level == 1) {
 		position = Vector2D(192, 384);
 	}
@@ -525,7 +525,18 @@ void Player::Shoot()
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetAnimation(0);
 	projectile->SetGravity(0);
+	projectile->SetCollisionType(0);
 
 	// Reset the attack timer to manage firing rate
 	attackShurikenTimer.Start();
+}
+
+bool Player::IsAttackingLeft()
+{
+	return isAttackingLeft;
+}
+
+bool Player::IsAttackingRight()
+{
+	return isAttackingRight;
 }
