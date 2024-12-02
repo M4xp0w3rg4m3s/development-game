@@ -97,14 +97,20 @@ bool Player::Start() {
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
 	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 0.8, height * 0.25, bodyType::DYNAMIC);
+	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
+	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
 
-	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
+	body->CreateWeld(bodyBot, { 0,(float)PIXEL_TO_METERS((-height / 2)) });
+	body->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS((-width * 1.5)) ,(float)PIXEL_TO_METERS((height / 4)) });
+	body->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS((width * 1.5)),(float)PIXEL_TO_METERS((height / 4)) });
 
 	body->body->SetFixedRotation(true);
 	bodyBot->body->SetFixedRotation(true);
+	bodyAttackLeft->body->SetFixedRotation(true);
+	bodyAttackRight->body->SetFixedRotation(true);
 
 	b2MassData playerMass;
-	playerMass.mass = 1.15f;
+	playerMass.mass = 2.3f;
 	playerMass.center = body->body->GetLocalCenter();
 	body->body->SetMassData(&playerMass);
 
@@ -113,10 +119,14 @@ bool Player::Start() {
 	// Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	body->listener = this;
 	bodyBot->listener = this;
+	bodyAttackLeft->listener = this;
+	bodyAttackRight->listener = this;
 
 	// Assign collider type
 	body->ctype = ColliderType::PLAYER;
 	bodyBot->ctype = ColliderType::GROUND_CHECK;
+	bodyAttackLeft->ctype = ColliderType::PLAYER_ATTACK_LEFT;
+	bodyAttackRight->ctype = ColliderType::PLAYER_ATTACK_RIGHT;
 
 	return true;
 }
@@ -161,6 +171,8 @@ bool Player::Update(float dt)
 					body->body->SetLinearVelocity(velocity);
 					body->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5}, true);
 					bodyBot->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5}, true);
+					bodyAttackLeft->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5 }, true);
+					bodyAttackRight->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5 }, true);
 					isGrounded = false;
 					state = PlayerState::JUMPING;
 				}
@@ -343,6 +355,22 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			KillPlayer();
 		}
 	}
+	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT ) {
+		if (physB->ctype == ColliderType::ENEMY) {
+			
+		}
+		if (physB->ctype == ColliderType::PROJECTILE) {
+
+		}
+	}
+	if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT) {
+		if (physB->ctype == ColliderType::ENEMY) {
+			
+		}
+		if (physB->ctype == ColliderType::PROJECTILE) {
+
+		}
+	}
 	switch (physB->ctype)
 	{
 	case ColliderType::KILL:
@@ -367,9 +395,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			hitTimer.Start();
 		}
 		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
 	case ColliderType::PROJECTILE:
 		LOG("Collision Projectile");
 		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
@@ -383,6 +408,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			}
 			hitTimer.Start();
 		}
+		break;
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
 		break;
 	default:
 		break;

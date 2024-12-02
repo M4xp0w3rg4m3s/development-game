@@ -135,6 +135,50 @@ PhysBody* Physics::CreateCircle(int x, int y, int radious, bodyType type)
 	return pbody;
 }
 
+PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type)
+{
+	// Create BODY at position x,y
+	b2BodyDef body;
+
+	if (type == DYNAMIC) body.type = b2_dynamicBody;
+	if (type == STATIC) body.type = b2_staticBody;
+	if (type == KINEMATIC) body.type = b2_kinematicBody;
+
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	// Add BODY to the world
+	b2Body* b = world->CreateBody(&body);
+
+	// Create SHAPE
+	b2CircleShape circle;
+	circle.m_radius = PIXEL_TO_METERS(radious);
+
+	// Create FIXTURE
+	b2FixtureDef fixture;
+	fixture.shape = &circle;
+	fixture.density = 1.0f;
+	fixture.isSensor = true;
+
+	// Add fixture to the BODY
+	b->CreateFixture(&fixture);
+
+	b->ResetMassData();
+	b2MassData totalMass;
+	totalMass.mass = 0.f;
+	totalMass.center = b->GetLocalCenter();
+	b->SetMassData(&totalMass);
+
+	// Create our custom PhysBody class
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	b->GetUserData().pointer = (uintptr_t)pbody;
+	pbody->width = radious * 0.5f;
+	pbody->height = radious * 0.5f;
+
+	// Return our PhysBody class
+	return pbody;
+}
+
 PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bodyType type)
 {
 	// Create BODY at position x,y
@@ -510,13 +554,13 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	return ret;
 }
 
-void PhysBody::CreateWeld(PhysBody* pbody, float position)
+void PhysBody::CreateWeld(PhysBody* pbody, Vector2D position)
 {
 	b2WeldJointDef jointDef;
 	jointDef.bodyA = this->body;
 	jointDef.bodyB = pbody->body;
 	jointDef.localAnchorA.Set(0.0f, 0.0f);
-	jointDef.localAnchorB.Set(0.0f, position);
+	jointDef.localAnchorB.Set(position.getX(), position.getY());
 	jointDef.referenceAngle = 0.0f;
 	jointDef.stiffness = 0.0f;
 	jointDef.damping = 0.0f;

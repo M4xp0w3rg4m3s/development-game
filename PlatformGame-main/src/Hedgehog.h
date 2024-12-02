@@ -30,6 +30,7 @@ public:
 
 	void GoToPath() override;
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
 private:
 	Timer attackTimer;
 	int attackTime = 2;

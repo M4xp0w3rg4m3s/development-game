@@ -7,11 +7,6 @@
 class Projectile : public Entity{
 public:
 
-	enum ProjectileState
-	{
-		FLYING,
-		COLLIDED
-	};
 	enum ProjectileType
 	{
 		ENEMY,

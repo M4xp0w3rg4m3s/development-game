@@ -64,6 +64,8 @@ public:
 	bool isGrounded = false;
 	PhysBody* body = nullptr;
 	PhysBody* bodyBot = nullptr;
+	PhysBody* bodyAttackLeft = nullptr;
+	PhysBody* bodyAttackRight = nullptr;
 
 	PlayerState state = IDLE;
 
