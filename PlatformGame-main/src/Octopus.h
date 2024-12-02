@@ -28,7 +28,7 @@ public:
 
 	void Shoot();
 
-	void GoToPath();
+	void GoToPath() override;
 public:
 
 private:

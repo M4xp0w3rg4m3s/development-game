@@ -202,7 +202,13 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 void Pathfinding::Compute()
 {
     while (!finished) {
-        PropagateAStar(MANHATTAN);
+        if (currentType == EnemyType::AIR) {
+            PropagateAStar(SQUARED);
+        }
+        else {
+            PropagateAStar(MANHATTAN);
+        }
+      
     }
     if (finished) {
         if (computeTimer.ReadSec() >= computeTime) {
