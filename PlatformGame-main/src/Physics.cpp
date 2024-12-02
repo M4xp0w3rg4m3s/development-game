@@ -59,7 +59,7 @@ bool Physics::PreUpdate()
 			PhysBody* pb1 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData().pointer;
 			PhysBody* pb2 = (PhysBody*)c->GetFixtureB()->GetBody()->GetUserData().pointer;
 
-			if (pb1 && pb2 && pb1->listener)
+			if (pb1 && pb2 && pb1->listener && !IsPendingToDelete(pb1) && !IsPendingToDelete(pb2))
 				pb1->listener->OnCollision(pb1, pb2);
 		}
 	}
