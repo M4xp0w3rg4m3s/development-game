@@ -98,6 +98,10 @@ bool Bee::Update(float dt)
 	}
 	pathfinding->Compute();
 
+	if (pathfinding->objectiveFound) {
+		GoToPath();
+	}
+
 	// Activate or deactivate debug mode
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
@@ -118,4 +122,63 @@ bool Bee::CleanUp()
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
+}
+
+void Bee::GoToPath()
+{
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+
+	Vector2D destination = { NULL, NULL };
+
+	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
+
+	int index = 0;
+	for (const auto& tile : pathfinding->pathTiles) {
+		if (tilePos == tile) {
+			float destinationX = NULL;
+			float destinationY = NULL;
+			if (index == 0) {
+				destinationX = pathfinding->pathTiles[index].getX();
+				destinationY = pathfinding->pathTiles[index].getY();
+			}
+			else {
+				destinationX = pathfinding->pathTiles[index - 1].getX();
+				destinationY = pathfinding->pathTiles[index - 1].getY();
+			}
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+			break;
+		}
+		index++;
+	}
+
+	if (destination.getX() != NULL && destination.getY() != NULL) {
+		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) /*- width / 5*/;
+		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().x) /*- width / 5*/;
+
+		if (currentPosX != destination.getX()) {
+			if (currentPosX < destination.getX()) {
+				velocity.x = 0.05 * 16;
+			}
+			else {
+				velocity.x = -0.05 * 16;
+			}
+		}
+		else if (currentPosX == destination.getX()) {
+			velocity.x = 0;
+		}
+
+		if (currentPosY != destination.getY()) {
+			if (currentPosY < destination.getY()) {
+				velocity.y = 0.05 * 16;
+			}
+			else {
+				velocity.y = -0.05 * 16;
+			}
+		}
+		else if (currentPosY == destination.getY()) {
+			velocity.y = 0;
+		}
+		pbody->body->SetLinearVelocity(velocity);
+	}
 }

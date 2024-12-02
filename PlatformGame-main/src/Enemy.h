@@ -36,6 +36,8 @@ public:
 
 	void SetPathfindingType(EnemyType type);
 
+	virtual void GoToPath();
+
 protected:
 	bool debug = false;
 
