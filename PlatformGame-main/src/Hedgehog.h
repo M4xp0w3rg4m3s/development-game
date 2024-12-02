@@ -28,6 +28,8 @@ public:
 
 	void Shoot();
 
+	void GoToPath() override;
+
 private:
 	Timer attackTimer;
 	int attackTime = 2;
