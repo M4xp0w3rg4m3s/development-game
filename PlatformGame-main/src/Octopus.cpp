@@ -141,13 +141,26 @@ void Octopus::GoToPath()
 
 	Vector2D destination = { NULL, NULL };
 
+	//Change to this
+	//b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
+	//velocity.x = 0.3 * 16;
+	//body->body->SetLinearVelocity(velocity);
+
+
 	int index = 0;
 	for (const auto& tile : pathfinding->pathTiles) {
-		if (tilePos == tile) {
-			float destinationX = pathfinding->pathTiles[index - 1].getX();
-			float destinationY = pathfinding->pathTiles[index - 1].getY();
-
-			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+		if (tilePos.getX() == tile.getX()) {
+			float destinationX = NULL;
+			float destinationY = NULL;
+			if (index == 0) {
+				destinationX = pathfinding->pathTiles[index].getX();
+				destinationY = pathfinding->pathTiles[index].getY();
+			}
+			else {
+				destinationX = pathfinding->pathTiles[index - 1].getX();
+				destinationY = pathfinding->pathTiles[index - 1].getY();
+			}
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)tilePos.getY());
 			break;
 		}
 		index++;
