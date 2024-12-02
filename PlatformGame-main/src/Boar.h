@@ -26,8 +26,6 @@ public:
 		this->parameters = parameters;
 	}
 
-public:
-
-private:
+	void GoToPath() override;
 
 };

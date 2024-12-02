@@ -28,6 +28,8 @@ public:
 
 	void Shoot();
 
+	void GoToPath() override;
+
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 private:
 	Timer attackTimer;
