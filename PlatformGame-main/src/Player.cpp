@@ -186,6 +186,8 @@ bool Player::Update(float dt)
 	else {
 		body->body->SetGravityScale(0);
 		bodyBot->body->SetGravityScale(0);
+		bodyAttackLeft->body->SetGravityScale(0);
+		bodyAttackRight->body->SetGravityScale(0);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 			velocity.x = -0.3 * 16;
@@ -215,6 +217,8 @@ bool Player::Update(float dt)
 			godMode = false;
 			body->body->SetGravityScale(1);
 			bodyBot->body->SetGravityScale(1);
+			bodyAttackLeft->body->SetGravityScale(1);
+			bodyAttackRight->body->SetGravityScale(1);
 		}
 	}
 

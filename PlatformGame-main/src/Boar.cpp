@@ -98,15 +98,15 @@ bool Boar::Update(float dt)
 		pathfinding->DrawPath();
 	}
 
-	if (pbody->body->GetLinearVelocity().x < 0) {
+	animator->Update();
+	if (pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookLeft();
+		animator->Draw((int)position.getX(), (int)position.getY(), 10, -3);
 	}
 	else {
 		animator->LookRight();
+		animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
 	}
-
-	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
 
 	return true;
 }

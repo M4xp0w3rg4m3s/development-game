@@ -111,6 +111,13 @@ bool Bee::Update(float dt)
 		pathfinding->DrawPath();
 	}
 
+	if (pbody->body->GetLinearVelocity().x > 0) {
+		animator->LookLeft();
+	}
+	else {
+		animator->LookRight();
+	}
+
 	animator->Update();
 	animator->Draw((int)position.getX(), (int)position.getY(), 12, -5);
 

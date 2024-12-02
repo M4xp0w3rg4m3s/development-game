@@ -99,15 +99,15 @@ bool Octopus::Update(float dt)
 		attackTimer.Start();
 	}
 
+	animator->Update();
 	if (pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookLeft();
+		animator->Draw((int)position.getX(), (int)position.getY(), 28, -16);
 	}
 	else {
 		animator->LookRight();
+		animator->Draw((int)position.getX(), (int)position.getY(), -4, -16);
 	}
-
-	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY(), -4, -16);
 	
 	return true;
 }
