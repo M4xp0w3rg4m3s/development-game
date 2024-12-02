@@ -141,11 +141,7 @@ void Octopus::GoToPath()
 
 	Vector2D destination = { NULL, NULL };
 
-	//Change to this
-	//b2Vec2 velocity = b2Vec2(0, body->body->GetLinearVelocity().y);
-	//velocity.x = 0.3 * 16;
-	//body->body->SetLinearVelocity(velocity);
-
+	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
 
 	int index = 0;
 	for (const auto& tile : pathfinding->pathTiles) {
@@ -167,22 +163,20 @@ void Octopus::GoToPath()
 	}
 
 	if (destination.getX() != NULL && destination.getY() != NULL) {
-		float currentPosX = pbody->body->GetPosition().x;
-		float currentPosY = pbody->body->GetPosition().y;
-		int direction = 0;
+		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) - width / 2;
 
-		printf("antes %d, %d : %d\n", (int)METERS_TO_PIXELS(currentPosX), (int)currentPosY, (int)destination.getX());
-
-		if (METERS_TO_PIXELS(currentPosX) != destination.getX()) {
-			if (METERS_TO_PIXELS(currentPosX) < destination.getX()) {
-				direction = 1;
+		if (currentPosX != destination.getX()) {
+			if (currentPosX < destination.getX()) {
+				velocity.x = 0.05 * 16;
 			}
 			else {
-				direction = -1;
+				velocity.x = -0.05 * 16;
 			}
-			currentPosX = currentPosX + direction * 0.005;
-			
-			pbody->body->SetTransform({ (currentPosX), (currentPosY) }, 0);
 		}
+		else if(currentPosX == destination.getX()){
+			velocity.x = 0;
+		}
+		velocity.y = 0;
+		pbody->body->SetLinearVelocity(velocity);
 	}
 }

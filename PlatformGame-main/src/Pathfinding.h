@@ -73,6 +73,6 @@ public:
     bool resetPathAfterEnd = false;
 
     Timer computeTimer;
-    int computeTime = 2;
+    float computeTime = 0.5;
 };
 
