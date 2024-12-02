@@ -30,7 +30,7 @@ bool Boar::Start()
 
 	texH = height, texW = width;
 
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 4, bodyType::DYNAMIC);
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
@@ -88,7 +88,7 @@ bool Boar::Update(float dt)
 	}
 
 	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
+	animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
 
 	return true;
 }
