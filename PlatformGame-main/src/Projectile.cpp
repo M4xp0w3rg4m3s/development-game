@@ -132,7 +132,6 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 		LOG("Collision KILL");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
-
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
@@ -144,6 +143,22 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PROJECTILE_PLAYER:
 		LOG("Collision ITEM");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
+	case ColliderType::PLAYER_ATTACK_LEFT:
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
+		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
+		break;
+	case ColliderType::PLAYER_ATTACK_RIGHT:
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
+		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

@@ -49,8 +49,11 @@ public:
 
 	void Shoot();
 
-	bool IsAttackingLeft();
-	bool IsAttackingRight();
+	bool IsAttackingLeft() const;
+	bool IsAttackingRight() const;
+
+	void SetAttackingLeft(bool isAttackingLeft_);
+	void SetAttackingRight(bool isAttackingRight_);
 
 public:
 

@@ -189,3 +189,32 @@ void Octopus::GoToPath()
 		pbody->body->SetLinearVelocity(velocity);
 	}
 }
+
+void Octopus::OnCollision(PhysBody* physA, PhysBody* physB)
+{
+	switch (physB->ctype)
+	{
+	case ColliderType::PLAYER_ATTACK_LEFT:
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
+		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
+		break;
+	case ColliderType::PLAYER_ATTACK_RIGHT:
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
+		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
+		break;
+	case ColliderType::PROJECTILE_PLAYER:
+
+		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
+	default:
+		break;
+	}
+}

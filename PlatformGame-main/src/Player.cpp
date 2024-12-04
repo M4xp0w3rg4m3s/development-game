@@ -242,8 +242,6 @@ bool Player::Update(float dt)
 				}
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
 					animator->SetAnimation(1);
-					isAttackingLeft = false;
-					isAttackingRight = false;
 					state = PlayerState::IDLE;
 				}
 				attackCooldownTimer.Start();
@@ -252,8 +250,6 @@ bool Player::Update(float dt)
 		else if (state == PlayerState::COMBO) {
 			if (animator->GetCurrentFrame_int() == 3) {
 				SDL_Delay(100);
-				isAttackingLeft = false;
-				isAttackingRight = false;
 				state = PlayerState::IDLE;
 			}
 		}
@@ -535,12 +531,22 @@ void Player::Shoot()
 	attackShurikenTimer.Start();
 }
 
-bool Player::IsAttackingLeft()
+bool Player::IsAttackingLeft() const
 {
 	return isAttackingLeft;
 }
 
-bool Player::IsAttackingRight()
+bool Player::IsAttackingRight() const
 {
 	return isAttackingRight;
+}
+
+void Player::SetAttackingLeft(bool isAttackingLeft_)
+{
+	isAttackingLeft = isAttackingLeft_;
+}
+
+void Player::SetAttackingRight(bool isAttackingRight_)
+{
+	isAttackingRight = isAttackingRight_;
 }

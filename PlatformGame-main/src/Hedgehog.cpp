@@ -25,6 +25,8 @@ bool Hedgehog::Awake()
 
 bool Hedgehog::Start()
 {
+	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
+
 	position.setX(parameters.attribute("x").as_int());
 	position.setY(parameters.attribute("y").as_int());
 	height = parameters.attribute("h").as_int();
@@ -46,6 +48,8 @@ bool Hedgehog::Start()
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+
+	pbody->listener = this;
 
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
@@ -249,12 +253,12 @@ void Hedgehog::GoToPath()
 }
 void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 {
-	
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER_ATTACK_LEFT:
 		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
 		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
 			LOG("Collision KILL");
 			Engine::GetInstance().entityManager->DeleteEntity(this);
 		}
@@ -262,9 +266,14 @@ void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PLAYER_ATTACK_RIGHT:
 		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
 		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
 			LOG("Collision KILL");
 			Engine::GetInstance().entityManager->DeleteEntity(this);
 		}
+		break;
+	case ColliderType::PROJECTILE_PLAYER:
+
+		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 	default:
 		break;
