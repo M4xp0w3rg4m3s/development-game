@@ -135,46 +135,7 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
-	//case ColliderType::PLAYER_ATTACK_LEFT:
-	//	if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
-	//	{
-	//		Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
-	//		LOG("Collision KILL");
-	//		Engine::GetInstance().entityManager->DeleteEntity(this);
-	//	}
-	//	/*if (physA->GetFixtureList()[0].GetFilterData(filter) == )
-	//	{
-	//		
-	//	}*/
-	//	/*Engine::GetInstance().entityManager->DeleteEntity(this);*/
-	//	break;
-	//case ColliderType::PLAYER_ATTACK_RIGHT:
-	//	if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
-	//	{
-	//		Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
-	//		LOG("Collision KILL");
-	//		Engine::GetInstance().entityManager->DeleteEntity(this);
-	//	}
-	//	/*Engine::GetInstance().entityManager->DeleteEntity(this);*/
-	//	break;
-	case ColliderType::PLAYER_ATTACK_LEFT:
-		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
-		{
-			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
-			LOG("Collision KILL");
-			Disable();
-		}
-		break;
-	case ColliderType::PLAYER_ATTACK_RIGHT:
-		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
-		{
-			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
-			LOG("Collision KILL");
-			Disable();
-		}
-		break;
 	case ColliderType::PROJECTILE_PLAYER:
-		
 		Disable();
 		break;
 	default:

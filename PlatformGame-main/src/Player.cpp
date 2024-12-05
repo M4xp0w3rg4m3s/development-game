@@ -269,11 +269,11 @@ bool Player::Update(float dt)
 				{
 					if (animator->IsLookingLeft() && isAttackingLeft)
 					{
-						Engine::GetInstance().entityManager->DeleteEntity(enemyAttacked);
+						enemyAttacked->Disable();
 					}
 					else if (animator->IsLookingRight() && isAttackingRight)
 					{
-						Engine::GetInstance().entityManager->DeleteEntity(enemyAttacked);
+						enemyAttacked->Disable();
 					}
 					isAttackingRight = false;
 					isAttackingLeft = false;
