@@ -48,6 +48,12 @@ bool Boar::Start()
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
 
+	/*b2Filter filter;
+	filter.categoryBits = Engine::GetInstance().physics.get()->EnemyLayer;
+	filter.maskBits = Engine::GetInstance().physics.get()->playerAttackLayer;*/
+
+	/*pbody->body->GetFixtureList()[0].SetFilterData(filter);*/
+
 	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
 
@@ -103,7 +109,7 @@ bool Boar::Update(float dt)
 		// Draw pathfinding 
 		pathfinding->DrawPath();
 	}
-
+	
 	animator->Update();
 	if (pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookLeft();
@@ -128,22 +134,28 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
-	case ColliderType::PLAYER_ATTACK_LEFT:
-		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
-		{
-			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
-			LOG("Collision KILL");
-			Engine::GetInstance().entityManager->DeleteEntity(this);
-		}
-		break;
-	case ColliderType::PLAYER_ATTACK_RIGHT:
-		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
-		{
-			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
-			LOG("Collision KILL");
-			Engine::GetInstance().entityManager->DeleteEntity(this);
-		}
-		break;
+	//case ColliderType::PLAYER_ATTACK_LEFT:
+	//	if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
+	//	{
+	//		Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
+	//		LOG("Collision KILL");
+	//		Engine::GetInstance().entityManager->DeleteEntity(this);
+	//	}
+	//	/*if (physA->GetFixtureList()[0].GetFilterData(filter) == )
+	//	{
+	//		
+	//	}*/
+	//	/*Engine::GetInstance().entityManager->DeleteEntity(this);*/
+	//	break;
+	//case ColliderType::PLAYER_ATTACK_RIGHT:
+	//	if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
+	//	{
+	//		Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
+	//		LOG("Collision KILL");
+	//		Engine::GetInstance().entityManager->DeleteEntity(this);
+	//	}
+	//	/*Engine::GetInstance().entityManager->DeleteEntity(this);*/
+	//	break;
 	case ColliderType::PROJECTILE_PLAYER:
 		
 		Engine::GetInstance().entityManager->DeleteEntity(this);

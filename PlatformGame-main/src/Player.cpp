@@ -128,6 +128,13 @@ bool Player::Start() {
 	bodyAttackLeft->ctype = ColliderType::PLAYER_ATTACK_LEFT;
 	bodyAttackRight->ctype = ColliderType::PLAYER_ATTACK_RIGHT;
 
+	/*b2Filter filter;
+	filter.categoryBits = Engine::GetInstance().physics.get()->playerAttackLayer;
+	filter.maskBits = Engine::GetInstance().physics.get()->EnemyLayer;
+
+	bodyAttackLeft->body->GetFixtureList()[0].SetFilterData(filter);
+	bodyAttackRight->body->GetFixtureList()[0].SetFilterData(filter);*/
+	
 	return true;
 }
 
@@ -258,9 +265,33 @@ bool Player::Update(float dt)
 			bool canAttack = attackCooldownTimer.ReadMSec() > attackCooldown;
 
 			if (keyQPressed && canAttack) {
+				if (enemyHasEntered)
+				{
+					if (animator->IsLookingLeft() && isAttackingLeft)
+					{
+						Engine::GetInstance().entityManager->DeleteEntity(enemyAttacked);
+					}
+					else if (animator->IsLookingRight() && isAttackingRight)
+					{
+						Engine::GetInstance().entityManager->DeleteEntity(enemyAttacked);
+					}
+					isAttackingRight = false;
+					isAttackingLeft = false;
+					enemyHasEntered = false;
+				}
+				
 				if (animator->GetAnimation() != 4) {
+					if (animator->IsLookingLeft())
+					{
+						bodyAttackLeft->body->SetEnabled(true);
+					}
+					else
+					{
+						bodyAttackRight->body->SetEnabled(true);
+					}
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
+					
 					state = PlayerState::WOMBO;
 					attackReactionTimer.Start();
 				}
@@ -359,11 +390,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			KillPlayer();
 		}
 	}
-	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT && physB->ctype == ColliderType::ENEMY && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT && physB->ctype == ColliderType::ENEMY) {
 		isAttackingLeft = true;
+		enemyHasEntered = true;
+		enemyAttacked = physB->listener;
 	}
-	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::ENEMY && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::ENEMY) {
 		isAttackingRight = true;
+		enemyHasEntered = true;
+		enemyAttacked = physB->listener;
 	}
 	if (physA->ctype != ColliderType::PLAYER_ATTACK_LEFT && physA->ctype != ColliderType::PLAYER_ATTACK_RIGHT){
 		switch (physB->ctype)

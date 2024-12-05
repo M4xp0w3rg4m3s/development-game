@@ -100,7 +100,8 @@ public:
 	b2World* GetWorld() const {
 		return world;
 	}
-
+	uint16_t playerAttackLayer = 0x0001;
+	uint16_t EnemyLayer = 0x0002;
 private:
 
 	// Debug mode
