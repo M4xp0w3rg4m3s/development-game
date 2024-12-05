@@ -140,25 +140,8 @@ void Bee::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
-	case ColliderType::PLAYER_ATTACK_LEFT:
-		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
-		{
-			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
-			LOG("Collision KILL");
-			active = false;
-		}
-		break;
-	case ColliderType::PLAYER_ATTACK_RIGHT:
-		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
-		{
-			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
-			LOG("Collision KILL");
-			active = false;
-		}
-		break;
 	case ColliderType::PROJECTILE_PLAYER:
-
-		active = false;
+		Disable();
 		break;
 	default:
 		break;
