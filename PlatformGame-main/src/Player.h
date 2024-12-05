@@ -97,7 +97,6 @@ public:
 
 	bool isAttackingLeft = false;
 	bool isAttackingRight = false;
-	bool enemyHasEntered = false;
 
 	Entity* enemyAttacked = nullptr;
 

@@ -265,7 +265,7 @@ bool Player::Update(float dt)
 			bool canAttack = attackCooldownTimer.ReadMSec() > attackCooldown;
 
 			if (keyQPressed && canAttack) {
-				if (enemyHasEntered)
+				if (enemyAttacked != nullptr)
 				{
 					if (animator->IsLookingLeft() && isAttackingLeft)
 					{
@@ -277,7 +277,6 @@ bool Player::Update(float dt)
 					}
 					isAttackingRight = false;
 					isAttackingLeft = false;
-					enemyHasEntered = false;
 				}
 				
 				if (animator->GetAnimation() != 4) {
@@ -392,12 +391,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	}
 	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT && physB->ctype == ColliderType::ENEMY) {
 		isAttackingLeft = true;
-		enemyHasEntered = true;
 		enemyAttacked = physB->listener;
 	}
 	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::ENEMY) {
 		isAttackingRight = true;
-		enemyHasEntered = true;
 		enemyAttacked = physB->listener;
 	}
 	if (physA->ctype != ColliderType::PLAYER_ATTACK_LEFT && physA->ctype != ColliderType::PLAYER_ATTACK_RIGHT){
