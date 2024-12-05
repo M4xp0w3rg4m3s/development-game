@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
+#include "EntityManager.h"
 
 Enemy::Enemy(EntityType type) : Entity(type)
 {
@@ -24,6 +25,7 @@ bool Enemy::Awake() {
 }
 
 bool Enemy::Start() {
+	enemyName = parameters.attribute("name").as_string();
 	return true;
 }
 
@@ -80,4 +82,14 @@ void Enemy::SetPathfindingType(EnemyType type)
 void Enemy::GoToPath()
 {
 
+}
+
+void Enemy::DeleteThis()
+{
+	Engine::GetInstance().entityManager->DeleteEntity(this);
+}
+
+void Enemy::SetUnactive()
+{
+	parameters.attribute("active").set_value(false);
 }

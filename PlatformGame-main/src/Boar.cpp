@@ -133,7 +133,8 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 		{
 			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
 			LOG("Collision KILL");
-			Engine::GetInstance().entityManager->DeleteEntity(this);
+			SetUnactive();
+			DeleteThis();
 		}
 		break;
 	case ColliderType::PLAYER_ATTACK_RIGHT:
@@ -141,12 +142,14 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 		{
 			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
 			LOG("Collision KILL");
-			Engine::GetInstance().entityManager->DeleteEntity(this);
+			SetUnactive();
+			DeleteThis();
 		}
 		break;
 	case ColliderType::PROJECTILE_PLAYER:
 		
-		Engine::GetInstance().entityManager->DeleteEntity(this);
+		SetUnactive();
+		DeleteThis();
 		break;
 	default:
 		break;

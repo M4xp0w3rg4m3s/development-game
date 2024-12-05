@@ -38,8 +38,14 @@ public:
 
 	virtual void GoToPath();
 
+	void DeleteThis();
+
+	void SetUnactive();
+
 protected:
 	bool debug = false;
+
+	std::string enemyName;
 
 	std::string textureName;
 	SDL_Texture* texture = nullptr;
