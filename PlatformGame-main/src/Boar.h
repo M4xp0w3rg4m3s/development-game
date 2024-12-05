@@ -31,4 +31,6 @@ public:
 
 	void GoToPath() override;
 
+private:
+	int audioShurikenHitId = -1;
 };

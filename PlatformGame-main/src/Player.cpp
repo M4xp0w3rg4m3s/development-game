@@ -15,7 +15,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 	name = "Player";
 
 	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
-	
+	audioShurikenShootId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenShoot.wav");
 }
 
 Player::~Player() {
@@ -235,7 +235,7 @@ bool Player::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
 		Shoot();
 	}
 
@@ -558,6 +558,9 @@ void Player::Shoot()
 	projectile->SetAnimation(0);
 	projectile->SetGravity(0);
 	projectile->SetCollisionType(0);
+
+	//Audio
+	Engine::GetInstance().audio.get()->PlayFx(audioShurikenShootId);
 
 	// Reset the attack timer to manage firing rate
 	attackShurikenTimer.Start();

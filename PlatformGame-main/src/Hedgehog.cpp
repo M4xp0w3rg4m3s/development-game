@@ -8,10 +8,11 @@
 #include "EntityManager.h"
 #include "Projectile.h"
 #include "Player.h"
+#include "Audio.h"
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
-
+	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
 Hedgehog::~Hedgehog()
@@ -257,6 +258,7 @@ void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
+		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
 		Disable();
 		break;
 	default:

@@ -6,10 +6,11 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "EntityManager.h"
+#include "Audio.h"
 
 Boar::Boar() : Enemy(EntityType::BOAR)
 {
-
+	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
 Boar::~Boar()
@@ -48,12 +49,6 @@ bool Boar::Start()
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
-
-	/*b2Filter filter;
-	filter.categoryBits = Engine::GetInstance().physics.get()->EnemyLayer;
-	filter.maskBits = Engine::GetInstance().physics.get()->playerAttackLayer;*/
-
-	/*pbody->body->GetFixtureList()[0].SetFilterData(filter);*/
 
 	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
@@ -136,6 +131,7 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
+		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
 		Disable();
 		break;
 	default:

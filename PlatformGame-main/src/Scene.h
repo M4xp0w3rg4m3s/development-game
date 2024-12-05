@@ -63,4 +63,6 @@ private:
 	std::vector<Enemy*> enemyList;
 
 	int current_level = 1;
+
+	int numEnemies = 13;
 };

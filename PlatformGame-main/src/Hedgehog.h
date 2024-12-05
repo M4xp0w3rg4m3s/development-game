@@ -35,4 +35,6 @@ public:
 private:
 	Timer attackTimer;
 	int attackTime = 2;
+
+	int audioShurikenHitId = -1;
 };

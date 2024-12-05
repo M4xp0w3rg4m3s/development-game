@@ -101,4 +101,5 @@ public:
 	Entity* enemyAttacked = nullptr;
 
 	int audioPlayerStepsId = -1; //AUDIO PEPE
+	int audioShurikenShootId = -1;
 };

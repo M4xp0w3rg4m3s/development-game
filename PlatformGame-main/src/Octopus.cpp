@@ -7,10 +7,11 @@
 #include "Textures.h"
 #include "EntityManager.h"
 #include "Projectile.h"
+#include "Audio.h"
 
 Octopus::Octopus() : Enemy(EntityType::OCTOPUS)
 {
-
+	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
 Octopus::~Octopus()
@@ -39,6 +40,8 @@ bool Octopus::Start()
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+
+	pbody->listener = this;
 
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
@@ -196,6 +199,7 @@ void Octopus::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
+		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
 		Disable();
 		break;
 	default:

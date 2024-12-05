@@ -6,10 +6,11 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "EntityManager.h"
+#include "Audio.h"
 
 Bee::Bee() : Enemy(EntityType::BEE)
 {
-
+	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
 Bee::~Bee()
@@ -141,6 +142,7 @@ void Bee::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
+		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
 		Disable();
 		break;
 	default:
