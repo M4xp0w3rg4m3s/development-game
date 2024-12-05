@@ -178,7 +178,7 @@ bool Player::Update(float dt)
 				}
 			}
 		}
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_REPEAT) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
 		
 			state = PlayerState::DYING;
 		}
@@ -452,8 +452,8 @@ void Player::ResetPlayer(int level)
 }
 
 void Player::SetPosition(Vector2D pos) {
-	pos.setX(pos.getX() + texW / 2);
-	pos.setY(pos.getY() + texH / 2);
+	//pos.setX(pos.getX() + texW / 2);
+	//pos.setY(pos.getY() + texH / 2);
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
 	body->body->SetTransform(bodyPos, 0);
 }

@@ -30,6 +30,7 @@ bool Boar::Start()
 	position.setY(parameters.attribute("y").as_int());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
+	enemyId = parameters.attribute("id").as_string();
 
 	texH = height, texW = width;
 
@@ -133,8 +134,7 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 		{
 			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
 			LOG("Collision KILL");
-			SetUnactive();
-			DeleteThis();
+			Disable();
 		}
 		break;
 	case ColliderType::PLAYER_ATTACK_RIGHT:
@@ -142,14 +142,12 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 		{
 			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
 			LOG("Collision KILL");
-			SetUnactive();
-			DeleteThis();
+			Disable();
 		}
 		break;
 	case ColliderType::PROJECTILE_PLAYER:
 		
-		SetUnactive();
-		DeleteThis();
+		Disable();
 		break;
 	default:
 		break;

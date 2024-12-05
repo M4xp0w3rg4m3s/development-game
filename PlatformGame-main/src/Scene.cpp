@@ -162,8 +162,10 @@ bool Scene::Update(float dt)
 	}
 
 	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
-		enemyList[enemyIndex]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-		enemyList[enemyIndex]->ResetPath();
+		if (enemyList[enemyIndex]->active) {
+			enemyList[enemyIndex]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
+			enemyList[enemyIndex]->ResetPath();
+		}
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
@@ -187,6 +189,11 @@ bool Scene::PostUpdate()
 	// Detects if the player wants to exit the game with ESC key
 	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+		LoadState();
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+		SaveState();
 
 	return ret;
 }
@@ -219,4 +226,96 @@ Vector2D Scene::GetPlayerPosition()
 Player* Scene::GetPlayer() const
 {
 	return player;
+}
+
+void Scene::LoadState()
+{
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+
+	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
+
+	//Read XML and restore information
+
+	//Player position
+	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_int(), sceneNode.child("player").attribute("y").as_int());
+	player->SetPosition(playerPos);
+
+	//enemies
+	for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
+	{
+		Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_int(), enemyNode.attribute("y").as_int());
+
+		bool enemyActive = enemyNode.attribute("active").as_bool();
+
+		for (const auto& entity : Engine::GetInstance().entityManager->entities) {
+			if (entity->type == EntityType::BEE || entity->type == EntityType::BOAR || entity->type == EntityType::OCTOPUS || entity->type == EntityType::HEDGEHOG) {
+
+				Enemy* enemy = static_cast<Enemy*>(entity);
+
+				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
+					if (!enemy->active && enemyActive) {
+						enemy->Enable();
+					}
+					if (enemyActive) {
+						enemy->SetPosition(enemyPos);
+					}
+				}
+			}
+		}
+	}
+}
+
+void Scene::SaveState()
+{
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+
+	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
+
+	//Save info to XML 
+
+	//Player position
+	sceneNode.child("player").attribute("x").set_value(player->GetPosition().getX());
+	sceneNode.child("player").attribute("y").set_value(player->GetPosition().getY());
+
+	//enemies
+	for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
+	{
+		bool enemyActive = enemyNode.attribute("active").as_bool();
+
+		for (const auto& entity : Engine::GetInstance().entityManager->entities) {
+			if (entity->type == EntityType::BEE || entity->type == EntityType::BOAR || entity->type == EntityType::OCTOPUS || entity->type == EntityType::HEDGEHOG) {
+
+				Enemy* enemy = static_cast<Enemy*>(entity);
+
+				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
+					if (enemyActive) {
+						if (!enemy->active) {
+							enemyNode.attribute("active").set_value("false");
+						}
+						else {
+							enemyNode.attribute("x").set_value(enemy->GetPosition().getX());
+							enemyNode.attribute("y").set_value(enemy->GetPosition().getY());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//Saves the modifications to the XML 
+	loadFile.save_file("config.xml");
 }

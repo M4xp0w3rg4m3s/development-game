@@ -40,12 +40,10 @@ public:
 
 	void DeleteThis();
 
-	void SetUnactive();
+	std::string enemyId;
 
 protected:
 	bool debug = false;
-
-	std::string enemyName;
 
 	std::string textureName;
 	SDL_Texture* texture = nullptr;
