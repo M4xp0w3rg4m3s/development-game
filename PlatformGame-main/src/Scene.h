@@ -44,6 +44,10 @@ public:
 
 	}
 
+	void LoadState();
+
+	void SaveState();
+
 private:
 	int enemyIndex = 0;
 

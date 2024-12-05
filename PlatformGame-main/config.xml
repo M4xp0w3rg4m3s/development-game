@@ -18,7 +18,7 @@
   </window>
 
   <scene>
-    <player x="100" y="100" texturePath="Assets/Textures/Character/chara-spritesheet.png"/>
+	  <player x="192" y="384" texturePath="Assets/Textures/Character/chara-spritesheet.png"/>
 	<layers>
 		<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
 		<two texturePath="Assets/Maps/background_parallax/normal_BG/layer2.png" />
@@ -45,22 +45,22 @@
 	<map3 path="Assets/Maps/" name="Level3Map.tmx"/>
 	<entities>
 		<enemies>
-			<enemy name="boar" x="2145" y="353" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
-			<enemy name="boar" x="3392" y="320" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
-			<enemy name="boar" x="4320" y="225" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
+			<enemy name="boar" x="2145" y="353" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="true" id="bo1"/>
+			<enemy name="boar" x="3392" y="320" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="true" id="bo2"/>
+			<enemy name="boar" x="4320" y="225" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="true" id="bo3"/>
 			
-			<enemy name="octopus" x="1728" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
-			<enemy name="octopus" x="2880" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
-			<enemy name="octopus" x="4416" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
-			<enemy name="octopus" x="4736" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
-			<enemy name="octopus" x="5520" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
-			<enemy name="octopus" x="5696" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			<enemy name="octopus" x="1728" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o1"/>
+			<enemy name="octopus" x="2880" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o2"/>
+			<enemy name="octopus" x="4416" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o3"/>
+			<enemy name="octopus" x="4736" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o4"/>
+			<enemy name="octopus" x="5520" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o5"/>
+			<enemy name="octopus" x="5696" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o6"/>
 			
-			<enemy name="bee" x="2112" y="65" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" />
-			<enemy name="bee" x="4000" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" />
-			<enemy name="bee" x="6080" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" />
+			<enemy name="bee" x="2112" y="65" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="true" id="be1"/>
+			<enemy name="bee" x="4000" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="true" id="be2"/>
+			<enemy name="bee" x="6080" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="true" id="be3"/>
 			
-			<enemy name="hedgehog" x="2880" y="288" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" />
+			<enemy name="hedgehog" x="2880" y="288" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="true" id="h1"/>
 		</enemies>
 	</entities>
   </scene>

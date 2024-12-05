@@ -31,6 +31,7 @@ bool Hedgehog::Start()
 	position.setY(parameters.attribute("y").as_int());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
+	enemyId = parameters.attribute("id").as_string();
 
 	texH = height, texW = width;
 
@@ -260,7 +261,7 @@ void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 		{
 			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
 			LOG("Collision KILL");
-			Engine::GetInstance().entityManager->DeleteEntity(this);
+			active = false;
 		}
 		break;
 	case ColliderType::PLAYER_ATTACK_RIGHT:
@@ -268,12 +269,12 @@ void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 		{
 			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
 			LOG("Collision KILL");
-			Engine::GetInstance().entityManager->DeleteEntity(this);
+			active = false;
 		}
 		break;
 	case ColliderType::PROJECTILE_PLAYER:
 
-		Engine::GetInstance().entityManager->DeleteEntity(this);
+		active = false;
 		break;
 	default:
 		break;
