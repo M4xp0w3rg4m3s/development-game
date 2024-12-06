@@ -156,7 +156,7 @@ bool Player::Update(float dt)
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
 		{
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				velocity.x = -0.2 * 16;
+				velocity.x = (float)-0.2 * 16;
 				animator->LookLeft();
 				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == RIGHT)
 				{
@@ -165,7 +165,7 @@ bool Player::Update(float dt)
 				
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				velocity.x = 0.2 * 16;
+				velocity.x = (float)0.2 * 16;
 				animator->LookRight();
 				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == LEFT)
 				{
@@ -197,18 +197,18 @@ bool Player::Update(float dt)
 		bodyAttackRight->body->SetGravityScale(0);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -0.3 * 16;
+			velocity.x = (float)-0.3 * 16;
 			animator->LookLeft();
 		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = 0.3 * 16;
+			velocity.x = (float)0.3 * 16;
 			animator->LookRight();
 		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			velocity.y = -0.3 * 16;
+			velocity.y = (float)-0.3 * 16;
 		}
 		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			velocity.y = 0.3 * 16;
+			velocity.y = (float)0.3 * 16;
 		}
 		else {
 			velocity.y = 0;
@@ -231,8 +231,8 @@ bool Player::Update(float dt)
 
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
+	position.setX((float)METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
+	position.setY((float)METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
@@ -492,7 +492,7 @@ void Player::SetPosition(Vector2D pos) {
 
 Vector2D Player::GetPosition() {
 	b2Vec2 bodyPos = body->body->GetTransform().p;
-	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	Vector2D pos = Vector2D((float)METERS_TO_PIXELS(bodyPos.x), (float)METERS_TO_PIXELS(bodyPos.y));
 	return pos;
 }
 
@@ -509,7 +509,7 @@ Vector2D Player::GetCenterPosition()
 	b2Vec2 centerPosInMeters = { bodyPos.x , bodyPos.y };
 
 	// Convert center position back to pixels
-	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));
+	Vector2D centerPos = Vector2D((float)METERS_TO_PIXELS(centerPosInMeters.x), (float)METERS_TO_PIXELS(centerPosInMeters.y));
 
 	return centerPos;
 }

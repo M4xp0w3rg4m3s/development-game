@@ -28,7 +28,7 @@ bool Hedgehog::Start()
 {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
-	position.setX(parameters.attribute("x").as_int());
+	position.setX(parameters.attribute("x").as_float());
 	position.setY(parameters.attribute("y").as_int());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
@@ -188,7 +188,7 @@ void Hedgehog::Shoot()
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetAnimation(1);
-	projectile->SetGravity(0.1);
+	projectile->SetGravity(0.1f);
 	projectile->SetCollisionType(1);
 
 	// Reset the attack timer to manage firing rate
@@ -224,15 +224,15 @@ void Hedgehog::GoToPath()
 	}
 
 	if (destination.getX() != NULL && destination.getY() != NULL) {
-		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
-		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
 
 		if (currentPosX != destination.getX()) {
 			if (currentPosX < destination.getX()) {
-				velocity.x = 0.10 * 16;
+				velocity.x = (float)0.10 * 16;
 			}
 			else {
-				velocity.x = -0.10 * 16;
+				velocity.x = (float)-0.10 * 16;
 			}
 		}
 		else if (currentPosX == destination.getX()) {
@@ -241,10 +241,10 @@ void Hedgehog::GoToPath()
 
 		if (currentPosY != destination.getY()) {
 			if (currentPosY < destination.getY()) {
-				velocity.y = 0.10 * 16;
+				velocity.y = (float)0.10 * 16;
 			}
 			else {
-				velocity.y = -0.10 * 16;
+				velocity.y = (float)-0.10 * 16;
 			}
 		}
 		else if (currentPosY == destination.getY()) {
