@@ -487,6 +487,9 @@ void Player::SetPosition(Vector2D pos) {
 	//pos.setX(pos.getX() + texW / 2);
 	//pos.setY(pos.getY() + texH / 2);
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+	bodyBot->body->SetTransform(bodyPos, 0);
+	bodyAttackLeft->body->SetTransform(bodyPos, 0);
+	bodyAttackRight->body->SetTransform(bodyPos, 0);
 	body->body->SetTransform(bodyPos, 0);
 }
 

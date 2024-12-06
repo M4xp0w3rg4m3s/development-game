@@ -37,13 +37,6 @@ bool Boar::Start()
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 4, bodyType::DYNAMIC);
 
-	b2MassData boarMass;
-	boarMass.mass = 1.15f;
-	boarMass.center = pbody->body->GetLocalCenter();
-	pbody->body->SetMassData(&boarMass);
-
-	pbody->body->GetFixtureList()[0].SetFriction(1);
-
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
 
