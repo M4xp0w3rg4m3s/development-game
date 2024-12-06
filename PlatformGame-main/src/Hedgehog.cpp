@@ -29,7 +29,7 @@ bool Hedgehog::Start()
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
 	position.setX(parameters.attribute("x").as_float());
-	position.setY(parameters.attribute("y").as_int());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 	enemyId = parameters.attribute("id").as_string();
@@ -58,8 +58,8 @@ bool Hedgehog::Start()
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(4);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 
@@ -105,12 +105,12 @@ bool Hedgehog::Update(float dt)
 {
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX((float)METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setY((float)METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
-		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 		pathfinding->ResetPath(tilePos);
 		pathfinding->resetPathAfterEnd = false;
 	}
@@ -191,7 +191,7 @@ void Hedgehog::Shoot()
 void Hedgehog::GoToPath()
 {
 	Vector2D pos = GetPosition();
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 
 	Vector2D destination = { NULL, NULL };
 

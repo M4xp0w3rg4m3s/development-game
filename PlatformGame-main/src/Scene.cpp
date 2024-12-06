@@ -149,10 +149,9 @@ bool Scene::Update(float dt)
 
 	//Get mouse position and obtain the map coordinate
 	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
-	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap(mousePos.getX() - Engine::GetInstance().render.get()->camera.x,
-																	mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
+	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap((int)mousePos.getX() - Engine::GetInstance().render.get()->camera.x,(int)mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
 
-	Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld(mouseTile.getX(), mouseTile.getY());
+	Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld((int)mouseTile.getX(), (int)mouseTile.getY());
 	SDL_Rect rect = { 0,0,32,32 };
 
 	// saves the tile pos for debugging purposes
@@ -244,13 +243,13 @@ void Scene::LoadState()
 	//Read XML and restore information
 
 	//Player position
-	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_int(), sceneNode.child("player").attribute("y").as_int());
+	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_float(), sceneNode.child("player").attribute("y").as_float());
 	player->SetPosition(playerPos);
 
 	//enemies
 	for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
 	{
-		Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_int(), enemyNode.attribute("y").as_int());
+		Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float());
 
 		bool enemyActive = enemyNode.attribute("active").as_bool();
 
