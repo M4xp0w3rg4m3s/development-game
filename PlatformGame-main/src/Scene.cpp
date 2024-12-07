@@ -102,8 +102,12 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
-		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width/2) - (Engine::GetInstance().window.get()->width) / 2);
+
+	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
+		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
+	}
+	else {
+		Engine::GetInstance().render.get()->camera.x = 0;
 	}
 
 	if (current_level == 1) {
@@ -174,6 +178,21 @@ bool Scene::Update(float dt)
 			enemyIndex = 0;
 		}
 	}
+	
+	for (auto checkpoint : Engine::GetInstance().map->checkpoints) {
+		if (current_level == 1) {
+			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 1 && !checkpoint->activated) {
+				checkpoint->activated = true;
+				SaveState();
+			}
+		}
+		else if (current_level == 2) {
+			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 2 && !checkpoint->activated) {
+				checkpoint->activated = true;
+				SaveState();
+			}
+		}
+	}
 
 	Engine::GetInstance().audio.get()->Update(dt);		//AUDIO PEPE
 
@@ -230,13 +249,6 @@ Player* Scene::GetPlayer() const
 
 void Scene::LoadState()
 {
-	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
-		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
-	}
-	else {
-		Engine::GetInstance().render.get()->camera.x = 0;
-	}
-
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
 
