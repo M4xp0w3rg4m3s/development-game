@@ -131,6 +131,8 @@ bool Scene::Update(float dt)
 		current_level = 2;
 
 		player->ResetPlayer(current_level);
+
+		SaveState();
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 
@@ -149,6 +151,8 @@ bool Scene::Update(float dt)
 		current_level = 1;
 
 		player->ResetPlayer(current_level);
+
+		SaveState();
 	}
 
 	//Get mouse position and obtain the map coordinate
@@ -193,9 +197,6 @@ bool Scene::Update(float dt)
 			}
 		}
 	}
-
-	Engine::GetInstance().audio.get()->Update(dt);		//AUDIO PEPE
-
 
 	return true;
 }
