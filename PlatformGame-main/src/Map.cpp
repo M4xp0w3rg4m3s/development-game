@@ -253,6 +253,13 @@ bool Map::Load(std::string path, std::string fileName, bool doCallsToObjects)
                         objects.emplace_back(boulder);
                     }
                 }
+                else if (groupName == "Checkpoints") {
+                    int checkpointOrder = objectNode.child("properties").find_child_by_attribute("name", "Order").attribute("value").as_int();
+                    int checkpointLevel = objectNode.child("properties").find_child_by_attribute("name", "Level").attribute("value").as_int();
+
+                    Checkpoint* currentCheckpoint = new Checkpoint{ { (float)x, (float)y }, checkpointLevel, checkpointOrder, false };
+                    checkpoints.emplace_back(currentCheckpoint);
+                }
             }
         }
 

@@ -230,6 +230,13 @@ Player* Scene::GetPlayer() const
 
 void Scene::LoadState()
 {
+	if (-(player->position.getX() - (Engine::GetInstance().window.get()->width) / 2) < 0) {
+		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
+	}
+	else {
+		Engine::GetInstance().render.get()->camera.x = 0;
+	}
+
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
 
