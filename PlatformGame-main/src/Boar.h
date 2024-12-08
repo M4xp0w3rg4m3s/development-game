@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "Sprite.h"
 #include "Pathfinding.h"
+#include <box2d/box2d.h>
 
 struct SDL_Texture;
 
@@ -26,8 +27,10 @@ public:
 		this->parameters = parameters;
 	}
 
-public:
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
+	void GoToPath() override;
 
 private:
-
+	int audioShurikenHitId = -1;
 };

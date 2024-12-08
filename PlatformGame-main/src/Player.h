@@ -49,6 +49,12 @@ public:
 
 	void Shoot();
 
+	bool IsAttackingLeft() const;
+	bool IsAttackingRight() const;
+
+	void SetAttackingLeft(bool isAttackingLeft_);
+	void SetAttackingRight(bool isAttackingRight_);
+
 public:
 
 	//Declare player parameters
@@ -64,6 +70,8 @@ public:
 	bool isGrounded = false;
 	PhysBody* body = nullptr;
 	PhysBody* bodyBot = nullptr;
+	PhysBody* bodyAttackLeft = nullptr;
+	PhysBody* bodyAttackRight = nullptr;
 
 	PlayerState state = IDLE;
 
@@ -87,5 +95,12 @@ public:
 
 	int lives = 3;
 
+	bool isAttackingLeft = false;
+	bool isAttackingRight = false;
+
+	Entity* enemyAttacked = nullptr;
+
 	int audioPlayerStepsId = -1; //AUDIO PEPE
+	int audioShurikenShootId = -1;
+	int audioPlayerSwordSwingId = -1;
 };

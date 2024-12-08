@@ -28,11 +28,14 @@ enum class ColliderType {
 	PLAYER,
 	ENEMY,
 	GROUND_CHECK,
+	PLAYER_ATTACK_LEFT,
+	PLAYER_ATTACK_RIGHT,
 	ITEM,
 	BOULDER,
 	PLATFORM,
 	KILL,
-	PROJECTILE,
+	PROJECTILE_PLAYER,
+	PROJECTILE_ENEMY,
 	UNKNOWN,
 	// ..
 };
@@ -51,7 +54,7 @@ public:
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
 
-	void CreateWeld(PhysBody* pbody, float position);
+	void CreateWeld(PhysBody* pbody, Vector2D position);
 
 public:
 	int activeCollisions = 0;
@@ -80,8 +83,9 @@ public:
 
 	// Create basic physics objects
 	PhysBody* CreateRectangle(int x, int y, int width, int height, bodyType type);
-	PhysBody* CreateCircle(int x, int y, int radious, bodyType type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, bodyType type);
+	PhysBody* CreateCircle(int x, int y, int radious, bodyType type);
+	PhysBody* CreateCircleSensor(int x, int y, int radious, bodyType type);
 	PhysBody* CreateChain(int x, int y, int* points, int size, bodyType type);
 
 	PhysBody* CreatePlayer(int x, int y, int width, int height, bodyType type);
@@ -96,7 +100,8 @@ public:
 	b2World* GetWorld() const {
 		return world;
 	}
-
+	uint16_t playerAttackLayer = 0x0001;
+	uint16_t EnemyLayer = 0x0002;
 private:
 
 	// Debug mode

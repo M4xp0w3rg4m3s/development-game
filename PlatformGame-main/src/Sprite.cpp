@@ -143,6 +143,22 @@ void Sprite::LookLeft()
 {
     player_dir = direction::LEFT;
 }
+bool Sprite::IsLookingRight()
+{
+    if (player_dir == direction::RIGHT)
+    {
+        return true;
+    }
+    return false;
+}
+bool Sprite::IsLookingLeft()
+{
+    if (player_dir == direction::LEFT)
+    {
+        return true;
+    }
+    return false;
+}
 direction Sprite::GetPlayerDir()
 {
     return player_dir;

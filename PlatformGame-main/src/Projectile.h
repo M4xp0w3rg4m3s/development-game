@@ -7,11 +7,6 @@
 class Projectile : public Entity{
 public:
 
-	enum ProjectileState
-	{
-		FLYING,
-		COLLIDED
-	};
 	enum ProjectileType
 	{
 		ENEMY,
@@ -35,6 +30,9 @@ public:
 	void SetAnimation(int id);
 
 	void SetGravity(float gravity);
+
+	void SetCollisionType(int type);
+
 private:
 	Sprite* animator;
 	std::string textureName;

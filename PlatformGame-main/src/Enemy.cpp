@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
+#include "EntityManager.h"
 
 Enemy::Enemy(EntityType type) : Entity(type)
 {
@@ -38,8 +39,6 @@ bool Enemy::CleanUp()
 }
 
 void Enemy::SetPosition(Vector2D pos) {
-	pos.setX(pos.getX() + texW / 2);
-	pos.setY(pos.getY() + texH / 2);
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
 	pbody->body->SetTransform(bodyPos, 0);
 }
@@ -80,4 +79,9 @@ void Enemy::SetPathfindingType(EnemyType type)
 void Enemy::GoToPath()
 {
 
+}
+
+void Enemy::DeleteThis()
+{
+	Engine::GetInstance().entityManager->DeleteEntity(this);
 }

@@ -40,6 +40,10 @@ public:
 
     void LookRight();
     void LookLeft();
+
+    bool IsLookingRight();
+    bool IsLookingLeft();
+
     direction GetPlayerDir();
 
     void Release();
