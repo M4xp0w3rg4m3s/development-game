@@ -127,6 +127,9 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
 		Disable();
 		break;
+	case ColliderType::KILL:
+		Disable();
+		break;
 	default:
 		break;
 	}

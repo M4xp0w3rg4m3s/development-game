@@ -399,14 +399,14 @@ bool Player::Update(float dt)
 	//Combo1 SoundFX
 	if (state == PlayerState::WOMBO && (animator->GetAnimation() == 4) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)){
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
-		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+		//Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); 
 
 	}
 	//Combo2 SoundFX
 	if (state == PlayerState::COMBO && (animator->GetAnimation() == 5) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)) {
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
-		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+		//Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); 
 	}
 
