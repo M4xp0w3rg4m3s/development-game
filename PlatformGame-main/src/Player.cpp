@@ -98,8 +98,6 @@ bool Player::Start() {
 
 	animator->SetAnimation(0);
 
-
-
 	// Add physics to the player - initialize physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
@@ -147,10 +145,7 @@ bool Player::Update(float dt)
 
 	isGrounded = bodyBot->activeCollisions != 0;
 
-	int currentLevel = Engine::GetInstance().scene.get()->GetCurrentLevel();
-
-
-	
+	int currentLevel = Engine::GetInstance().scene.get()->GetCurrentLevel();	
 
 	if (!godMode) {
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
@@ -352,19 +347,19 @@ bool Player::Update(float dt)
 	if (isGrounded && !wasGrounded) {
 		if (position.getX() < 1125 && currentLevel == 1) // Cave Level 1
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);
 		}
 		else if (6460 > position.getX() && position.getX() > 6170 && currentLevel == 1) // House Level 1
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);
 		}
 		else if (510 > position.getX() && position.getX() > 225 && currentLevel == 2) // Initial house Level 2
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);
 		}
 		else if (3935 > position.getX() && position.getX() > 225 && currentLevel == 2) // End house Level 2
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);
 		}
 		else
 		{
@@ -376,23 +371,29 @@ bool Player::Update(float dt)
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
 		if (position.getX() < 1125 && currentLevel == 1) // Cave Level 1
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); //player steps audio updates every step
 		}
+		/* steps rock beneath boulder */
+		//else if (3712 > position.getX() && position.getX() > 4064 && currentLevel == 1 && position.getY() > 360) // boulder lvl1
+		//{
+		//	Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
+		//}
+
 		else if (6460 > position.getX() && position.getX() > 6170 && currentLevel == 1) // House Level 1
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
 		}
 		else if (510 > position.getX() && position.getX() > 225 && currentLevel == 2) // Initial house Level 2
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
 		}
 		else if (4225 > position.getX() && position.getX() > 3935 && currentLevel == 2) // End house Level 2
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
 		}
 		else
 		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);	//player steps audio updates every step	
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);	
 		}
 	}
 	//Combo1 SoundFX
