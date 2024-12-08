@@ -16,6 +16,7 @@
 	</window>
 	<scene>
 		<player x="192" y="319" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
+		<level currentlevel="1" />
 		<layers>
 			<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
 			<two texturePath="Assets/Maps/background_parallax/normal_BG/layer2.png" />

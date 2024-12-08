@@ -114,7 +114,7 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
 	}
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_0) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
@@ -131,10 +131,8 @@ bool Scene::Update(float dt)
 		current_level = 2;
 
 		player->ResetPlayer(current_level);
-
-		SaveState();
 	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx",true);
@@ -151,8 +149,9 @@ bool Scene::Update(float dt)
 		current_level = 1;
 
 		player->ResetPlayer(current_level);
-
-		SaveState();
+	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+		player->ResetPlayer(current_level);
 	}
 
 	//Get mouse position and obtain the map coordinate
@@ -263,6 +262,41 @@ void Scene::LoadState()
 
 	//Read XML and restore information
 
+	if (sceneNode.child("level").attribute("currentlevel").as_int() == 2 && current_level == 1) {
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+
+		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		SDL_DestroyTexture(caveBg);
+
+		current_level = 2;
+
+		player->ResetPlayer(current_level);
+
+	} else if (sceneNode.child("level").attribute("currentlevel").as_int() == 1 && current_level != 1) {
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx",true);
+
+		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
+
+		current_level = 1;
+
+		player->ResetPlayer(current_level);
+	}
+
 	//Player position
 	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_int(), sceneNode.child("player").attribute("y").as_int());
 	player->SetPosition(playerPos);
@@ -310,6 +344,8 @@ void Scene::SaveState()
 	//Player position
 	sceneNode.child("player").attribute("x").set_value(player->GetPosition().getX());
 	sceneNode.child("player").attribute("y").set_value(player->GetPosition().getY());
+
+	sceneNode.child("level").attribute("currentlevel").set_value(current_level);
 
 	//enemies
 	for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
