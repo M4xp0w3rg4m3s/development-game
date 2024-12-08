@@ -62,7 +62,8 @@ private:
 	Player* player;
 	Parallax* parallax;
 
-	std::vector<Enemy*> enemyList;
+	std::vector<Enemy*> enemyListLevel1;
+	std::vector<Enemy*> enemyListLevel2;
 
 	int current_level = 1;
 

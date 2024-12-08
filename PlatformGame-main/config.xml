@@ -15,7 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<player x="192" y="319" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
+		<player x="191" y="392" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
 		<level currentlevel="1" />
 		<layers>
 			<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
@@ -42,7 +42,7 @@
 		</layers3>
 		<map3 path="Assets/Maps/" name="Level3Map.tmx" />
 		<entities>
-			<enemies>
+			<enemies_lvl_1>
 				<enemy name="boar" x="2145" y="371" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo1" />
 				<enemy name="boar" x="3391" y="339" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo2" />
 				<enemy name="boar" x="4320" y="243" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo3" />
@@ -56,7 +56,7 @@
 				<enemy name="bee" x="3956" y="209" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be2" />
 				<enemy name="bee" x="6080" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be3" />
 				<enemy name="hedgehog" x="2880" y="311" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h1" />
-			</enemies>
+			</enemies_lvl_1>
 		</entities>
 	</scene>
 </config>
