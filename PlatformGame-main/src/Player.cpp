@@ -212,11 +212,6 @@ bool Player::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 
-	if (lives <= 0)
-	{
-		KillPlayer();
-	}
-
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
 		Shoot();
 	}
@@ -281,6 +276,7 @@ bool Player::Update(float dt)
 	}
 	else if (state == PlayerState::DYING)
 	{
+		lives = 100;
 		if (animator->GetAnimation() != 3) {
 			animator->SetAnimation(3);
 			animator->SetLoop(false);
@@ -299,7 +295,6 @@ bool Player::Update(float dt)
 
 	//Walking SoundFX
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
-		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);	//player steps audio updates every step	
 	}
 
@@ -361,7 +356,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ENEMY:
 		LOG("Collision UNKNOWN");
 		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-		lives--;
+
+		if (hitTimer.ReadMSec() > hitTime)
+		{
+			lives--;
+			if (lives <= 0)
+			{
+				KillPlayer();
+			}
+			hitTimer.Start();
+		}
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
@@ -369,7 +373,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PROJECTILE:
 		LOG("Collision Projectile");
 		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-		lives--;
+
+		if (hitTimer.ReadMSec() > hitTime)
+		{
+			lives--;
+			if (lives <= 0)
+			{
+				KillPlayer();
+			}
+			hitTimer.Start();
+		}
 		break;
 	default:
 		break;
@@ -389,6 +402,7 @@ void Player::ResetPlayer()
 	position = Vector2D(192, 384);
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
+	lives = 3;
 	Enable();
 }
 
@@ -405,6 +419,7 @@ void Player::ResetPlayer(int level)
 	}
 	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
+	lives = 3;
 	Enable();
 }
 
@@ -480,6 +495,8 @@ void Player::Shoot()
 
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+	projectile->SetAnimation(0);
+	projectile->SetGravity(0);
 
 	// Reset the attack timer to manage firing rate
 	attackShurikenTimer.Start();

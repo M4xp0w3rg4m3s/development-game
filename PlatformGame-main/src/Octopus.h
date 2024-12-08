@@ -26,8 +26,12 @@ public:
 		this->parameters = parameters;
 	}
 
+	void Shoot();
+
+	void GoToPath() override;
 public:
 
 private:
-
+	Timer attackTimer;
+	int attackTime = 2;
 };

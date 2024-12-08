@@ -45,10 +45,22 @@
 	<map3 path="Assets/Maps/" name="Level3Map.tmx"/>
 	<entities>
 		<enemies>
-			<enemy name="boar" x="640" y="280" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
-			<enemy name="octopus" x="672" y="280" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
-			<enemy name="bee" x="704" y="280" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="true" />
-			<enemy name="hedgehog" x="736" y="280" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" />
+			<enemy name="boar" x="2145" y="353" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
+			<enemy name="boar" x="3392" y="320" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
+			<enemy name="boar" x="4320" y="225" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" />
+			
+			<enemy name="octopus" x="1728" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			<enemy name="octopus" x="2880" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			<enemy name="octopus" x="4416" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			<enemy name="octopus" x="4736" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			<enemy name="octopus" x="5520" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			<enemy name="octopus" x="5696" y="385" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" />
+			
+			<enemy name="bee" x="2112" y="65" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" />
+			<enemy name="bee" x="4000" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" />
+			<enemy name="bee" x="6080" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" />
+			
+			<enemy name="hedgehog" x="2880" y="288" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" />
 		</enemies>
 	</entities>
   </scene>

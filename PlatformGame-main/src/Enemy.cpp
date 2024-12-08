@@ -76,3 +76,8 @@ void Enemy::SetPathfindingType(EnemyType type)
 {
 	pathfinding->SetEnemyType(type);
 }
+
+void Enemy::GoToPath()
+{
+
+}

@@ -80,6 +80,9 @@ public:
 	Timer attackShurikenTimer;
 	int attackShurikenTime = 2000;
 
+	Timer hitTimer;
+	int hitTime = 100;
+
 	bool godMode = false;
 
 	int lives = 3;
