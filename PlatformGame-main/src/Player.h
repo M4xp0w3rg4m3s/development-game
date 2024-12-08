@@ -107,4 +107,5 @@ public:
 	int audioPlayerHurtId = -1;
 	int audioPlayerDieId = -1;
 	int audioHitEnemyId = -1;
+	int audioFallToWaterId = -1;
 };

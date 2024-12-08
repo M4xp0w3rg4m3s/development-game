@@ -90,6 +90,8 @@ bool Scene::Start()
 
 	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
 
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+
 	return true;
 }
 
@@ -133,7 +135,7 @@ bool Scene::Update(float dt)
 		player->ResetPlayer(current_level);
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-
+	
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx",true);
 
@@ -267,6 +269,8 @@ void Scene::LoadState()
 	//Read XML and restore information
 
 	if (sceneNode.child("level").attribute("currentlevel").as_int() == 2 && current_level == 1) {
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 
@@ -284,6 +288,8 @@ void Scene::LoadState()
 		player->ResetPlayer(current_level);
 
 	} else if (sceneNode.child("level").attribute("currentlevel").as_int() == 1 && current_level != 1) {
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx",true);
 

@@ -21,6 +21,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 	audioPlayerHurtId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerHurt.wav");
 	audioPlayerDieId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerDie.wav");
 	audioHitEnemyId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/hitEnemy.wav");
+	audioFallToWaterId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/fallToWater.wav");
 }
 
 Player::~Player() {
@@ -252,11 +253,13 @@ bool Player::Update(float dt)
 				{
 					Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId); //Enemy hit Audio
 					enemyAttacked->Disable();
+					enemyAttacked = nullptr;
 				}
 				else if (animator->IsLookingRight() && isAttackingRight)
 				{
 					Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId); //Enemy hit Audio
 					enemyAttacked->Disable();
+					enemyAttacked = nullptr;
 				}
 			}
 		}
@@ -336,6 +339,7 @@ bool Player::Update(float dt)
 	else if (state == PlayerState::DYING)
 	{
 		lives = 100;
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerDieId);
 		if (animator->GetAnimation() != 3) {
 			animator->SetAnimation(3);
 			animator->SetLoop(false);
@@ -449,6 +453,7 @@ bool Player::CleanUp()
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	if (physA->ctype == ColliderType::GROUND_CHECK) {
 		if (physB->ctype == ColliderType::KILL) {
+			Engine::GetInstance().audio.get()->PlayFx(audioFallToWaterId);
 			KillPlayer();
 		}
 	}
@@ -519,7 +524,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 void Player::KillPlayer()
 {
 	if (!godMode) {
-		Engine::GetInstance().audio.get()->PlayFx(audioPlayerDieId);
 		state = PlayerState::DYING;
 	}
 }
