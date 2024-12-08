@@ -14,9 +14,12 @@ Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
 
-	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
+	audioPlayerStepsGrassId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/stepGrass.wav"); //AUDIO STEPS
+	audioPlayerStepsRockId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/stepRock.wav");
 	audioShurikenShootId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenShoot.wav");
 	audioPlayerSwordSwingId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordSwing.wav");
+	audioPlayerHurtId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerHurt.wav");
+	audioPlayerDieId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerDie.wav");
 }
 
 Player::~Player() {
@@ -149,7 +152,18 @@ bool Player::Update(float dt)
 
 	//Jump SoundFX
 	if (isGrounded && !wasGrounded) {
-		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);
+		if (position.getX() < 1125) // Cave Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+		}
+		else if (6460 > position.getX() && position.getX() > 6170) // House Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+		}
+		else
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);		
+		}
 	}
 	
 
@@ -338,13 +352,24 @@ bool Player::Update(float dt)
 
 	//Walking SoundFX
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
-		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);	//player steps audio updates every step	
+		if (position.getX() < 1125) // Cave Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+		}
+		else if (6460 > position.getX() && position.getX() > 6170) // House Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+		}
+		else
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);	//player steps audio updates every step	
+		}
 	}
 
 	//Audio testing in Q
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 	{
-		/*Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);*/
+		/*Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId);*/
 	}
 
 	animator->Update();
@@ -422,6 +447,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				{
 					KillPlayer();
 				}
+				if (state != PlayerState::DYING && state != PlayerState::DEAD)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId);
+				}
 				hitTimer.Start();
 			}
 			break;
@@ -435,6 +464,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				if (lives <= 0)
 				{
 					KillPlayer();
+				}
+				if (state != PlayerState::DYING && state != PlayerState::DEAD)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId);
 				}
 				hitTimer.Start();
 			}
@@ -450,7 +483,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 void Player::KillPlayer()
 {
-	if(!godMode)	state = PlayerState::DYING;
+	if (!godMode) {
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerDieId);
+		state = PlayerState::DYING;
+	}
 }
 
 void Player::ResetPlayer()
