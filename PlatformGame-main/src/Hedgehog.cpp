@@ -12,8 +12,7 @@
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
-	audioHedgeShurikenId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shuriken_ninja_knifes1.wav"); //AUDIO STEPS
-
+	audioHedgeShurikenId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shuriken_ninja_knifes1.wav"); //AUDIO HEDGESHURIKEN
 	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
