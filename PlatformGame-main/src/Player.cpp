@@ -457,8 +457,7 @@ void Player::ResetPlayer()
 	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
 	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
 	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
-	position = Vector2D(192, 384);
-	Engine::GetInstance().scene->CameraReset();
+	Engine::GetInstance().scene->LoadState();
 	state = PlayerState::IDLE;
 	lives = 3;
 	Enable();
@@ -477,7 +476,6 @@ void Player::ResetPlayer(int level)
 	if (level == 2) {
 		position = Vector2D(192, 320);
 	}
-	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
 	lives = 3;
 	Enable();
