@@ -186,7 +186,9 @@ void Hedgehog::Shoot()
 	projectile->SetGravity(0.1f);
 	projectile->SetCollisionType(1);
 
-	Engine::GetInstance().audio.get()->PlayFx(audioHedgeShurikenId); //Audio Shuriken
+
+	if (2464 <= Engine::GetInstance().scene.get()->GetPlayerPosition().getX() && Engine::GetInstance().scene.get()->GetPlayerPosition().getX() <= 3360)
+		Engine::GetInstance().audio.get()->PlayFx(audioHedgeShurikenId); //Audio Shuriken
 
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
