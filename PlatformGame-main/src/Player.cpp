@@ -16,6 +16,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 
 	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
 	audioShurikenShootId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenShoot.wav");
+	audioPlayerSwordSwingId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordSwing.wav");
 }
 
 Player::~Player() {
@@ -245,6 +246,8 @@ bool Player::Update(float dt)
 				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackReactionTimer.ReadMSec() < reactionTimeMs) {
 					animator->SetAnimation(5);
 					animator->SetLoop(false);
+					
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);
 					state = PlayerState::COMBO;
 				}
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
@@ -280,17 +283,11 @@ bool Player::Update(float dt)
 				}
 				
 				if (animator->GetAnimation() != 4) {
-					if (animator->IsLookingLeft())
-					{
-						bodyAttackLeft->body->SetEnabled(true);
-					}
-					else
-					{
-						bodyAttackRight->body->SetEnabled(true);
-					}
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
-					
+
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);
+
 					state = PlayerState::WOMBO;
 					attackReactionTimer.Start();
 				}
@@ -342,6 +339,12 @@ bool Player::Update(float dt)
 	//Walking SoundFX
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);	//player steps audio updates every step	
+	}
+
+	//Audio testing in Q
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+	{
+		/*Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);*/
 	}
 
 	animator->Update();

@@ -41,4 +41,3 @@ private:
 
 	int audioShurikenHitId = -1;
 };
-.

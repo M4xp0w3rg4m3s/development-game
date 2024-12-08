@@ -102,4 +102,5 @@ public:
 
 	int audioPlayerStepsId = -1; //AUDIO PEPE
 	int audioShurikenShootId = -1;
+	int audioPlayerSwordSwingId = -1;
 };
