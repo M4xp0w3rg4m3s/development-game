@@ -16,6 +16,8 @@ Player::Player() : Entity(EntityType::PLAYER)
 
 	audioPlayerStepsGrassId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/stepGrass.wav"); //AUDIO STEPS
 	audioPlayerStepsRockId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/stepRock.wav");
+	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
+	audioPlayerSwordId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordPlayer.wav"); //AUDIO STEPS
 	audioShurikenShootId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenShoot.wav");
 	audioPlayerSwordSwingId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordSwing.wav");
 	audioPlayerHurtId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerHurt.wav");
@@ -402,6 +404,16 @@ bool Player::Update(float dt)
 		{
 			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);	//player steps audio updates every step	
 		}
+	}
+	//Combo1 SoundFX
+	if (state == PlayerState::WOMBO && (animator->GetAnimation() == 4) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)){
+		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+	}
+	//Combo2 SoundFX
+	if (state == PlayerState::COMBO && (animator->GetAnimation() == 5) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)) {
+		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
 	}
 
 	//Audio testing in Q

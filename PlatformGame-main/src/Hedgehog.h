@@ -29,6 +29,8 @@ public:
 
 	void Shoot();
 
+	int audioHedgeShurikenId = -1; //AUDIO PEPE
+
 	void GoToPath() override;
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
