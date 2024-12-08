@@ -17,7 +17,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 	audioPlayerStepsGrassId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/stepGrass.wav"); //AUDIO STEPS
 	audioPlayerStepsRockId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/stepRock.wav");
 	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
-	audioPlayerSwordId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordPlayer.wav"); //AUDIO STEPS
+	audioPlayerSwordId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordPlayer.wav"); //AUDIO SWORD
 	audioShurikenShootId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenShoot.wav");
 	audioPlayerSwordSwingId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordSwing.wav");
 	audioPlayerHurtId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerHurt.wav");
@@ -135,13 +135,6 @@ bool Player::Start() {
 	bodyBot->ctype = ColliderType::GROUND_CHECK;
 	bodyAttackLeft->ctype = ColliderType::PLAYER_ATTACK_LEFT;
 	bodyAttackRight->ctype = ColliderType::PLAYER_ATTACK_RIGHT;
-
-	/*b2Filter filter;
-	filter.categoryBits = Engine::GetInstance().physics.get()->playerAttackLayer;
-	filter.maskBits = Engine::GetInstance().physics.get()->EnemyLayer;
-
-	bodyAttackLeft->body->GetFixtureList()[0].SetFilterData(filter);
-	bodyAttackRight->body->GetFixtureList()[0].SetFilterData(filter);*/
 	
 	return true;
 }
@@ -271,7 +264,6 @@ bool Player::Update(float dt)
 					animator->SetAnimation(5);
 					animator->SetLoop(false);
 					
-					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); //Sword Audio
 					state = PlayerState::COMBO;
 				}
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
@@ -300,8 +292,6 @@ bool Player::Update(float dt)
 				if (animator->GetAnimation() != 4) {
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
-
-					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); //Sword Audio
 
 					state = PlayerState::WOMBO;
 					attackReactionTimer.Start();
@@ -341,7 +331,7 @@ bool Player::Update(float dt)
 	else if (state == PlayerState::DYING)
 	{
 		lives = 100;
-		Engine::GetInstance().audio.get()->PlayFx(audioPlayerDieId);
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerDieId); // Audio Die
 		if (animator->GetAnimation() != 3) {
 			animator->SetAnimation(3);
 			animator->SetLoop(false);
@@ -409,18 +399,14 @@ bool Player::Update(float dt)
 	if (state == PlayerState::WOMBO && (animator->GetAnimation() == 4) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)){
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); 
+
 	}
 	//Combo2 SoundFX
 	if (state == PlayerState::COMBO && (animator->GetAnimation() == 5) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)) {
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
-	}
-
-	//Audio testing in Q
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
-	{
-		//Put Audio to test below
-		/*Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId);*/
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); 
 	}
 
 	animator->Update();
@@ -465,7 +451,7 @@ bool Player::CleanUp()
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	if (physA->ctype == ColliderType::GROUND_CHECK) {
 		if (physB->ctype == ColliderType::KILL) {
-			Engine::GetInstance().audio.get()->PlayFx(audioFallToWaterId);
+			Engine::GetInstance().audio.get()->PlayFx(audioFallToWaterId); // Audio Water
 			KillPlayer();
 		}
 	}
@@ -485,7 +471,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
-			//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);			//AUDIO PEPE
+			//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);		
 			//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
 			break;
 		case ColliderType::ENEMY:
@@ -501,7 +487,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				}
 				if (state != PlayerState::DYING && state != PlayerState::DEAD)
 				{
-					Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId);
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId); // Audio Hurt
 				}
 				hitTimer.Start();
 			}
@@ -519,7 +505,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				}
 				if (state != PlayerState::DYING && state != PlayerState::DEAD)
 				{
-					Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId);
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId); // Audio Hurt
 				}
 				hitTimer.Start();
 			}

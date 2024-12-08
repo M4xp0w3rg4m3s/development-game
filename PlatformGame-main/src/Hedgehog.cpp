@@ -12,7 +12,7 @@
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
-	// audioHedgeShurikenId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shuriken_ninja_knifes1.wav"); //AUDIO STEPS
+	audioHedgeShurikenId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shuriken_ninja_knifes1.wav"); //AUDIO STEPS
 
 	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
@@ -185,6 +185,8 @@ void Hedgehog::Shoot()
 	projectile->SetAnimation(1);
 	projectile->SetGravity(0.1f);
 	projectile->SetCollisionType(1);
+
+	Engine::GetInstance().audio.get()->PlayFx(audioHedgeShurikenId); //Audio Shuriken
 
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();

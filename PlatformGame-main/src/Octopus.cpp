@@ -199,7 +199,7 @@ void Octopus::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
-		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
+		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId); // Audio Shuriken Hit
 		Disable();
 		break;
 	default:

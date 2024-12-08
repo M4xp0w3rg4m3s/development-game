@@ -29,7 +29,6 @@ public:
 
 	void Shoot();
 
-	int audioHedgeShurikenId = -1; //AUDIO PEPE
 
 	void GoToPath() override;
 
@@ -39,4 +38,5 @@ private:
 	int attackTime = 2;
 
 	int audioShurikenHitId = -1;
+	int audioHedgeShurikenId = -1; //AUDIO PEPE
 };
