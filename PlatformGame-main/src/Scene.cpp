@@ -134,7 +134,13 @@ bool Scene::Update(float dt)
 
 		player->ResetPlayer(current_level);
 
-		
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Disable();
+		}
+
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Enable();
+		}
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 	
@@ -153,6 +159,14 @@ bool Scene::Update(float dt)
 		current_level = 1;
 
 		player->ResetPlayer(current_level);
+
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Disable();
+		}
+
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Enable();
+		}
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
 		player->ResetPlayer(current_level);
