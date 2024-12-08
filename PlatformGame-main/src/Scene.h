@@ -35,7 +35,7 @@ public:
 
 	void CameraReset();
 
-	Vector2D GetPlayerPosition();
+	Vector2D GetPlayerPosition() const;
 
 	Player* GetPlayer() const;
 
@@ -43,6 +43,8 @@ public:
 		return tilePosDebug;
 
 	}
+
+	int GetCurrentLevel()const;
 
 	void LoadState();
 

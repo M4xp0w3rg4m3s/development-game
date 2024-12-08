@@ -236,7 +236,7 @@ void Scene::CameraReset()
 }
 
 // Return the player position
-Vector2D Scene::GetPlayerPosition()
+Vector2D Scene::GetPlayerPosition() const
 {
 	return player->GetPosition();
 }
@@ -244,6 +244,11 @@ Vector2D Scene::GetPlayerPosition()
 Player* Scene::GetPlayer() const
 {
 	return player;
+}
+
+int Scene::GetCurrentLevel() const
+{
+	return current_level;
 }
 
 void Scene::LoadState()

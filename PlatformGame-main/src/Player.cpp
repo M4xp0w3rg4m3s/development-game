@@ -20,6 +20,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 	audioPlayerSwordSwingId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordSwing.wav");
 	audioPlayerHurtId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerHurt.wav");
 	audioPlayerDieId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/playerDie.wav");
+	audioHitEnemyId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/hitEnemy.wav");
 }
 
 Player::~Player() {
@@ -150,21 +151,9 @@ bool Player::Update(float dt)
 
 	isGrounded = bodyBot->activeCollisions != 0;
 
-	//Jump SoundFX
-	if (isGrounded && !wasGrounded) {
-		if (position.getX() < 1125) // Cave Level 1
-		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
-		}
-		else if (6460 > position.getX() && position.getX() > 6170) // House Level 1
-		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
-		}
-		else
-		{
-			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);		
-		}
-	}
+	int currentLevel = Engine::GetInstance().scene.get()->GetCurrentLevel();
+
+
 	
 
 	if (!godMode) {
@@ -255,16 +244,34 @@ bool Player::Update(float dt)
 	}
 
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
+		if (state == PlayerState::WOMBO || state == PlayerState::COMBO)
+		{
+			if (enemyAttacked != nullptr)
+			{
+				if (animator->IsLookingLeft() && isAttackingLeft)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId); //Enemy hit Audio
+					enemyAttacked->Disable();
+				}
+				else if (animator->IsLookingRight() && isAttackingRight)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId); //Enemy hit Audio
+					enemyAttacked->Disable();
+				}
+			}
+		}
 		if (state == PlayerState::WOMBO) {
 			if (animator->isAnimFinished() && animator->GetAnimation() != 5) {
 				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackReactionTimer.ReadMSec() < reactionTimeMs) {
 					animator->SetAnimation(5);
 					animator->SetLoop(false);
 					
-					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); //Sword Audio
 					state = PlayerState::COMBO;
 				}
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
+					isAttackingRight = false;
+					isAttackingLeft = false;
 					animator->SetAnimation(1);
 					state = PlayerState::IDLE;
 				}
@@ -274,6 +281,8 @@ bool Player::Update(float dt)
 		else if (state == PlayerState::COMBO) {
 			if (animator->GetCurrentFrame_int() == 3) {
 				SDL_Delay(100);
+				isAttackingRight = false;
+				isAttackingLeft = false;
 				state = PlayerState::IDLE;
 			}
 		}
@@ -282,25 +291,12 @@ bool Player::Update(float dt)
 			bool canAttack = attackCooldownTimer.ReadMSec() > attackCooldown;
 
 			if (keyQPressed && canAttack) {
-				if (enemyAttacked != nullptr)
-				{
-					if (animator->IsLookingLeft() && isAttackingLeft)
-					{
-						enemyAttacked->Disable();
-					}
-					else if (animator->IsLookingRight() && isAttackingRight)
-					{
-						enemyAttacked->Disable();
-					}
-					isAttackingRight = false;
-					isAttackingLeft = false;
-				}
 				
 				if (animator->GetAnimation() != 4) {
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
 
-					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); //Sword Audio
 
 					state = PlayerState::WOMBO;
 					attackReactionTimer.Start();
@@ -310,12 +306,16 @@ bool Player::Update(float dt)
 				if (isGrounded) {
 					if (velocity.x == 0) {
 						if (animator->GetAnimation() != 1) {
+							isAttackingRight = false;
+							isAttackingLeft = false;
 							animator->SetAnimation(1);
 							state = PlayerState::IDLE;
 						}
 					}
 					else {
 						if (animator->GetAnimation() != 0) {
+							isAttackingRight = false;
+							isAttackingLeft = false;
 							animator->SetAnimation(0);
 							state = PlayerState::RUNNING;
 						}
@@ -323,6 +323,8 @@ bool Player::Update(float dt)
 				}
 				else {
 					if (animator->GetAnimation() != 2) {
+						isAttackingRight = false;
+						isAttackingLeft = false;
 						animator->SetAnimation(2);
 						animator->SetLoop(false);
 						state = PlayerState::JUMPING;
@@ -350,13 +352,45 @@ bool Player::Update(float dt)
 		}
 	}
 
+	//Jump SoundFX
+	if (isGrounded && !wasGrounded) {
+		if (position.getX() < 1125 && currentLevel == 1) // Cave Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+		}
+		else if (6460 > position.getX() && position.getX() > 6170 && currentLevel == 1) // House Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+		}
+		else if (510 > position.getX() && position.getX() > 225 && currentLevel == 2) // Initial house Level 2
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+		}
+		else if (3935 > position.getX() && position.getX() > 225 && currentLevel == 2) // End house Level 2
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId);
+		}
+		else
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsGrassId);
+		}
+	}
+
 	//Walking SoundFX
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
-		if (position.getX() < 1125) // Cave Level 1
+		if (position.getX() < 1125 && currentLevel == 1) // Cave Level 1
 		{
 			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
 		}
-		else if (6460 > position.getX() && position.getX() > 6170) // House Level 1
+		else if (6460 > position.getX() && position.getX() > 6170 && currentLevel == 1) // House Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+		}
+		else if (510 > position.getX() && position.getX() > 225 && currentLevel == 2) // Initial house Level 2
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
+		}
+		else if (4225 > position.getX() && position.getX() > 3935 && currentLevel == 2) // End house Level 2
 		{
 			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsRockId); //player steps audio updates every step
 		}
@@ -369,7 +403,8 @@ bool Player::Update(float dt)
 	//Audio testing in Q
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 	{
-		/*Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId);*/
+		//Put Audio to test below
+		/*Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId);*/
 	}
 
 	animator->Update();
@@ -599,8 +634,7 @@ void Player::Shoot()
 	projectile->SetGravity(0);
 	projectile->SetCollisionType(0);
 
-	//Audio
-	Engine::GetInstance().audio.get()->PlayFx(audioShurikenShootId);
+	Engine::GetInstance().audio.get()->PlayFx(audioShurikenShootId); //Audio Shuriken
 
 	// Reset the attack timer to manage firing rate
 	attackShurikenTimer.Start();

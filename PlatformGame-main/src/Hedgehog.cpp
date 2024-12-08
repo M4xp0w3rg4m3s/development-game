@@ -97,7 +97,7 @@ bool Hedgehog::Start()
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
-	animator->LookLeft();
+	animator->LookRight();
 	return true;
 }
 
@@ -252,6 +252,9 @@ void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
 		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
+		Disable();
+		break;
+	case ColliderType::KILL:
 		Disable();
 		break;
 	default:
