@@ -37,10 +37,16 @@ public:
 
 	Vector2D GetPlayerPosition();
 
+	Player* GetPlayer() const;
+
 	std::string GetTilePosDebug() {
 		return tilePosDebug;
 
 	}
+
+	void LoadState();
+
+	void SaveState();
 
 private:
 	int enemyIndex = 0;
@@ -57,4 +63,6 @@ private:
 	std::vector<Enemy*> enemyList;
 
 	int current_level = 1;
+
+	int numEnemies = 13;
 };

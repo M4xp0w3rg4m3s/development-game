@@ -157,6 +157,16 @@ public:
 
     MapLayer* GetNavigationLayer();
 
+    struct Checkpoint
+    {
+        Vector2D pos = {-1,-1};
+        int level = -1;
+        int order = -1;
+        bool activated = false;
+    };
+
+    std::vector<Checkpoint*> checkpoints;
+
 public: 
     std::string mapName;
     std::string mapPath;

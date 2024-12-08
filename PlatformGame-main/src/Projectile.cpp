@@ -9,7 +9,7 @@
 
 Projectile::Projectile(b2Vec2 position, b2Vec2 direction) : Entity(EntityType::PROJECTILE)
 {
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Shuriken_test.png");
+	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Projectiles.png");
 	animator = new Sprite(texture);
 
 	body = Engine::GetInstance().physics.get()->CreateCircle((int)position.x, (int)position.y, width/2, bodyType::DYNAMIC);
@@ -35,11 +35,22 @@ bool Projectile::Awake()
 
 bool Projectile::Start()
 {
-	animator->SetNumberAnimations(1);
+	animator->SetNumberAnimations(3);
 	
+	//Shuriken
 	animator->AddKeyFrame(0, { 0,0,13,13 });
 	animator->AddKeyFrame(0, { 1 * 13,0,13,13 });
 	animator->SetAnimationDelay(0, 100);
+
+	//Spike
+	animator->AddKeyFrame(1, { 0,1 * 13,13,13 });
+	animator->AddKeyFrame(1, { 1 * 13,1 * 13,13,13 });
+	animator->SetAnimationDelay(1, 100);
+
+	//Water
+	animator->AddKeyFrame(2, { 0,2 * 13,13,13 });
+	animator->AddKeyFrame(2, { 1 * 13,2 * 13,13,13 });
+	animator->SetAnimationDelay(2, 100);
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
@@ -56,28 +67,31 @@ bool Projectile::Start()
 
 	body->body->GetFixtureList()[0].SetFriction(0);
 	body->body->GetFixtureList()[0].SetSensor(true);
-	body->body->SetGravityScale(0);
 
 	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	body->listener = this;
 
-	// Assign collider type
-	body->ctype = ColliderType::PROJECTILE;
+	body->body->ApplyLinearImpulseToCenter({ direction.x * speed, direction.y * speed }, true);
 
 	return true;
 }
 
 bool Projectile::Update(float dt)
 {
-	b2Vec2 velocity = b2Vec2( 0, body->body->GetLinearVelocity().y );
+	b2Vec2 velocity = body->body->GetLinearVelocity();
 
-	velocity.x = direction.x * speed / dt;
-	velocity.y = direction.y * speed / dt;
-	
-	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
 	position.x = (METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
 	position.y = (METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
+
+	if (velocity.x < 0)
+	{
+		animator->LookLeft();
+	}
+	else
+	{
+		animator->LookLeft();
+	}
 
 	animator->Update();
 	animator->Draw((int)position.x, (int)position.y, 0, 0);
@@ -118,18 +132,61 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 		LOG("Collision KILL");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
-
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
-
+	case ColliderType::PROJECTILE_ENEMY:
+		LOG("Collision ITEM");
+		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
+	case ColliderType::PROJECTILE_PLAYER:
+		LOG("Collision ITEM");
+		Engine::GetInstance().entityManager->DeleteEntity(this);
+		break;
+	case ColliderType::PLAYER_ATTACK_LEFT:
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingLeft())
+		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingLeft(false);
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
+		break;
+	case ColliderType::PLAYER_ATTACK_RIGHT:
+		if (Engine::GetInstance().scene.get()->GetPlayer()->IsAttackingRight())
+		{
+			Engine::GetInstance().scene.get()->GetPlayer()->SetAttackingRight(false);
+			LOG("Collision KILL");
+			Engine::GetInstance().entityManager->DeleteEntity(this);
+		}
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
-		Engine::GetInstance().entityManager->DeleteEntity(this);
 		break;
 
 	default:
 		break;
+	}
+}
+
+void Projectile::SetAnimation(int id)
+{
+	animator->SetAnimation(id);
+}
+
+void Projectile::SetGravity(float gravity)
+{
+	body->body->SetGravityScale(gravity);
+}
+
+void Projectile::SetCollisionType(int type)
+{
+	if (type == 0)
+	{
+		body->ctype = ColliderType::PROJECTILE_PLAYER;
+	}
+	if (type == 1)
+	{
+		body->ctype = ColliderType::PROJECTILE_ENEMY;
 	}
 }

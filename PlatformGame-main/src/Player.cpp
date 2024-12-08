@@ -16,6 +16,8 @@ Player::Player() : Entity(EntityType::PLAYER)
 
 	audioPlayerStepsId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/steps3.wav"); //AUDIO STEPS
 	audioPlayerSwordId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordPlayer.wav"); //AUDIO STEPS
+	audioShurikenShootId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenShoot.wav");
+	audioPlayerSwordSwingId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/swordSwing.wav");
 }
 
 Player::~Player() {
@@ -97,14 +99,20 @@ bool Player::Start() {
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
 	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 0.8, height * 0.25, bodyType::DYNAMIC);
+	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
+	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
 
-	body->CreateWeld(bodyBot, (float)PIXEL_TO_METERS((-height / 2)));
+	body->CreateWeld(bodyBot, { 0,(float)PIXEL_TO_METERS((-height / 2)) });
+	body->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS((width * 1.5)) ,(float)PIXEL_TO_METERS((height / 4)) });
+	body->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS((-width * 1.5)),(float)PIXEL_TO_METERS((height / 4)) });
 
 	body->body->SetFixedRotation(true);
 	bodyBot->body->SetFixedRotation(true);
+	bodyAttackLeft->body->SetFixedRotation(true);
+	bodyAttackRight->body->SetFixedRotation(true);
 
 	b2MassData playerMass;
-	playerMass.mass = 1.15f;
+	playerMass.mass = 2.3f;
 	playerMass.center = body->body->GetLocalCenter();
 	body->body->SetMassData(&playerMass);
 
@@ -113,11 +121,22 @@ bool Player::Start() {
 	// Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	body->listener = this;
 	bodyBot->listener = this;
+	bodyAttackLeft->listener = this;
+	bodyAttackRight->listener = this;
 
 	// Assign collider type
 	body->ctype = ColliderType::PLAYER;
 	bodyBot->ctype = ColliderType::GROUND_CHECK;
+	bodyAttackLeft->ctype = ColliderType::PLAYER_ATTACK_LEFT;
+	bodyAttackRight->ctype = ColliderType::PLAYER_ATTACK_RIGHT;
 
+	/*b2Filter filter;
+	filter.categoryBits = Engine::GetInstance().physics.get()->playerAttackLayer;
+	filter.maskBits = Engine::GetInstance().physics.get()->EnemyLayer;
+
+	bodyAttackLeft->body->GetFixtureList()[0].SetFilterData(filter);
+	bodyAttackRight->body->GetFixtureList()[0].SetFilterData(filter);*/
+	
 	return true;
 }
 
@@ -139,7 +158,7 @@ bool Player::Update(float dt)
 		if (state != PlayerState::DYING && state != PlayerState::DEAD)
 		{
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				velocity.x = -0.2 * 16;
+				velocity.x = (float)-0.2 * 16;
 				animator->LookLeft();
 				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == RIGHT)
 				{
@@ -148,7 +167,7 @@ bool Player::Update(float dt)
 				
 			}
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				velocity.x = 0.2 * 16;
+				velocity.x = (float)0.2 * 16;
 				animator->LookRight();
 				if ((state == PlayerState::WOMBO || state == PlayerState::COMBO) && animator->GetPlayerDir() == LEFT)
 				{
@@ -161,12 +180,14 @@ bool Player::Update(float dt)
 					body->body->SetLinearVelocity(velocity);
 					body->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5}, true);
 					bodyBot->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5}, true);
+					bodyAttackLeft->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5 }, true);
+					bodyAttackRight->body->ApplyLinearImpulseToCenter(b2Vec2{ 0, -7.5 }, true);
 					isGrounded = false;
 					state = PlayerState::JUMPING;
 				}
 			}
 		}
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_REPEAT) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
 		
 			state = PlayerState::DYING;
 		}
@@ -174,20 +195,22 @@ bool Player::Update(float dt)
 	else {
 		body->body->SetGravityScale(0);
 		bodyBot->body->SetGravityScale(0);
+		bodyAttackLeft->body->SetGravityScale(0);
+		bodyAttackRight->body->SetGravityScale(0);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -0.3 * 16;
+			velocity.x = (float)-0.3 * 16;
 			animator->LookLeft();
 		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = 0.3 * 16;
+			velocity.x = (float)0.3 * 16;
 			animator->LookRight();
 		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			velocity.y = -0.3 * 16;
+			velocity.y = (float)-0.3 * 16;
 		}
 		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			velocity.y = 0.3 * 16;
+			velocity.y = (float)0.3 * 16;
 		}
 		else {
 			velocity.y = 0;
@@ -203,21 +226,18 @@ bool Player::Update(float dt)
 			godMode = false;
 			body->body->SetGravityScale(1);
 			bodyBot->body->SetGravityScale(1);
+			bodyAttackLeft->body->SetGravityScale(1);
+			bodyAttackRight->body->SetGravityScale(1);
 		}
 	}
 
 	body->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = body->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
+	position.setX((float)METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
+	position.setY((float)METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
 
-	if (lives <= 0)
-	{
-		KillPlayer();
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
 		Shoot();
 	}
 
@@ -227,6 +247,8 @@ bool Player::Update(float dt)
 				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN && attackReactionTimer.ReadMSec() < reactionTimeMs) {
 					animator->SetAnimation(5);
 					animator->SetLoop(false);
+					
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);
 					state = PlayerState::COMBO;
 				}
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
@@ -247,9 +269,26 @@ bool Player::Update(float dt)
 			bool canAttack = attackCooldownTimer.ReadMSec() > attackCooldown;
 
 			if (keyQPressed && canAttack) {
+				if (enemyAttacked != nullptr)
+				{
+					if (animator->IsLookingLeft() && isAttackingLeft)
+					{
+						enemyAttacked->Disable();
+					}
+					else if (animator->IsLookingRight() && isAttackingRight)
+					{
+						enemyAttacked->Disable();
+					}
+					isAttackingRight = false;
+					isAttackingLeft = false;
+				}
+				
 				if (animator->GetAnimation() != 4) {
 					animator->SetAnimation(4);
 					animator->SetLoop(false);
+
+					Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);
+
 					state = PlayerState::WOMBO;
 					attackReactionTimer.Start();
 				}
@@ -281,6 +320,7 @@ bool Player::Update(float dt)
 	}
 	else if (state == PlayerState::DYING)
 	{
+		lives = 100;
 		if (animator->GetAnimation() != 3) {
 			animator->SetAnimation(3);
 			animator->SetLoop(false);
@@ -299,7 +339,6 @@ bool Player::Update(float dt)
 
 	//Walking SoundFX
 	if (state == PlayerState::RUNNING && (animator->GetAnimation() == 0) && (animator->GetCurrentFrame_int() == 2 && animator->GetLastFrame_int() != 2 || animator->GetCurrentFrame_int() == 7 && animator->GetLastFrame_int() != 7)) {
-		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId);	//player steps audio updates every step	
 	}
 	//Combo1 SoundFX
@@ -311,6 +350,12 @@ bool Player::Update(float dt)
 	if (state == PlayerState::COMBO && (animator->GetAnimation() == 5) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)) {
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+	}
+
+	//Audio testing in Q
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+	{
+		/*Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId);*/
 	}
 
 	animator->Update();
@@ -358,31 +403,59 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			KillPlayer();
 		}
 	}
-	switch (physB->ctype)
-	{
-	case ColliderType::KILL:
-		LOG("Collision KILL");
-		break;
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
-		//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);			//AUDIO PEPE
-		//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
-		break;
-	case ColliderType::ENEMY:
-		LOG("Collision UNKNOWN");
-		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-		lives--;
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
-	case ColliderType::PROJECTILE:
-		LOG("Collision Projectile");
-		body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
-		lives--;
-		break;
-	default:
-		break;
+	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT && physB->ctype == ColliderType::ENEMY) {
+		isAttackingLeft = true;
+		enemyAttacked = physB->listener;
+	}
+	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::ENEMY) {
+		isAttackingRight = true;
+		enemyAttacked = physB->listener;
+	}
+	if (physA->ctype != ColliderType::PLAYER_ATTACK_LEFT && physA->ctype != ColliderType::PLAYER_ATTACK_RIGHT){
+		switch (physB->ctype)
+		{
+		case ColliderType::KILL:
+			LOG("Collision KILL");
+			break;
+		case ColliderType::ITEM:
+			LOG("Collision ITEM");
+			//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);			//AUDIO PEPE
+			//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
+			break;
+		case ColliderType::ENEMY:
+			LOG("Collision UNKNOWN");
+			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+
+			if (hitTimer.ReadMSec() > hitTime)
+			{
+				lives--;
+				if (lives <= 0)
+				{
+					KillPlayer();
+				}
+				hitTimer.Start();
+			}
+			break;
+		case ColliderType::PROJECTILE_ENEMY:
+			LOG("Collision Projectile");
+			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+
+			if (hitTimer.ReadMSec() > hitTime)
+			{
+				lives--;
+				if (lives <= 0)
+				{
+					KillPlayer();
+				}
+				hitTimer.Start();
+			}
+			break;
+		case ColliderType::UNKNOWN:
+			LOG("Collision UNKNOWN");
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -396,9 +469,11 @@ void Player::ResetPlayer()
 	Disable();
 	Engine::GetInstance().physics->DeletePhysBody(body);
 	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
-	position = Vector2D(192, 384);
-	Engine::GetInstance().scene->CameraReset();
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
+	Engine::GetInstance().scene->LoadState();
 	state = PlayerState::IDLE;
+	lives = 3;
 	Enable();
 }
 
@@ -407,27 +482,32 @@ void Player::ResetPlayer(int level)
 	Disable();
 	Engine::GetInstance().physics->DeletePhysBody(body);
 	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
 	if (level == 1) {
 		position = Vector2D(192, 384);
 	}
 	if (level == 2) {
 		position = Vector2D(192, 320);
 	}
-	Engine::GetInstance().scene->CameraReset();
 	state = PlayerState::IDLE;
+	lives = 3;
 	Enable();
 }
 
 void Player::SetPosition(Vector2D pos) {
-	pos.setX(pos.getX() + texW / 2);
-	pos.setY(pos.getY() + texH / 2);
+	//pos.setX(pos.getX() + texW / 2);
+	//pos.setY(pos.getY() + texH / 2);
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+	bodyBot->body->SetTransform(bodyPos, 0);
+	bodyAttackLeft->body->SetTransform(bodyPos, 0);
+	bodyAttackRight->body->SetTransform(bodyPos, 0);
 	body->body->SetTransform(bodyPos, 0);
 }
 
 Vector2D Player::GetPosition() {
 	b2Vec2 bodyPos = body->body->GetTransform().p;
-	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	Vector2D pos = Vector2D((float)METERS_TO_PIXELS(bodyPos.x), (float)METERS_TO_PIXELS(bodyPos.y));
 	return pos;
 }
 
@@ -444,7 +524,7 @@ Vector2D Player::GetCenterPosition()
 	b2Vec2 centerPosInMeters = { bodyPos.x , bodyPos.y };
 
 	// Convert center position back to pixels
-	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));
+	Vector2D centerPos = Vector2D((float)METERS_TO_PIXELS(centerPosInMeters.x), (float)METERS_TO_PIXELS(centerPosInMeters.y));
 
 	return centerPos;
 }
@@ -490,7 +570,33 @@ void Player::Shoot()
 
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+	projectile->SetAnimation(0);
+	projectile->SetGravity(0);
+	projectile->SetCollisionType(0);
+
+	//Audio
+	Engine::GetInstance().audio.get()->PlayFx(audioShurikenShootId);
 
 	// Reset the attack timer to manage firing rate
 	attackShurikenTimer.Start();
+}
+
+bool Player::IsAttackingLeft() const
+{
+	return isAttackingLeft;
+}
+
+bool Player::IsAttackingRight() const
+{
+	return isAttackingRight;
+}
+
+void Player::SetAttackingLeft(bool isAttackingLeft_)
+{
+	isAttackingLeft = isAttackingLeft_;
+}
+
+void Player::SetAttackingRight(bool isAttackingRight_)
+{
+	isAttackingRight = isAttackingRight_;
 }

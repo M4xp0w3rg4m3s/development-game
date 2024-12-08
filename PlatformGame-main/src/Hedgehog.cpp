@@ -7,11 +7,14 @@
 #include "Textures.h"
 #include "EntityManager.h"
 #include "Projectile.h"
+#include "Player.h"
+#include "Audio.h"
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
 	// audioHedgeShurikenId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shuriken_ninja_knifes1.wav"); //AUDIO STEPS
 
+	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
 Hedgehog::~Hedgehog()
@@ -25,20 +28,25 @@ bool Hedgehog::Awake()
 
 bool Hedgehog::Start()
 {
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
+
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
+	enemyId = parameters.attribute("id").as_string();
 
 	texH = height, texW = width;
 
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 3, bodyType::DYNAMIC);
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+
+	pbody->listener = this;
 
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
@@ -52,8 +60,8 @@ bool Hedgehog::Start()
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(4);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 
@@ -99,16 +107,20 @@ bool Hedgehog::Update(float dt)
 {
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX((float)METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setY((float)METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
-		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 		pathfinding->ResetPath(tilePos);
 		pathfinding->resetPathAfterEnd = false;
 	}
 	pathfinding->Compute();
+
+	if (pathfinding->objectiveFound) {
+		GoToPath();
+	}
 
 	// Activate or deactivate debug mode
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
@@ -125,14 +137,22 @@ bool Hedgehog::Update(float dt)
 		attackTimer.Start();
 	}
 
+	if (pbody->body->GetLinearVelocity().x < 0) {
+		animator->LookLeft();
+	}
+	else {
+		animator->LookRight();
+	}
+
 	animator->Update();
-	animator->Draw((int)position.getX(), (int)position.getY(), 0, 0);
+	animator->Draw((int)position.getX(), (int)position.getY(), 0, -3);
 
 	return true;
 }
 
 bool Hedgehog::CleanUp()
 {
+	LOG("Cleanup Hedgehog");
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
@@ -162,7 +182,81 @@ void Hedgehog::Shoot()
 
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+	projectile->SetAnimation(1);
+	projectile->SetGravity(0.1f);
+	projectile->SetCollisionType(1);
 
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
+}
+
+void Hedgehog::GoToPath()
+{
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
+
+	Vector2D destination = { NULL, NULL };
+
+	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
+
+	int index = 0;
+	for (const auto& tile : pathfinding->pathTiles) {
+		if (tilePos == tile) {
+			float destinationX = NULL;
+			float destinationY = NULL;
+			if (index == 0) {
+				destinationX = pathfinding->pathTiles[index].getX();
+				destinationY = pathfinding->pathTiles[index].getY();
+			}
+			else {
+				destinationX = pathfinding->pathTiles[index - 1].getX();
+				destinationY = pathfinding->pathTiles[index - 1].getY();
+			}
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+			break;
+		}
+		index++;
+	}
+
+	if (destination.getX() != NULL && destination.getY() != NULL) {
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
+
+		if (currentPosX != destination.getX()) {
+			if (currentPosX < destination.getX()) {
+				velocity.x = (float)0.10 * 16;
+			}
+			else {
+				velocity.x = (float)-0.10 * 16;
+			}
+		}
+		else if (currentPosX == destination.getX()) {
+			velocity.x = 0;
+		}
+
+		if (currentPosY != destination.getY()) {
+			if (currentPosY < destination.getY()) {
+				velocity.y = (float)0.10 * 16;
+			}
+			else {
+				velocity.y = (float)-0.10 * 16;
+			}
+		}
+		else if (currentPosY == destination.getY()) {
+			velocity.y = 0;
+		}
+		pbody->body->SetLinearVelocity(velocity);
+	}
+}
+void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
+{
+	switch (physB->ctype)
+	{
+	case ColliderType::PROJECTILE_PLAYER:
+		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
+		Disable();
+		break;
+	default:
+		break;
+	}
 }

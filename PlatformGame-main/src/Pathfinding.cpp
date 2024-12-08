@@ -105,7 +105,7 @@ bool Pathfinding::IsWalkable(int x, int y) {
                 if (gid != blockedGid && gid != waterGid) isWalkable = true;
             }
             else if (currentType == EnemyType::WATER) {
-                if (gid != blockedGid && gid != airGid) isWalkable = true;
+                if (gid != blockedGid && gid != floorGid && gid != airGid) isWalkable = true;
             }
         }
     }
@@ -118,7 +118,11 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
     // Dijkstra algorithm for AStar. Consider the different heuristics
 
     Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
+    if (currentType == EnemyType::WATER) {
+        playerPos = { Engine::GetInstance().scene.get()->GetPlayerPosition().getX(), Engine::GetInstance().scene.get()->GetPlayerPosition().getY() };
+    }
     Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
+    
 
     bool foundDestination = false;
     if (frontierAStar.size() > 0) {
@@ -191,19 +195,25 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
     if (frontierAStar.empty()) {
         finished = true;
-        found = false;
+        objectiveFound = false;
     }
 }
 
 void Pathfinding::Compute()
 {
     while (!finished) {
-        PropagateAStar(MANHATTAN);
+        if (currentType == EnemyType::AIR) {
+            PropagateAStar(SQUARED);
+        }
+        else {
+            PropagateAStar(MANHATTAN);
+        }
+      
     }
     if (finished) {
         if (computeTimer.ReadSec() >= computeTime) {
             finished = false;
-            found = false;
+            objectiveFound = false;
             resetPathAfterEnd = true;
             computeTimer.Start();
         }
@@ -252,7 +262,7 @@ void Pathfinding::ComputePath(int x, int y)
     }
 
     finished = true;
-    found = true;
+    objectiveFound = true;
 }
 
 void Pathfinding::SetEnemyType(EnemyType type)

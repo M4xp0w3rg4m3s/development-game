@@ -36,6 +36,12 @@ public:
 
 	void SetPathfindingType(EnemyType type);
 
+	virtual void GoToPath();
+
+	void DeleteThis();
+
+	std::string enemyId;
+
 protected:
 	bool debug = false;
 

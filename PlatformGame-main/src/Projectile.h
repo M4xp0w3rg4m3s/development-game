@@ -7,11 +7,6 @@
 class Projectile : public Entity{
 public:
 
-	enum ProjectileState
-	{
-		FLYING,
-		COLLIDED
-	};
 	enum ProjectileType
 	{
 		ENEMY,
@@ -32,6 +27,12 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	void SetAnimation(int id);
+
+	void SetGravity(float gravity);
+
+	void SetCollisionType(int type);
+
 private:
 	Sprite* animator;
 	std::string textureName;
@@ -46,8 +47,8 @@ private:
 
 	PhysBody* body;
 
-	int speed = 100;
+	int speed = 15;
 
 	Timer projectileDeadTimer;
-	int projectileDeadTime = 2;
+	int projectileDeadTime = 1;
 };
