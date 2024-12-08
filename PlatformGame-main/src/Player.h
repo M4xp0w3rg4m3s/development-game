@@ -85,4 +85,5 @@ public:
 	int lives = 3;
 
 	int audioPlayerStepsId = -1; //AUDIO PEPE
+	int audioPlayerSwordId = -1;
 };

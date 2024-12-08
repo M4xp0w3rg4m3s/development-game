@@ -28,6 +28,8 @@ public:
 
 	void Shoot();
 
+	int audioHedgeShurikenId = -1; //AUDIO PEPE
+
 private:
 	Timer attackTimer;
 	int attackTime = 2;
