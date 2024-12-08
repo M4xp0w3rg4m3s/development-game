@@ -12,6 +12,7 @@
 
 Hedgehog::Hedgehog() : Enemy(EntityType::HEDGEHOG)
 {
+	audioHedgeShurikenId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shuriken_ninja_knifes1.wav"); //AUDIO HEDGESHURIKEN
 	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
@@ -28,8 +29,8 @@ bool Hedgehog::Start()
 {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 	enemyId = parameters.attribute("id").as_string();
@@ -58,8 +59,8 @@ bool Hedgehog::Start()
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(4);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 
@@ -97,7 +98,7 @@ bool Hedgehog::Start()
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
-	animator->LookLeft();
+	animator->LookRight();
 	return true;
 }
 
@@ -105,12 +106,12 @@ bool Hedgehog::Update(float dt)
 {
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX((float)METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setY((float)METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
-		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 		pathfinding->ResetPath(tilePos);
 		pathfinding->resetPathAfterEnd = false;
 	}
@@ -181,8 +182,12 @@ void Hedgehog::Shoot()
 	// Create and initialize the projectile with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetAnimation(1);
-	projectile->SetGravity(0.1);
+	projectile->SetGravity(0.1f);
 	projectile->SetCollisionType(1);
+
+
+	if (2464 <= Engine::GetInstance().scene.get()->GetPlayerPosition().getX() && Engine::GetInstance().scene.get()->GetPlayerPosition().getX() <= 3360)
+		Engine::GetInstance().audio.get()->PlayFx(audioHedgeShurikenId); //Audio Shuriken
 
 	// Reset the attack timer to manage firing rate
 	attackTimer.Start();
@@ -191,7 +196,7 @@ void Hedgehog::Shoot()
 void Hedgehog::GoToPath()
 {
 	Vector2D pos = GetPosition();
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 
 	Vector2D destination = { NULL, NULL };
 
@@ -217,15 +222,15 @@ void Hedgehog::GoToPath()
 	}
 
 	if (destination.getX() != NULL && destination.getY() != NULL) {
-		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
-		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
 
 		if (currentPosX != destination.getX()) {
 			if (currentPosX < destination.getX()) {
-				velocity.x = 0.10 * 16;
+				velocity.x = (float)0.10 * 16;
 			}
 			else {
-				velocity.x = -0.10 * 16;
+				velocity.x = (float)-0.10 * 16;
 			}
 		}
 		else if (currentPosX == destination.getX()) {
@@ -234,10 +239,10 @@ void Hedgehog::GoToPath()
 
 		if (currentPosY != destination.getY()) {
 			if (currentPosY < destination.getY()) {
-				velocity.y = 0.10 * 16;
+				velocity.y = (float)0.10 * 16;
 			}
 			else {
-				velocity.y = -0.10 * 16;
+				velocity.y = (float)-0.10 * 16;
 			}
 		}
 		else if (currentPosY == destination.getY()) {
@@ -252,6 +257,9 @@ void Hedgehog::OnCollision(PhysBody* physA, PhysBody* physB)
 	{
 	case ColliderType::PROJECTILE_PLAYER:
 		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
+		Disable();
+		break;
+	case ColliderType::KILL:
 		Disable();
 		break;
 	default:

@@ -75,8 +75,8 @@ bool Boar::Update(float dt)
 {
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
@@ -127,6 +127,9 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
 		Disable();
 		break;
+	case ColliderType::KILL:
+		Disable();
+		break;
 	default:
 		break;
 	}
@@ -161,15 +164,15 @@ void Boar::GoToPath()
 	}
 
 	if (destination.getX() != NULL && destination.getY() != NULL) {
-		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
-		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
 
 		if (currentPosX != destination.getX()) {
 			if (currentPosX < destination.getX()) {
-				velocity.x = 0.10 * 16;
+				velocity.x = (float)0.10 * 16;
 			}
 			else {
-				velocity.x = -0.10 * 16;
+				velocity.x = (float)-0.10 * 16;
 			}
 		}
 		else if (currentPosX == destination.getX()) {
@@ -178,10 +181,10 @@ void Boar::GoToPath()
 
 		if (currentPosY != destination.getY()) {
 			if (currentPosY < destination.getY()) {
-				velocity.y = 0.10 * 16;
+				velocity.y = (float)0.10 * 16;
 			}
 			else {
-				velocity.y = -0.10 * 16;
+				velocity.y = (float)-0.10 * 16;
 			}
 		}
 		else if (currentPosY == destination.getY()) {

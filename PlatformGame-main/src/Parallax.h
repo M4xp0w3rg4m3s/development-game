@@ -14,7 +14,6 @@ class Parallax : public Module {
 public:
 
 	Parallax() {
-
 	}
 
 	~Parallax() {
@@ -34,19 +33,19 @@ public:
 		layer1.offset = 0;
 
 		layer2.texture = Engine::GetInstance().textures->Load(textureName2.c_str());
-		layer2.speed = 0.1;
+		layer2.speed = 0.1f;
 		layer2.offset = 0;
 
 		layer3.texture = Engine::GetInstance().textures->Load(textureName3.c_str());
-		layer3.speed = 0.3;
+		layer3.speed = 0.3f;
 		layer3.offset = 0;
 
 		layer4.texture = Engine::GetInstance().textures->Load(textureName4.c_str());
-		layer4.speed = 0.5;
+		layer4.speed = 0.5f;
 		layer4.offset = 0;
 
 		layer5.texture = Engine::GetInstance().textures->Load(textureName5.c_str());
-		layer5.speed = 0.7;
+		layer5.speed = 0.7f;
 		layer5.offset = 0;
 
 		return true;
@@ -60,19 +59,19 @@ public:
 		layer1.offset = 0;
 
 		layer2.texture = Engine::GetInstance().textures->Load(textureName2.c_str());
-		layer2.speed = 0.1;
+		layer2.speed = 0.1f;
 		layer2.offset = 0;
 
 		layer3.texture = Engine::GetInstance().textures->Load(textureName3.c_str());
-		layer3.speed = 0.3;
+		layer3.speed = 0.3f;
 		layer3.offset = 0;
 
 		layer4.texture = Engine::GetInstance().textures->Load(textureName4.c_str());
-		layer4.speed = 0.5;
+		layer4.speed = 0.5f;
 		layer4.offset = 0;
 
 		layer5.texture = Engine::GetInstance().textures->Load(textureName5.c_str());
-		layer5.speed = 0.7;
+		layer5.speed = 0.7f;
 		layer5.offset = 0;
 
 		return true;
@@ -135,15 +134,15 @@ public:
 
 public:
 
-	Layer layer1;
+	Layer layer1{0,0,nullptr};
 	std::string textureName1;
-	Layer layer2;
+	Layer layer2{ 0,0,nullptr };
 	std::string textureName2;
-	Layer layer3;
+	Layer layer3{ 0,0,nullptr };
 	std::string textureName3;
-	Layer layer4;
+	Layer layer4{ 0,0,nullptr };
 	std::string textureName4;
-	Layer layer5;
+	Layer layer5{ 0,0,nullptr };
 	std::string textureName5;
 
 	int sizeW = 1421;

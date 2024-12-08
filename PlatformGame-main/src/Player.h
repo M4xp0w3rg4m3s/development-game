@@ -100,6 +100,16 @@ public:
 
 	Entity* enemyAttacked = nullptr;
 
-	int audioPlayerStepsId = -1; //AUDIO PEPE
+private:
+
+	int audioPlayerStepsGrassId = -1;
+	int audioPlayerStepsRockId = -1;
+	int audioPlayerStepsId = -1; 
+	int audioPlayerSwordId = -1;
 	int audioShurikenShootId = -1;
+	int audioPlayerSwordSwingId = -1;
+	int audioPlayerHurtId = -1;
+	int audioPlayerDieId = -1;
+	int audioHitEnemyId = -1;
+	int audioFallToWaterId = -1;
 };

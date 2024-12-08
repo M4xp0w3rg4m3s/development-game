@@ -26,10 +26,10 @@ bool Bee::Start()
 {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
-	height = parameters.attribute("h").as_int();
-	width = parameters.attribute("w").as_int();
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
+	height = parameters.attribute("h").as_float();
+	width = parameters.attribute("w").as_float();
 	enemyId = parameters.attribute("id").as_string();
 
 	texH = height, texW = width;
@@ -56,10 +56,10 @@ bool Bee::Start()
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(4);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
-	height = parameters.attribute("h").as_int();
-	width = parameters.attribute("w").as_int();
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
+	height = parameters.attribute("h").as_float();
+	width = parameters.attribute("w").as_float();
 
 	// IDLE
 	animator->AddKeyFrame(0, { 0,  1 * height,width,height });
@@ -93,8 +93,8 @@ bool Bee::Update(float dt)
 {
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX((float)(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2));
+	position.setY((float)(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2));
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
@@ -179,15 +179,15 @@ void Bee::GoToPath()
 	}
 
 	if (destination.getX() != NULL && destination.getY() != NULL) {
-		float currentPosX = METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 5)*2;
-		float currentPosY = METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 5)*2;
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 5)*2;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 5)*2;
 
 		if (currentPosX != destination.getX()) {
 			if (currentPosX < destination.getX()) {
-				velocity.x = 0.13 * 16;
+				velocity.x = (float)0.13 * 16;
 			}
 			else {
-				velocity.x = -0.13 * 16;
+				velocity.x = (float)-0.13 * 16;
 			}
 		}
 		else if (currentPosX == destination.getX()) {
@@ -196,10 +196,10 @@ void Bee::GoToPath()
 
 		if (currentPosY != destination.getY()) {
 			if (currentPosY < destination.getY()) {
-				velocity.y = 0.13 * 16;
+				velocity.y = (float)0.13 * 16;
 			}
 			else {
-				velocity.y = -0.13 * 16;
+				velocity.y = (float)-0.13 * 16;
 			}
 		}
 		else if (currentPosY == destination.getY()) {
