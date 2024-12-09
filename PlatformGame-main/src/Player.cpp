@@ -533,10 +533,10 @@ void Player::ResetPlayer()
 	Engine::GetInstance().physics->DeletePhysBody(bodyBot);
 	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
 	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
-	Engine::GetInstance().scene->LoadState();
 	state = PlayerState::IDLE;
 	lives = 3;
 	Enable();
+	Engine::GetInstance().scene->LoadState();
 }
 
 void Player::ResetPlayer(int level)
