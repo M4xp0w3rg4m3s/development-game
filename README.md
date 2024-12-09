@@ -9,15 +9,21 @@ Controls :
 
 ● SPACE : Jump.
 ● Q : Attack (Press twice to perform a combo).
+● E : Projectile.
 
 ● ESC : Exit game.
 ● H : Shows / hides a help menu showing the keys.
-● F5 : Die
+● F1 : Level 1
+● F2 : Level 2
+● F3 : Start
+● F5 : Save
+● F6 : Load
 ● F9 : Visualize the colliders / logic (Debug Mode).
 ● F10 : God Mode (fly around, cannot be killed).
 ● F11 : Enable/Disable FPS cap to 30.
-● 0 : Level 2
-● 1 : Level 1
+
+● Mouse Left Click : Change enemy position.
+● Shift : Change enemy selected.
 
 Description :
 
@@ -34,6 +40,7 @@ Features :
 ● Tilemap using Tiled.
 ● Level 1.
 ● Level 2.
+● Checkpoints.
 ● Movable Object.
 ● Animated Tiles.
 
@@ -44,6 +51,15 @@ Features :
 ● Player Physics.
 ● Player Die.
 
+● Projectiles.
+
+● Enemy Boar.
+● Enemy Hedgehog.
+● Enemy Bee.
+● Enemy Octopus.
+● Pathfiding.
+
+● Load/Save.
 ● Menu showing keys.
 ● Debug Mode.
 ● God Mode.
