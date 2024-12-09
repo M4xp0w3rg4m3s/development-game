@@ -55,30 +55,7 @@ bool Scene::Awake()
 	//Get the player texture name from the config file and assigns the value
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
-	for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies_lvl_1").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-	{
-		std::string name = enemyNode.attribute("name").as_string();
-		if (name == "boar") {
-			Boar* enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
-			enemy->SetParameters(enemyNode);
-			enemyListLevel1.push_back(enemy);
-		}
-		else if (name == "octopus") {
-			Octopus* enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
-			enemy->SetParameters(enemyNode);
-			enemyListLevel1.push_back(enemy);
-		}
-		else if (name == "bee") {
-			Bee* enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
-			enemy->SetParameters(enemyNode);
-			enemyListLevel1.push_back(enemy);
-		}
-		else if (name == "hedgehog") {
-			Hedgehog* enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
-			enemy->SetParameters(enemyNode);
-			enemyListLevel1.push_back(enemy);
-		}
-	}
+	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
 
 	return ret;
 }
@@ -138,6 +115,14 @@ bool Scene::Update(float dt)
 			enemy->Disable();
 		}
 
+		if (!Lvl2_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+			for (const auto& enemy : enemyListLevel2) {
+				enemy->Start();
+			}
+			Lvl2_Enemies_created = true;
+		}
+
 		for (const auto& enemy : enemyListLevel2) {
 			enemy->Enable();
 		}
@@ -171,6 +156,13 @@ bool Scene::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
 		player->ResetPlayer(current_level);
 	}
+
+	if (current_level == 1 && player->position.getX() >= 6520) {
+		AdvanceLevel();
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		debug = !debug;
 
 	//Get mouse position and obtain the map coordinate
 	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
@@ -353,6 +345,49 @@ void Scene::LoadState()
 					}
 				}
 			}
+
+			for (const auto& enemy : enemyListLevel2) {
+				enemy->Disable();
+			}
+
+			for (const auto& enemy : enemyListLevel1) {
+				enemy->Enable();
+			}
+		}
+	}
+	if (current_level == 2) {
+		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_2").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
+		{
+			Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float());
+
+			bool enemyActive = enemyNode.attribute("active").as_bool();
+
+			for (const auto& enemy : enemyListLevel2) {
+				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
+					if (!enemy->active && enemyActive) {
+						enemy->Enable();
+					}
+					if (enemyActive) {
+						enemy->SetPosition(enemyPos);
+					}
+				}
+			}
+		}
+
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Disable();
+		}
+
+		if (!Lvl2_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+			for (const auto& enemy : enemyListLevel2) {
+				enemy->Start();
+			}
+			Lvl2_Enemies_created = true;
+		}
+
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Enable();
 		}
 	}
 }
@@ -380,7 +415,7 @@ void Scene::SaveState()
 
 	//enemies
 	if (current_level == 1) {
-		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
+		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_1").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
 		{
 			bool enemyActive = enemyNode.attribute("active").as_bool();
 
@@ -399,7 +434,94 @@ void Scene::SaveState()
 			}
 		}
 	}
+	if (current_level == 2) {
+		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_2").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
+		{
+			bool enemyActive = enemyNode.attribute("active").as_bool();
+
+			for (const auto& enemy : enemyListLevel2) {
+				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
+					if (enemyActive) {
+						if (!enemy->active) {
+							enemyNode.attribute("active").set_value("false");
+						}
+						else {
+							enemyNode.attribute("x").set_value(enemy->GetPosition().getX());
+							enemyNode.attribute("y").set_value(enemy->GetPosition().getY());
+						}
+					}
+				}
+			}
+		}
+	}
 
 	//Saves the modifications to the XML 
 	loadFile.save_file("config.xml");
+}
+
+void Scene::AdvanceLevel()
+{
+	if (current_level == 1) {
+
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+
+		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		SDL_DestroyTexture(caveBg);
+
+		current_level = 2;
+
+		player->ResetPlayer(current_level);
+
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Disable();
+		}
+
+		if (!Lvl2_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+
+			for (const auto& enemy : enemyListLevel2) {
+				enemy->Start();
+			}
+			Lvl2_Enemies_created = true;
+		}
+
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Enable();
+		}
+	}
+}
+
+void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList)
+{
+	while (enemyNode) {
+		std::string name = enemyNode.attribute("name").as_string();
+		Enemy* enemy = nullptr;
+
+		if (name == "boar") {
+			enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
+		}
+		else if (name == "octopus") {
+			enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
+		}
+		else if (name == "bee") {
+			enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
+		}
+		else if (name == "hedgehog") {
+			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+		}
+
+		if (enemy) {
+			enemy->SetParameters(enemyNode);
+			enemyList.push_back(enemy);
+		}
+
+		enemyNode = enemyNode.next_sibling("enemy");
+	}
 }

@@ -50,11 +50,18 @@ public:
 
 	void SaveState();
 
+	void AdvanceLevel();
+
+	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
+
+	bool debug = false;
 private:
 	int enemyIndex = 0;
 
 	std::string tilePosDebug = "[0,0]";
 	bool once = false;
+
+	bool Lvl2_Enemies_created = false;
 
 	SDL_Texture* img;
 	SDL_Texture* caveBg;

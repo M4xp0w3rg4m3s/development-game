@@ -107,12 +107,11 @@ bool Bee::Update(float dt)
 	if (pathfinding->objectiveFound) {
 		GoToPath();
 	}
+	else {
+		pbody->body->SetLinearVelocity({0,0});
+	}
 
-	// Activate or deactivate debug mode
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-		debug = !debug;
-
-	if (debug) {
+	if (Engine::GetInstance().scene->debug) {
 		// Draw pathfinding 
 		pathfinding->DrawPath();
 	}
