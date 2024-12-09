@@ -54,6 +54,7 @@ public:
 
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 
+	bool debug = false;
 private:
 	int enemyIndex = 0;
 

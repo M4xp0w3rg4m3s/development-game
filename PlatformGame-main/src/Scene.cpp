@@ -161,6 +161,9 @@ bool Scene::Update(float dt)
 		AdvanceLevel();
 	}
 
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		debug = !debug;
+
 	//Get mouse position and obtain the map coordinate
 	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
 	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap((int)mousePos.getX() - Engine::GetInstance().render.get()->camera.x,(int)mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
@@ -482,6 +485,7 @@ void Scene::AdvanceLevel()
 
 		if (!Lvl2_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+
 			for (const auto& enemy : enemyListLevel2) {
 				enemy->Start();
 			}

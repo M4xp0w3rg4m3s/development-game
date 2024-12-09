@@ -43,8 +43,6 @@ public:
 	std::string enemyId;
 
 protected:
-	bool debug = false;
-
 	std::string textureName;
 	SDL_Texture* texture = nullptr;
 	int texW = 0, texH = 0;
