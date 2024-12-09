@@ -56,7 +56,8 @@ public:
 
 	bool debug = false;
 private:
-	int enemyIndex = 0;
+	int enemyIndex1 = 0;
+	int enemyIndex2 = 0;
 
 	std::string tilePosDebug = "[0,0]";
 	bool once = false;
@@ -74,5 +75,6 @@ private:
 
 	int current_level = 1;
 
-	int numEnemies = 13;
+	int numEnemies1 = 13;
+	int numEnemies2 = 11;
 };

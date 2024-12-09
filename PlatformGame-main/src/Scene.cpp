@@ -179,23 +179,30 @@ bool Scene::Update(float dt)
 
 	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
 		if (current_level == 1) {
-			if (enemyListLevel1[enemyIndex]->active) {
-				enemyListLevel1[enemyIndex]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-				enemyListLevel1[enemyIndex]->ResetPath();
+			if (enemyListLevel1[enemyIndex1]->active) {
+				enemyListLevel1[enemyIndex1]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
+				enemyListLevel1[enemyIndex1]->ResetPath();
 			}
 		}
 		else if (current_level == 2) {
-			if (enemyListLevel2[enemyIndex]->active) {
-				enemyListLevel2[enemyIndex]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-				enemyListLevel2[enemyIndex]->ResetPath();
+			if (enemyListLevel2[enemyIndex2]->active) {
+				enemyListLevel2[enemyIndex2]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
+				enemyListLevel2[enemyIndex2]->ResetPath();
 			}
 		}
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
-		enemyIndex++;
-		if (enemyIndex >= numEnemies) {
-			enemyIndex = 0;
+		if (current_level == 1) {
+			enemyIndex1++;
+			if (enemyIndex1 >= numEnemies1) {
+				enemyIndex1 = 0;
+			}
+		} else if (current_level == 2) {
+			enemyIndex2++;
+			if (enemyIndex2 >= numEnemies2) {
+				enemyIndex2 = 0;
+			}
 		}
 	}
 	
