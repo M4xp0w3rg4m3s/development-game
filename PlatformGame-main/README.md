@@ -1,67 +1,74 @@
-# development-game
+# Development Game
 
-Controls : 
+## 📜 **Game Description**
 
-● A : Move to the left.
-● D : Move to the right.
-● W : Move up (only in God Mode).
-● S : Move down (only in God Mode).
+Deep within a forgotten cave, an adventurer sleeps, cursed to awaken once every century when a monstrous force revives. Each time, he rises with a singular purpose: to hunt down and destroy the creature threatening the world. Over the course of a year, he journeys across the globe—through forests, mountains, rivers and snow—battling fierce foes and uncovering ancient secrets. With each passing day, the weight of his quest grows, knowing that only by defeating the monster can he bring peace, but at a cost he may not fully understand.
 
-● SPACE : Jump.
-● Q : Attack (Press twice to perform a combo).
-● E : Projectile.
+---
 
-● ESC : Exit game.
-● H : Shows / hides a help menu showing the keys.
-● F1 : Level 1
-● F2 : Level 2
-● F3 : Start
-● F5 : Save
-● F6 : Load
-● F9 : Visualize the colliders / logic (Debug Mode).
-● F10 : God Mode (fly around, cannot be killed).
-● F11 : Enable/Disable FPS cap to 30.
+## 🎮 **Controls**
 
-● Mouse Left Click : Change enemy position.
-● Shift : Change enemy selected.
+### **Movement & Actions:**
+- **A**: Move Left  
+- **D**: Move Right  
+- **W**: Move Up (only in God Mode)  
+- **S**: Move Down (only in God Mode)  
+- **SPACE**: Jump  
+- **Q**: Attack (Press twice to perform a combo)  
+- **E**: Shoot a Projectile 
 
-Description :
+### **Menu & Game Functions:**
+- **ESC**: Exit Game  
+- **H**: Toggle Help Menu (shows control keys)  
+- **F1**: Go to Level 1  
+- **F2**: Go to Level 2  
+- **F3**: Start Game  
+- **F5**: Save Game  
+- **F6**: Load Game  
+- **F9**: Debug Mode (Visualize colliders & logic)  
+- **F10**: God Mode (Fly around, invulnerable)  
+- **F11**: Toggle FPS Cap (set to 30 FPS or 60FPS)  
 
-A young man, searching for mushrooms for his village, becomes lost in a vast cave. 
-Days later, he finally escapes, emerging into a breathtaking world of nature’s beauty. 
-Inspired by his journey, he sets out to explore the wonders beyond, embracing his new life as an adventurer.
+### **Mouse & Shift:**
+- **Mouse Left Click**: Change enemy position  
+- **Shift**: Change selected enemy  
 
+---
 
-Features :
+## 🌟 **Game Features**
 
-● Parallax Background.
-● Platform Colliders.
-● Killing Colliders.
-● Tilemap using Tiled.
-● Level 1.
-● Level 2.
-● Checkpoints.
-● Movable Object.
-● Animated Tiles.
+### **World & Environment:**
+- **Parallax Background**  
+- **Tilemap created using Tiled**  
+- **Animated Tiles**  
+- **Movable Objects**  
+- **Checkpoints**
 
-● Box2d Physics.
+### **Physics & Mechanics:**
+- **Box2D Physics Engine**  
+- **Platform Colliders**  
+- **Killing Colliders**  
+- **Player Physics**  
+- **Player Animations** (Jumping, Attacking, Dying)  
 
-● Player Animations.
-● Player Attack Combo.
-● Player Physics.
-● Player Die.
+### **Combat:**
+- **Player Attack Combo**  
+- **Projectile Attacks**  
+- **Enemies:**
+  - Boar  
+  - Hedgehog  
+  - Bee  
+  - Octopus  
+- **Enemy Pathfinding**  
 
-● Projectiles.
+### **Progress & Debugging:**
+- **Load/Save System**  
+- **Debug Mode** (Visualize colliders & logic)  
+- **God Mode** (Fly, invulnerable)  
+- **Framerate Cap (30 FPS)**  
+- **Fullscreen Toggle**  
 
-● Enemy Boar.
-● Enemy Hedgehog.
-● Enemy Bee.
-● Enemy Octopus.
-● Pathfiding.
+---
 
-● Load/Save.
-● Menu showing keys.
-● Debug Mode.
-● God Mode.
-● Framerate cap.
-● Fullscreen
+## ⚙️ **Development Notes**
+- This game is still in active development, and more levels and features are planned.
