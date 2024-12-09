@@ -98,7 +98,7 @@ bool Hedgehog::Start()
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
-	animator->LookRight();
+	
 	return true;
 }
 
@@ -139,8 +139,11 @@ bool Hedgehog::Update(float dt)
 	if (pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookLeft();
 	}
-	else {
+	else if (pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookRight();
+	}
+	else {
+		animator->LookLeft();
 	}
 
 	animator->Update();
