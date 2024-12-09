@@ -374,11 +374,10 @@ bool Player::Update(float dt)
 			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); //player steps audio updates every step
 		}
 		/* steps rock beneath boulder */
-		//else if (3712 > position.getX() && position.getX() > 4064 && currentLevel == 1 && position.getY() > 360) // boulder lvl1
-		//{
-		//	Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
-		//}
-
+		else if (4064 > position.getX() && position.getX() > 3712  && currentLevel == 1 && position.getY() > 360) // Boulder Level 1
+		{
+			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
+		}
 		else if (6460 > position.getX() && position.getX() > 6170 && currentLevel == 1) // House Level 1
 		{
 			Engine::GetInstance().audio.get()->PlayFx(audioPlayerStepsId); 
@@ -399,14 +398,14 @@ bool Player::Update(float dt)
 	//Combo1 SoundFX
 	if (state == PlayerState::WOMBO && (animator->GetAnimation() == 4) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)){
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
-		//Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); 
 
 	}
 	//Combo2 SoundFX
 	if (state == PlayerState::COMBO && (animator->GetAnimation() == 5) && (animator->GetCurrentFrame_int() == 0 && animator->GetLastFrame_int() != 0)) {
 		printf("%d - %d\n", animator->GetCurrentFrame_int(), animator->GetLastFrame_int());
-		//Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
+		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordId);	//player sword play
 		Engine::GetInstance().audio.get()->PlayFx(audioPlayerSwordSwingId); 
 	}
 
