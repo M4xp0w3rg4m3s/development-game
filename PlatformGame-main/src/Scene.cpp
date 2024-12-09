@@ -172,6 +172,10 @@ bool Scene::Update(float dt)
 		player->ResetPlayer(current_level);
 	}
 
+	if (current_level == 1 && player->position.getX() >= 6520) {
+		AdvanceLevel();
+	}
+
 	//Get mouse position and obtain the map coordinate
 	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
 	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap((int)mousePos.getX() - Engine::GetInstance().render.get()->camera.x,(int)mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
@@ -402,4 +406,34 @@ void Scene::SaveState()
 
 	//Saves the modifications to the XML 
 	loadFile.save_file("config.xml");
+}
+
+void Scene::AdvanceLevel()
+{
+	if (current_level == 1) {
+
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+
+		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		SDL_DestroyTexture(caveBg);
+
+		current_level = 2;
+
+		player->ResetPlayer(current_level);
+
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Disable();
+		}
+
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Enable();
+		}
+	}
 }

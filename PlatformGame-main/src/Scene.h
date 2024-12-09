@@ -50,6 +50,8 @@ public:
 
 	void SaveState();
 
+	void AdvanceLevel();
+
 private:
 	int enemyIndex = 0;
 
