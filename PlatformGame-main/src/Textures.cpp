@@ -77,7 +77,7 @@ SDL_Texture* const Textures::Load(const char* path)
 bool Textures::UnLoad(SDL_Texture* texture)
 {
 	for (const auto& _texture : textures) {
-		if (_texture == texture) {
+		if (_texture == texture && texture) {
 			LOG("Unloading texture");
 			SDL_DestroyTexture(texture);
 			return true;
