@@ -79,6 +79,12 @@
     <ClCompile Include="src\Octopus.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\GuiManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GuiControlButton.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -164,6 +170,15 @@
     </ClInclude>
     <ClInclude Include="src\Octopus.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiManager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiControl.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiControlButton.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
