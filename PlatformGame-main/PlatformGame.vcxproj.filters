@@ -85,6 +85,11 @@
     <ClCompile Include="src\GuiControlButton.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="src\MainMenu.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CreditsScene.cpp" />
+    <ClCompile Include="src\OptionsScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -179,6 +184,15 @@
     </ClInclude>
     <ClInclude Include="src\GuiControlButton.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMenu.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CreditsScene.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OptionsScene.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
