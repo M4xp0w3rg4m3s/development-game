@@ -15,6 +15,8 @@
 #include "Physics.h"
 #include "Parallax.h"
 
+#include "GuiManager.h"
+
 // Constructor
 Engine::Engine() {
 
@@ -38,6 +40,7 @@ Engine::Engine() {
     map = std::make_shared<Map>();
     parallax = std::make_shared<Parallax>();
     entityManager = std::make_shared<EntityManager>();
+    guiManager = std::make_shared<GuiManager>();
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -52,6 +55,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(map));
     // Add the entity manager
     AddModule(std::static_pointer_cast<Module>(entityManager));
+    AddModule(std::static_pointer_cast<Module>(guiManager));
 
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render));

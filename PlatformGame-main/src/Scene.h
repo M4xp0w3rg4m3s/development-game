@@ -5,6 +5,7 @@
 #include "Parallax.h"
 #include <box2d/box2d.h>
 #include "Enemy.h"
+#include "GuiControlButton.h"
 
 class Scene : public Module
 {
@@ -50,6 +51,8 @@ public:
 
 	void SaveState();
 
+	bool OnGuiMouseClickEvent(GuiControl* control);
+
 	void AdvanceLevel();
 
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
@@ -77,4 +80,6 @@ private:
 
 	int numEnemies1 = 13;
 	int numEnemies2 = 11;
+
+	GuiControlButton* guiBt;
 };

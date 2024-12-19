@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 #include <memory>
 #include <list>
@@ -20,6 +20,7 @@ class EntityManager;
 class Map;
 class Physics;
 class Parallax;
+class GuiManager;
 
 class Engine
 {
@@ -100,6 +101,7 @@ public:
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<Parallax> parallax;
+	std::shared_ptr<GuiManager> guiManager;
 
 private: 
 

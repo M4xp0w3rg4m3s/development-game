@@ -51,6 +51,11 @@ bool Render::Awake()
 		SDL_RenderSetLogicalSize(renderer, Engine::GetInstance().window->width * scale, Engine::GetInstance().window->height * scale);
 	}
 
+	//initialise the SDL_ttf library
+	TTF_Init();
+
+	//load a font into memory
+	font = TTF_OpenFont("Assets/Fonts/MP16REG.ttf", 72);
 
 	return ret;
 }

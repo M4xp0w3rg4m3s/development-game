@@ -20,6 +20,9 @@
 #include "Bee.h"
 #include "Hedgehog.h"
 
+#include "GuiControl.h"
+#include "GuiManager.h"
+
 Scene::Scene() : Module()
 {
 	name = "scene";
@@ -44,6 +47,9 @@ bool Scene::Awake()
 	parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
 	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
+
+	SDL_Rect btPos = { 854-65, 0, 65, 20 };
+	guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
 
 	//Get the map name from the config file and assigns the value
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
@@ -177,7 +183,7 @@ bool Scene::Update(float dt)
 		once = true;
 	}
 
-	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) {
 		if (current_level == 1) {
 			if (enemyListLevel1[enemyIndex1]->active) {
 				enemyListLevel1[enemyIndex1]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
@@ -220,6 +226,13 @@ bool Scene::Update(float dt)
 			}
 		}
 	}
+
+	return true;
+}
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+	LOG("Press Gui Control: %d", control->id);
 
 	return true;
 }
