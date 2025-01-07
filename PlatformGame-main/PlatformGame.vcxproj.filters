@@ -31,9 +31,6 @@
     <ClCompile Include="src\Boulder.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\Enemy.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Audio.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -67,29 +64,36 @@
     <ClCompile Include="src\Pathfinding.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Boar.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hedgehog.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Bee.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Octopus.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GuiManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GuiControlButton.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="src\MainMenu.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\CreditsScene.cpp" />
-    <ClCompile Include="src\OptionsScene.cpp" />
+    <ClCompile Include="src\GuiControlButton.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GuiManager.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bee.cpp">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Boar.cpp">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Enemy.cpp">
+      <Filter>Game\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hedgehog.cpp">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Octopus.cpp">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OptionsScene.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CreditsScene.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -123,9 +127,6 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="src\Boulder.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Enemy.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="src\Audio.h">
@@ -164,27 +165,6 @@
     <ClInclude Include="src\Pathfinding.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Boar.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hedgehog.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Bee.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Octopus.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GuiManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GuiControl.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GuiControlButton.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="src\MainMenu.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -193,6 +173,30 @@
     </ClInclude>
     <ClInclude Include="src\OptionsScene.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiControl.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiManager.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiControlButton.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bee.h">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Boar.h">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Enemy.h">
+      <Filter>Game\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hedgehog.h">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Octopus.h">
+      <Filter>Game\Enemies\Type %28Enemies%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +222,15 @@
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{f826cf23-96ba-424b-ac74-e345613500dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI">
+      <UniqueIdentifier>{aeec71b9-1704-400c-b37f-d412134c58c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Enemies">
+      <UniqueIdentifier>{c9c89809-c15a-44f7-a693-9cc2ca444d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Enemies\Type %28Enemies%29">
+      <UniqueIdentifier>{505462bd-90cd-495a-9716-0d8d26698909}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
