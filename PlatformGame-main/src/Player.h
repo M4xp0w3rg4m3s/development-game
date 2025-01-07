@@ -55,14 +55,16 @@ public:
 	void SetAttackingLeft(bool isAttackingLeft_);
 	void SetAttackingRight(bool isAttackingRight_);
 
-public:
+	int width = 16;
+	std::string textureName;
+
+private:
 
 	//Declare player parameters
 	float speed = 150.0f;
-	std::string textureName; 
 	SDL_Texture* texture = NULL;
 	int texW = 0, texH = 0;
-	int width = 16;
+	
 	int height = 45;
 
 	int pickCoinFxId = -1;
@@ -99,8 +101,6 @@ public:
 	bool isAttackingRight = false;
 
 	Entity* enemyAttacked = nullptr;
-
-private:
 
 	int audioPlayerStepsGrassId = -1;
 	int audioPlayerStepsRockId = -1;

@@ -186,6 +186,7 @@
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\GameHUD.h" />
     <ClInclude Include="src\GuiControl.h" />
     <ClInclude Include="src\GuiControlButton.h" />
     <ClInclude Include="src\GuiManager.h" />
