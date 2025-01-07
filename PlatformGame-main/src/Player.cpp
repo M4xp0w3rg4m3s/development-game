@@ -661,3 +661,11 @@ void Player::SetAttackingRight(bool isAttackingRight_)
 {
 	isAttackingRight = isAttackingRight_;
 }
+
+int Player::GetPlayerLives()
+{
+	if (state != PlayerState::DYING && state != PlayerState::DEAD) {
+		return lives;
+	}
+	return 0;
+}

@@ -94,7 +94,7 @@ bool Render::Update(float dt)
 
 	DrawTexture(lifeHudTexture, -camera.x + 16, camera.y + 400);
 
-	DrawRectangle({ -camera.x + 16 + 54, camera.y + 400 + 42, 94 * Engine::GetInstance().scene->GetPlayer()->lives, 16}, 100, 0, 0);
+	DrawRectangle({ -camera.x + 16 + 54, camera.y + 400 + 42, 94 * Engine::GetInstance().scene->GetPlayer()->GetPlayerLives(), 16}, 100, 0, 0);
 
 	return true;
 }

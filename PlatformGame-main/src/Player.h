@@ -58,6 +58,8 @@ public:
 	int width = 16;
 	std::string textureName;
 
+	int GetPlayerLives();
+
 private:
 
 	//Declare player parameters
