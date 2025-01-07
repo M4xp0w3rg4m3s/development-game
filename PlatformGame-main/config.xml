@@ -15,7 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<player x="4132" y="118" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
+		<player x="4869" y="217" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
 		<level currentlevel="1" />
 		<layers>
 			<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
@@ -51,7 +51,7 @@
 				<enemy name="octopus" x="4416" y="399" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="false" id="o3" />
 				<enemy name="octopus" x="4736" y="399" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="false" id="o4" />
 				<enemy name="octopus" x="5519" y="399" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o5" />
-				<enemy name="octopus" x="5696" y="399" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o6" />
+				<enemy name="octopus" x="5775" y="399" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="true" id="o6" />
 				<enemy name="bee" x="2002" y="116" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be1" />
 				<enemy name="bee" x="3956" y="209" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be2" />
 				<enemy name="bee" x="6080" y="193" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be3" />

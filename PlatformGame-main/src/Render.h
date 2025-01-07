@@ -49,7 +49,9 @@ public:
 	SDL_Color background;
 
 	SDL_Texture* keysMenuTexture;
+	SDL_Texture* lifeHudTexture;
 	TTF_Font* font;
 
 	bool keysMenuOn = false;
+	bool lifeHud = false;
 };
