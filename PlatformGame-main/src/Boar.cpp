@@ -27,8 +27,8 @@ bool Boar::Start()
 	
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 	enemyId = parameters.attribute("id").as_string();
@@ -80,7 +80,7 @@ bool Boar::Update(float dt)
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
-		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
 		pathfinding->ResetPath(tilePos);
 		pathfinding->resetPathAfterEnd = false;
 	}
@@ -137,7 +137,7 @@ void Boar::OnCollision(PhysBody* physA, PhysBody* physB)
 void Boar::GoToPath()
 {
 	Vector2D pos = GetPosition();
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
 
 	Vector2D destination = { NULL, NULL };
 

@@ -68,13 +68,13 @@ public:
 
 public:
 
-	int id;
+	int id = 0;
 	GuiControlType type;
 	GuiControlState state;
 
 	std::string text;           // Control text (if required)
-	SDL_Rect bounds;        // Position and size
-	SDL_Color color;        // Tint color
+	SDL_Rect bounds = {0,0,0,0};        // Position and size
+	SDL_Color color = { 255, 255, 255, 255 };        // Tint color
 
 	SDL_Texture* texture = nullptr;   // Texture atlas reference
 	SDL_Rect section = {0,0,0,0};       // Texture atlas base section
