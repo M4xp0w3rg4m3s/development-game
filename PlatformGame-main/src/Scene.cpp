@@ -91,7 +91,7 @@ bool Scene::Update(float dt)
 {
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
-		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
+		Engine::GetInstance().render.get()->camera.x = (int)(-((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2));
 	}
 	else {
 		Engine::GetInstance().render.get()->camera.x = 0;

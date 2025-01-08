@@ -71,11 +71,14 @@ private:
 	bool Lvl2_Enemies_created = false;
 	bool Lvl2_Items_created = false;
 
-	SDL_Texture* img;
-	SDL_Texture* caveBg;
+	bool Lvl3_Enemies_created = false;
+	bool Lvl3_Items_created = false;
 
-	Player* player;
-	Parallax* parallax;
+	SDL_Texture* img = nullptr;
+	SDL_Texture* caveBg = nullptr;
+
+	Player* player = nullptr;
+	Parallax* parallax = nullptr;
 
 	std::vector<Enemy*> enemyListLevel1;
 	std::vector<Enemy*> enemyListLevel2;
@@ -89,6 +92,7 @@ private:
 
 	int numEnemies1 = 13;
 	int numEnemies2 = 11;
+	int numEnemies3 = 11;
 
-	GuiControlButton* guiBt;
+	GuiControlButton* guiBt = nullptr;
 };

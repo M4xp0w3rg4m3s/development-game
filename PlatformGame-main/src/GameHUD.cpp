@@ -76,12 +76,12 @@ bool GameHUD::Update(float dt)
 	Engine::GetInstance().render->DrawTexture(ignisHudTexture, -Engine::GetInstance().render->camera.x + 719, Engine::GetInstance().render->camera.y + 400);
 	ignisAnimator->Update();
 	ignisAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - ignis_texW, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
-	Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size(), 18);
+	Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * (int)(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size()), 18);
 
 	UpdateInternalTimer();
 	std::ostringstream stream;
 	stream << std::fixed << std::setprecision(1) << internalTimer;
-	Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * ReadInternalTimerFormat().size(), 10, 10 * ReadInternalTimerFormat().size(), 18);
+	Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * (int)(ReadInternalTimerFormat().size()), 10, 10 * (int)(ReadInternalTimerFormat().size()), 18);
 	
 	return true;
 }

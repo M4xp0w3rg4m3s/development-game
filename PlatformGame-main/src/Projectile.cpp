@@ -81,8 +81,8 @@ bool Projectile::Update(float dt)
 	b2Vec2 velocity = body->body->GetLinearVelocity();
 
 	b2Transform pbodyPos = body->body->GetTransform();
-	position.x = (METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
-	position.y = (METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
+	position.x = ((float)METERS_TO_PIXELS(pbodyPos.p.x) - width / 2);
+	position.y = ((float)METERS_TO_PIXELS(pbodyPos.p.y) - height / 2);
 
 	if (velocity.x < 0)
 	{

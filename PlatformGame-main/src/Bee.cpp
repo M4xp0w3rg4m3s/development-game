@@ -28,8 +28,8 @@ bool Bee::Start()
 
 	position.setX(parameters.attribute("x").as_float());
 	position.setY(parameters.attribute("y").as_float());
-	height = parameters.attribute("h").as_float();
-	width = parameters.attribute("w").as_float();
+	height = parameters.attribute("h").as_int();
+	width = parameters.attribute("w").as_int();
 	enemyId = parameters.attribute("id").as_string();
 
 	texH = height, texW = width;
@@ -56,18 +56,13 @@ bool Bee::Start()
 	animator = new Sprite(texture);
 	animator->SetNumberAnimations(4);
 
-	position.setX(parameters.attribute("x").as_float());
-	position.setY(parameters.attribute("y").as_float());
-	height = parameters.attribute("h").as_float();
-	width = parameters.attribute("w").as_float();
-
 	// IDLE
 	animator->AddKeyFrame(0, { 0,  1 * height,width,height });
 	animator->AddKeyFrame(0, { 1 * width, 1 * height,width,height });
 	animator->AddKeyFrame(0, { 2 * width, 1 * height,width,height });
 	animator->AddKeyFrame(0, { 3 * width, 1 * height,width,height });
 	animator->SetAnimationDelay(0, 100);
-
+	
 	// ATTACK
 	animator->AddKeyFrame(1, { 0,  0 * height,width,height });
 	animator->AddKeyFrame(1, { 1 * width, 0 * height,width,height });
@@ -98,7 +93,7 @@ bool Bee::Update(float dt)
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
-		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 		pathfinding->ResetPath(tilePos);
 		pathfinding->resetPathAfterEnd = false;
 	}
@@ -152,7 +147,7 @@ void Bee::OnCollision(PhysBody* physA, PhysBody* physB)
 void Bee::GoToPath()
 {
 	Vector2D pos = GetPosition();
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)pos.getX(), (int)pos.getY());
 
 	Vector2D destination = { NULL, NULL };
 

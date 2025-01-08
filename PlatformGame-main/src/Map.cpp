@@ -71,7 +71,7 @@ bool Map::Update(float dt)
                                 //Get the screen coordinates from the tile coordinates
                                 Vector2D mapCoord = MapToWorld(i, j);
                                 //Draw the texture
-                                Engine::GetInstance().render->DrawTexture(tileSet->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
+                                Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)(mapCoord.getX()), (int)(mapCoord.getY()), &tileRect);
                             }
                         }
                     }
@@ -249,7 +249,7 @@ bool Map::Load(std::string path, std::string fileName, bool doCallsToObjects)
                         if (doCallsToObjects)
                             boulder->SetNewPos({ (float)x,(float)y });
                         else
-                            boulder->position = Vector2D(x,y);
+                            boulder->position = Vector2D((float)x, (float)y);
                         objects.emplace_back(boulder);
                     }
                 }
@@ -305,8 +305,8 @@ Vector2D Map::MapToWorld(int x, int y) const
 {
     Vector2D ret;
 
-    ret.setX(x * mapData.tilewidth);
-    ret.setY(y * mapData.tileheight);
+    ret.setX((float)(x * mapData.tilewidth));
+    ret.setY((float)(y * mapData.tileheight));
 
     return ret;
 }
@@ -315,8 +315,8 @@ Vector2D Map::WorldToMap(int x, int y) {
 
     Vector2D ret(0, 0);
 
-    ret.setX(x / mapData.tilewidth);
-    ret.setY(y / mapData.tileheight);
+    ret.setX((float)(x / mapData.tilewidth));
+    ret.setY((float)(y / mapData.tileheight));
 
     return ret;
 }

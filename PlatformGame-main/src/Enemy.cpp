@@ -45,7 +45,7 @@ void Enemy::SetPosition(Vector2D pos) {
 
 Vector2D Enemy::GetPosition() {
 	b2Vec2 bodyPos = pbody->body->GetTransform().p;
-	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	Vector2D pos = Vector2D((float)(METERS_TO_PIXELS(bodyPos.x)), (float)(METERS_TO_PIXELS(bodyPos.y)));
 	return pos;
 }
 Vector2D Enemy::GetCenterPosition()
@@ -61,13 +61,13 @@ Vector2D Enemy::GetCenterPosition()
 	b2Vec2 centerPosInMeters = { bodyPos.x , bodyPos.y };
 
 	// Convert center position back to pixels
-	Vector2D centerPos = Vector2D(METERS_TO_PIXELS(centerPosInMeters.x), METERS_TO_PIXELS(centerPosInMeters.y));
+	Vector2D centerPos = Vector2D((float)(METERS_TO_PIXELS(centerPosInMeters.x)), (float)(METERS_TO_PIXELS(centerPosInMeters.y)));
 
 	return centerPos;
 }
 void Enemy::ResetPath() {
 	Vector2D pos = GetPosition();
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
 	pathfinding->ResetPath(tilePos);
 }
 

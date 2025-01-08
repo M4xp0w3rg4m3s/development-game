@@ -102,9 +102,9 @@ bool Player::Start() {
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 
 	body = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX(), (int)position.getY(), width, height, bodyType::DYNAMIC);
-	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 0.8, height * 0.25, bodyType::DYNAMIC);
-	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
-	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), width * 1.5, height * 1.5, bodyType::DYNAMIC);
+	bodyBot = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), (int)(width * 0.8), (int)(height * 0.25), bodyType::DYNAMIC);
+	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), (int)(width * 1.5), (int)(height * 1.5), bodyType::DYNAMIC);
+	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), (int)(width * 1.5), (int)(height * 1.5), bodyType::DYNAMIC);
 
 	body->CreateWeld(bodyBot, { 0,(float)PIXEL_TO_METERS((-height / 2)) });
 	body->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS((width * 1.5)) ,(float)PIXEL_TO_METERS((height / 4)) });

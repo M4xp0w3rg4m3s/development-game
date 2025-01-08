@@ -56,8 +56,8 @@ bool Boulder::Update(float dt)
 	// Boulder physics - update the position of the object from the physics.  
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX((float)(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2));
+	position.setY((float)(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2));
 
 	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY()+2);
 
