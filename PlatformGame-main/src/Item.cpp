@@ -137,7 +137,20 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB)
 	}
 }
 
+void Item::SetPosition(Vector2D pos)
+{
+	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+	pbody->body->SetTransform(bodyPos, 0);
+}
+
 ItemType Item::GetCurrentType()
 {
 	return currentType;
+}
+
+Vector2D Item::GetPosition()
+{
+	b2Vec2 bodyPos = pbody->body->GetTransform().p;
+	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	return pos;
 }

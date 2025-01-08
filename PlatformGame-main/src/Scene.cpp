@@ -63,7 +63,7 @@ bool Scene::Awake()
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
 	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
-	CreateItems(configParameters.child("entities").child("items_lvl_1").child("enemy"), itemListLevel1);
+	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
 	return ret;
 }
@@ -122,17 +122,28 @@ bool Scene::Update(float dt)
 		for (const auto& enemy : enemyListLevel1) {
 			enemy->Disable();
 		}
+		for (const auto& item : itemListLevel1) {
+			item->Disable();
+		}
 
 		if (!Lvl2_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
 			for (const auto& enemy : enemyListLevel2) {
 				enemy->Start();
 			}
+			for (const auto& item : itemListLevel2) {
+				item->Start();
+			}
 			Lvl2_Enemies_created = true;
+			Lvl2_Items_created = true;
 		}
 
 		for (const auto& enemy : enemyListLevel2) {
 			enemy->Enable();
+		}
+		for (const auto& item : itemListLevel2) {
+			item->Enable();
 		}
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
@@ -156,9 +167,15 @@ bool Scene::Update(float dt)
 		for (const auto& enemy : enemyListLevel2) {
 			enemy->Disable();
 		}
-
 		for (const auto& enemy : enemyListLevel1) {
 			enemy->Enable();
+		}
+
+		for (const auto& item : itemListLevel2) {
+			item->Disable();
+		}
+		for (const auto& item : itemListLevel1) {
+			item->Enable();
 		}
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
@@ -412,6 +429,70 @@ void Scene::LoadState()
 			enemy->Enable();
 		}
 	}
+
+	//items
+	if (current_level == 1) {
+		for (pugi::xml_node itemNode = sceneNode.child("entities").child("enemies_lvl_1").child("enemy"); itemNode; itemNode = itemNode.next_sibling("item"))
+		{
+			Vector2D itemPos = Vector2D(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
+
+			bool itemActive = itemNode.attribute("active").as_bool();
+
+			for (const auto& item : itemListLevel1) {
+				if (item && item->itemId == itemNode.attribute("id").as_string()) {
+					if (!item->active && itemActive) {
+						item->Enable();
+					}
+					if (itemActive) {
+						item->SetPosition(itemPos);
+					}
+				}
+			}
+
+			for (const auto& item : itemListLevel2) {
+				item->Disable();
+			}
+
+			for (const auto& item : itemListLevel1) {
+				item->Enable();
+			}
+		}
+	}
+	if (current_level == 2) {
+		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_2").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
+		{
+			Vector2D itemPos = Vector2D(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
+
+			bool itemActive = itemNode.attribute("active").as_bool();
+
+			for (const auto& item : itemListLevel2) {
+				if (item && item->itemId == itemNode.attribute("id").as_string()) {
+					if (!item->active && itemActive) {
+						item->Enable();
+					}
+					if (itemActive) {
+						item->SetPosition(itemPos);
+					}
+				}
+			}
+		}
+
+		for (const auto& item : itemListLevel1) {
+			item->Disable();
+		}
+
+		if (!Lvl2_Items_created) {
+			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
+			for (const auto& item : itemListLevel2) {
+				item->Start();
+			}
+			Lvl2_Items_created = true;
+		}
+
+		for (const auto& item : itemListLevel2) {
+			item->Enable();
+		}
+	}
 }
 
 void Scene::SaveState()
@@ -477,6 +558,47 @@ void Scene::SaveState()
 		}
 	}
 
+	//items
+	if (current_level == 1) {
+		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_1").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
+		{
+			bool itemActive = itemNode.attribute("active").as_bool();
+
+			for (const auto& item : itemListLevel1) {
+				if (item && item->itemId == itemNode.attribute("id").as_string()) {
+					if (itemActive) {
+						if (!item->active) {
+							itemNode.attribute("active").set_value("false");
+						}
+						else {
+							itemNode.attribute("x").set_value(item->GetPosition().getX());
+							itemNode.attribute("y").set_value(item->GetPosition().getY());
+						}
+					}
+				}
+			}
+		}
+	}
+	if (current_level == 2) {
+		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_2").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
+		{
+			bool itemActive = itemNode.attribute("active").as_bool();
+
+			for (const auto& item : itemListLevel2) {
+				if (item && item->itemId == itemNode.attribute("id").as_string()) {
+					if (itemActive) {
+						if (!item->active) {
+							itemNode.attribute("active").set_value("false");
+						}
+						else {
+							itemNode.attribute("x").set_value(item->GetPosition().getX());
+							itemNode.attribute("y").set_value(item->GetPosition().getY());
+						}
+					}
+				}
+			}
+		}
+	}
 	//Saves the modifications to the XML 
 	loadFile.save_file("config.xml");
 }

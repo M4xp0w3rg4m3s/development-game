@@ -69,6 +69,7 @@ private:
 	bool once = false;
 
 	bool Lvl2_Enemies_created = false;
+	bool Lvl2_Items_created = false;
 
 	SDL_Texture* img;
 	SDL_Texture* caveBg;
@@ -78,6 +79,7 @@ private:
 
 	std::vector<Enemy*> enemyListLevel1;
 	std::vector<Enemy*> enemyListLevel2;
+	std::vector<Enemy*> enemyListLevel3;
 
 	std::vector<Item*> itemListLevel1;
 	std::vector<Item*> itemListLevel2;

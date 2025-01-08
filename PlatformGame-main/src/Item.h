@@ -32,8 +32,10 @@ public:
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
+	void SetPosition(Vector2D pos);
 
 	ItemType GetCurrentType();
+	Vector2D GetPosition();
 
 	std::string itemId;
 
