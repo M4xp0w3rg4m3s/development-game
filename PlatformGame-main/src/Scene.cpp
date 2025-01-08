@@ -623,6 +623,7 @@ void Scene::AdvanceLevel()
 
 		player->ResetPlayer(current_level);
 
+		//enemies
 		for (const auto& enemy : enemyListLevel1) {
 			enemy->Disable();
 		}
@@ -639,6 +640,26 @@ void Scene::AdvanceLevel()
 		for (const auto& enemy : enemyListLevel2) {
 			enemy->Enable();
 		}
+
+		//items
+		for (const auto& item : itemListLevel1) {
+			item->Disable();
+		}
+
+		if (!Lvl2_Items_created) {
+			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
+
+			for (const auto& item : itemListLevel2) {
+				item->Start();
+			}
+			Lvl2_Items_created = true;
+		}
+
+		for (const auto& item : itemListLevel2) {
+			item->Enable();
+		}
+		player->ResetPlayer(current_level);
+
 	}
 }
 
