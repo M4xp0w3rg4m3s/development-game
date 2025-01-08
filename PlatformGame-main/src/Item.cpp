@@ -121,21 +121,6 @@ bool Item::CleanUp()
 	return true;
 }
 
-void Item::OnCollision(PhysBody* physA, PhysBody* physB)
-{
-	switch (physB->ctype)
-	{
-	case ColliderType::PLAYER:
-		Disable();
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
-	default:
-		break;
-	}
-}
-
 void Item::SetPosition(Vector2D pos)
 {
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));

@@ -27,8 +27,6 @@ public:
 	bool Update(float dt);
 	bool CleanUp();
 
-	void OnCollision(PhysBody* physA, PhysBody* physB);
-
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
