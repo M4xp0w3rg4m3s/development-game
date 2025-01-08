@@ -39,9 +39,10 @@ public:
 
 	std::string itemId;
 
-public:
+protected:
 
 	bool isPicked = false;
+	pugi::xml_node parameters;
 
 private:
 	ItemType currentType;
@@ -51,7 +52,7 @@ private:
 	std::string textureName;
 	int texW = 0, texH = 0;
 
-	pugi::xml_node parameters;
+	
 
 	//Add a physics to an item
 	PhysBody* pbody = nullptr;

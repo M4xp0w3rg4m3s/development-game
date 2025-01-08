@@ -693,7 +693,6 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 			item->SetParameters(itemNode);
 			itemList.push_back(item);
 		}
-
 		itemNode = itemNode.next_sibling("item");
 	}
 }
