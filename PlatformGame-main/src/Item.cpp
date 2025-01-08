@@ -52,6 +52,16 @@ Item::Item(ItemType currentType) : Entity(EntityType::ITEM)
 	case ItemType::IGNIS:
 		textureName = parameters.attribute("texture").as_string();
 		texture = Engine::GetInstance().textures->Load(textureName.c_str());
+		animator = new Sprite(texture);
+		animator->SetNumberAnimations(1);
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 8; j++) {
+				animator->AddKeyFrame(0, { j * texW, i * texH, texW, texH });
+			}
+		}
+		animator->SetAnimationDelay(0, 100);
+		animator->SetAnimation(0);
+		animator->SetLoop(true);
 		break;
 	case ItemType::COIN:
 		textureName = parameters.attribute("texture").as_string();
@@ -106,7 +116,7 @@ bool Item::Update(float dt)
 
 bool Item::CleanUp()
 {
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().textures->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 
 	return true;
@@ -125,4 +135,9 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB)
 	default:
 		break;
 	}
+}
+
+ItemType Item::GetCurrentType()
+{
+	return currentType;
 }

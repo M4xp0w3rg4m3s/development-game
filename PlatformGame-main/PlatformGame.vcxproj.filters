@@ -76,7 +76,6 @@
     <ClCompile Include="src\Octopus.cpp">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameHUD.cpp" />
     <ClCompile Include="src\Scene.cpp">
       <Filter>Game\Scenes</Filter>
     </ClCompile>
@@ -94,6 +93,9 @@
     </ClCompile>
     <ClCompile Include="src\Item.cpp">
       <Filter>Game\Map Objects\Collectables</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameHUD.cpp">
+      <Filter>Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\GameHUD.cpp">
       <Filter>Engine\UI</Filter>
@@ -184,7 +186,6 @@
     <ClInclude Include="src\Octopus.h">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameHUD.h" />
     <ClInclude Include="src\Scene.h">
       <Filter>Game\Scenes</Filter>
     </ClInclude>
@@ -202,6 +203,9 @@
     </ClInclude>
     <ClInclude Include="src\Item.h">
       <Filter>Game\Map Objects\Collectables</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameHUD.h">
+      <Filter>Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

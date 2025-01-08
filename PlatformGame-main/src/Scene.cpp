@@ -63,6 +63,7 @@ bool Scene::Awake()
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
 	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
+	CreateItems(configParameters.child("entities").child("items_lvl_1").child("enemy"), itemListLevel1);
 
 	return ret;
 }

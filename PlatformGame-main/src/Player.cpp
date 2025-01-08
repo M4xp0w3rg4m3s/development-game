@@ -229,9 +229,13 @@ bool Player::Update(float dt)
 	position.setX((float)METERS_TO_PIXELS(pbodyPos.p.x) - 64 / 2);
 	position.setY((float)METERS_TO_PIXELS(pbodyPos.p.y) - 64 / 2);
 
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime) {
+	//Shuriken Attack
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_E) == KEY_DOWN && attackShurikenTimer.ReadMSec() > attackShurikenTime && shurikenEnabled) {
 		Shoot();
+	}
+	if (enabledShurikenTimer.ReadMSec() > enabledShurikenTime) 
+	{
+		shurikenEnabled = false;
 	}
 
 	if (state != PlayerState::DYING && state != PlayerState::DEAD){
@@ -471,8 +475,31 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
-			//Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);		
-			//Engine::GetInstance().physics.get()->DeletePhysBody(physB);
+			
+			if (physB->listener->name == "shuriken")
+			{
+				//Sound?
+				shurikenEnabled = true;
+				enabledShurikenTimer.Start();
+				physB->listener->Disable();
+			}
+			else if (physB->listener->name == "ignis")
+			{
+				//Sound?
+				currentIgnis++;
+				physB->listener->Disable();
+			}
+			else if (physB->listener->name == "health")
+			{
+				//Sound?
+				lives++;
+				physB->listener->Disable();
+			}
+			else if (physB->listener->name == "coin")
+			{
+				Engine::GetInstance().audio->PlayFx(pickCoinFxId);
+			}
+			else {}
 			break;
 		case ColliderType::ENEMY:
 			LOG("Collision UNKNOWN");

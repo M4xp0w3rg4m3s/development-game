@@ -18,11 +18,11 @@ public:
 		WOMBO,
 		COMBO,
 		DYING,
-		DEAD	
+		DEAD
 	};
 
 	Player();
-	
+
 	virtual ~Player();
 
 	bool Awake();
@@ -40,7 +40,7 @@ public:
 	void ResetPlayer();
 
 	void ResetPlayer(int level);
-	
+
 	void SetPosition(Vector2D pos);
 
 	Vector2D GetPosition();
@@ -63,28 +63,27 @@ public:
 
 private:
 
-	//Declare player parameters
-	float speed = 150.0f;
+	//Texture
 	SDL_Texture* texture = NULL;
 	int texW = 0, texH = 0;
-	
+	Sprite* animator = nullptr;
+
 	int height = 45;
 
-	int pickCoinFxId = -1;
-
+	//Physics
 	bool isGrounded = false;
 	PhysBody* body = nullptr;
 	PhysBody* bodyBot = nullptr;
 	PhysBody* bodyAttackLeft = nullptr;
 	PhysBody* bodyAttackRight = nullptr;
 
+	//States
 	PlayerState state = IDLE;
-
-	Sprite* animator = nullptr;
 
 	Timer deadTimer;
 	int deadTime = 2;
 
+	//Attack
 	Timer attackReactionTimer;
 	Timer attackCooldownTimer;
 	int reactionTimeMs = 500;
@@ -98,18 +97,27 @@ private:
 
 	bool godMode = false;
 
+	//Player Stats
+	float speed = 150.0f;
 	int lives = 3;
-
 	int currentIgnis = 0;
+
+	//Enemies
+	Entity* enemyAttacked = nullptr;
 
 	bool isAttackingLeft = false;
 	bool isAttackingRight = false;
 
-	Entity* enemyAttacked = nullptr;
+	//Items
+	bool shurikenEnabled = false;
 
+	Timer enabledShurikenTimer;
+	int enabledShurikenTime = 60000;
+
+	//Audio
 	int audioPlayerStepsGrassId = -1;
 	int audioPlayerStepsRockId = -1;
-	int audioPlayerStepsId = -1; 
+	int audioPlayerStepsId = -1;
 	int audioPlayerSwordId = -1;
 	int audioShurikenShootId = -1;
 	int audioPlayerSwordSwingId = -1;
@@ -117,4 +125,5 @@ private:
 	int audioPlayerDieId = -1;
 	int audioHitEnemyId = -1;
 	int audioFallToWaterId = -1;
+	int pickCoinFxId = -1;
 };

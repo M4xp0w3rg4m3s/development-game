@@ -33,6 +33,8 @@ public:
 		this->parameters = parameters;
 	}
 
+	ItemType GetCurrentType();
+
 	std::string itemId;
 
 public:
