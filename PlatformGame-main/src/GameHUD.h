@@ -15,8 +15,14 @@ public:
 	bool Update(float dt);
 	bool CleanUp();
 
+	void StartInternalTimer();
+	void UpdateInternalTimer();
+	double ReadInternalTimerSec() const;
+	std::string ReadInternalTimerFormat() const;
 
 private:
+	float internalDt;
+
 	SDL_Texture* ignisTexture = nullptr;
 	Sprite* ignisAnimator = nullptr;
 	int ignis_texW = 32, ignis_texH = 32;
@@ -33,4 +39,6 @@ private:
 
 	bool keysMenuOn = false;
 	bool lifeHud = false;
+
+	double internalTimer = 0;
 };

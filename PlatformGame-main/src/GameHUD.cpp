@@ -6,6 +6,8 @@
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
+#include <iomanip>
+#include <sstream>
 
 GameHUD::GameHUD()
 {
@@ -48,11 +50,14 @@ bool GameHUD::Start()
 	heartAnimator->SetAnimation(0);
 	heartAnimator->SetLoop(true);
 
+	StartInternalTimer();
 	return true;
 }
 
 bool GameHUD::Update(float dt)
 {
+	internalDt = dt;
+
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
 		if (!keysMenuOn) keysMenuOn = true;
 		else keysMenuOn = false;
@@ -73,17 +78,50 @@ bool GameHUD::Update(float dt)
 	ignisAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - ignis_texW, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
 	Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size(), 18);
 
+	UpdateInternalTimer();
+	std::ostringstream stream;
+	stream << std::fixed << std::setprecision(1) << internalTimer;
+	Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * ReadInternalTimerFormat().size(), 10, 10 * ReadInternalTimerFormat().size(), 18);
+	
 	return true;
 }
 
 bool GameHUD::CleanUp()
 {
 	LOG("Cleanup Game HUD");
-	SDL_DestroyTexture(keysMenuTexture);
-	SDL_DestroyTexture(lifeHudTexture);
-	SDL_DestroyTexture(ignisHudTexture);
+	Engine::GetInstance().textures->UnLoad(keysMenuTexture);
+	Engine::GetInstance().textures->UnLoad(lifeHudTexture);
+	Engine::GetInstance().textures->UnLoad(ignisHudTexture);
 	delete ignisAnimator;
 	delete heartAnimator;
+	Engine::GetInstance().textures->UnLoad(ignisTexture);
+	Engine::GetInstance().textures->UnLoad(heartTexture);
 	//memory leaks
 	return true;
+}
+
+void GameHUD::StartInternalTimer()
+{
+	internalTimer = 0;
+}
+
+void GameHUD::UpdateInternalTimer()
+{
+	internalTimer += internalDt/1000;
+}
+
+double GameHUD::ReadInternalTimerSec() const
+{
+	return internalTimer;
+}
+
+std::string GameHUD::ReadInternalTimerFormat() const
+{
+	int minutes = static_cast<int>(ReadInternalTimerSec() / 60);
+	int seconds = static_cast<int>(ReadInternalTimerSec()) % 60;
+
+	std::ostringstream stream;
+	stream << std::setw(2) << std::setfill('0') << minutes << ":" << std::setw(2) << std::setfill('0') << seconds;
+
+	return stream.str();
 }
