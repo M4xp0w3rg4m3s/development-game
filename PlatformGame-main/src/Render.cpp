@@ -4,7 +4,6 @@
 #include "Log.h"
 #include "Textures.h"
 #include "Input.h"
-#include "Scene.h"
 
 #define VSYNC true
 
@@ -66,9 +65,6 @@ bool Render::Start()
 {
 	LOG("render start");
 
-	keysMenuTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/controls.png");
-	lifeHudTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/life.png");
-
 	// back background
 	SDL_RenderGetViewport(renderer, &viewport);
 	return true;
@@ -83,19 +79,6 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
-		if (!keysMenuOn) keysMenuOn = true;
-		else keysMenuOn = false;
-	}
-
-	if (keysMenuOn) {
-		DrawTexture(keysMenuTexture, -camera.x, camera.y);
-	}
-
-	DrawTexture(lifeHudTexture, -camera.x + 16, camera.y + 400);
-
-	DrawRectangle({ -camera.x + 16 + 54, camera.y + 400 + 42, 94 * Engine::GetInstance().scene->GetPlayer()->GetPlayerLives(), 16}, 100, 0, 0);
-
 	return true;
 }
 
@@ -109,7 +92,6 @@ bool Render::PostUpdate()
 // Called before quitting
 bool Render::CleanUp()
 {
-	SDL_DestroyTexture(keysMenuTexture);
 	LOG("Destroying SDL render");
 	SDL_DestroyRenderer(renderer);
 	return true;

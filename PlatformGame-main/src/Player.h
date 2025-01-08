@@ -58,7 +58,8 @@ public:
 	int width = 16;
 	std::string textureName;
 
-	int GetPlayerLives();
+	int GetPlayerLives() const;
+	int GetPlayerIgnis() const;
 
 private:
 
@@ -98,6 +99,8 @@ private:
 	bool godMode = false;
 
 	int lives = 3;
+
+	int currentIgnis = 0;
 
 	bool isAttackingLeft = false;
 	bool isAttackingRight = false;

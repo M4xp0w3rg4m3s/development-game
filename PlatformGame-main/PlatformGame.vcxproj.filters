@@ -95,6 +95,9 @@
     <ClCompile Include="src\Item.cpp">
       <Filter>Game\Map Objects\Collectables</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameHUD.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">

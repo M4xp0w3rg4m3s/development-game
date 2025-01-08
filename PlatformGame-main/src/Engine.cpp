@@ -16,6 +16,7 @@
 #include "Parallax.h"
 
 #include "GuiManager.h"
+#include "GameHUD.h"
 
 // Constructor
 Engine::Engine() {
@@ -41,6 +42,7 @@ Engine::Engine() {
     parallax = std::make_shared<Parallax>();
     entityManager = std::make_shared<EntityManager>();
     guiManager = std::make_shared<GuiManager>();
+    gameHud = std::make_shared<GameHUD>();
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -56,6 +58,7 @@ Engine::Engine() {
     // Add the entity manager
     AddModule(std::static_pointer_cast<Module>(entityManager));
     AddModule(std::static_pointer_cast<Module>(guiManager));
+    AddModule(std::static_pointer_cast<Module>(gameHud));
 
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render));
