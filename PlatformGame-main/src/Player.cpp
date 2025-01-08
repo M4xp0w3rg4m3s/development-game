@@ -662,10 +662,15 @@ void Player::SetAttackingRight(bool isAttackingRight_)
 	isAttackingRight = isAttackingRight_;
 }
 
-int Player::GetPlayerLives()
+int Player::GetPlayerLives() const
 {
 	if (state != PlayerState::DYING && state != PlayerState::DEAD) {
 		return lives;
 	}
 	return 0;
+}
+
+int Player::GetPlayerIgnis() const
+{
+	return currentIgnis;
 }

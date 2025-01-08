@@ -94,6 +94,9 @@
     <ClCompile Include="src\CreditsScene.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameHUD.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -197,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="src\Octopus.h">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameHUD.h">
+      <Filter>Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

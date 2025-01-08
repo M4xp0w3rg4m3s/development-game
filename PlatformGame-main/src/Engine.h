@@ -21,6 +21,7 @@ class Map;
 class Physics;
 class Parallax;
 class GuiManager;
+class GameHUD;
 
 class Engine
 {
@@ -102,6 +103,7 @@ public:
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<Parallax> parallax;
 	std::shared_ptr<GuiManager> guiManager;
+	std::shared_ptr<GameHUD> gameHud;
 
 private: 
 
