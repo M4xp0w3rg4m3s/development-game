@@ -29,7 +29,7 @@ Item::Item(ItemType currentType) : Entity(EntityType::ITEM)
 	texH = parameters.attribute("h").as_float();
 	texW = parameters.attribute("w").as_float();
 	itemId = parameters.attribute("id").as_string();
-	isPicked = parameters.attribute("active").as_bool();
+	//isPicked = parameters.attribute("active").as_bool();
 
 	//initilize textures
 	switch (currentType)

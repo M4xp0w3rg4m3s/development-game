@@ -432,7 +432,7 @@ void Scene::LoadState()
 
 	//items
 	if (current_level == 1) {
-		for (pugi::xml_node itemNode = sceneNode.child("entities").child("enemies_lvl_1").child("enemy"); itemNode; itemNode = itemNode.next_sibling("item"))
+		for (pugi::xml_node itemNode = sceneNode.child("entities").child("enemies_lvl_1").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 		{
 			Vector2D itemPos = Vector2D(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
 
@@ -693,7 +693,6 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 			item->SetParameters(itemNode);
 			itemList.push_back(item);
 		}
-
 		itemNode = itemNode.next_sibling("item");
 	}
 }
