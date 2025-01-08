@@ -15,7 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<player x="5859" y="296" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
+		<player x="3139" y="296" texturePath="Assets/Textures/Character/chara-spritesheet.png" />
 		<level currentlevel="1" />
 		<layers>
 			<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
