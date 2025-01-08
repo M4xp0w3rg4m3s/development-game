@@ -58,7 +58,7 @@ public:
 	void AdvanceLevel();
 
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
-	void CreateItems(pugi::xml_node enemyNode, std::vector<Item*>& itemList);
+	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
 
 	bool debug = false;
 private:

@@ -546,3 +546,31 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 		enemyNode = enemyNode.next_sibling("enemy");
 	}
 }
+
+void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
+{
+	while (itemNode) {
+		std::string name = itemNode.attribute("name").as_string();
+		Item* item = nullptr;
+
+		if (name == "coin") {
+			//enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
+		}
+		else if (name == "shuriken") {
+			//enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
+		}
+		else if (name == "health") {
+			//enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
+		}
+		else if (name == "ignis") {
+			//enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+		}
+
+		if (item) {
+			//item->SetParameters(itemNode);
+			itemList.push_back(item);
+		}
+
+		itemNode = itemNode.next_sibling("enemy");
+	}
+}
