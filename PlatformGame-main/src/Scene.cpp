@@ -19,6 +19,7 @@
 #include "Octopus.h"
 #include "Bee.h"
 #include "Hedgehog.h"
+#include "Enemy.h"
 
 #include "GuiControl.h"
 #include "GuiManager.h"

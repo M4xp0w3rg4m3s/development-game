@@ -25,12 +25,6 @@
     <ClCompile Include="src\Player.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Boulder.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Audio.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -58,14 +52,8 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Item.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Pathfinding.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MainMenu.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="src\GuiControlButton.cpp">
       <Filter>Engine\UI</Filter>
@@ -88,11 +76,24 @@
     <ClCompile Include="src\Octopus.cpp">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
     </ClCompile>
-    <ClCompile Include="src\OptionsScene.cpp">
-      <Filter>Game</Filter>
+    <ClCompile Include="src\GameHUD.cpp" />
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Game\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\CreditsScene.cpp">
-      <Filter>Game</Filter>
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainMenu.cpp">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OptionsScene.cpp">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Boulder.cpp">
+      <Filter>Game\Map Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Item.cpp">
+      <Filter>Game\Map Objects\Collectables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,13 +121,7 @@
     <ClInclude Include="src\Player.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Parallax.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Boulder.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="src\Audio.h">
@@ -159,20 +154,8 @@
     <ClInclude Include="src\Window.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Item.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Pathfinding.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MainMenu.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CreditsScene.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OptionsScene.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="src\GuiControl.h">
       <Filter>Engine\UI</Filter>
@@ -197,6 +180,28 @@
     </ClInclude>
     <ClInclude Include="src\Octopus.h">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameHUD.h" />
+    <ClInclude Include="src\Scene.h">
+      <Filter>Game\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CreditsScene.h">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMenu.h">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OptionsScene.h">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Boulder.h">
+      <Filter>Game\Map Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item.h">
+      <Filter>Game\Map Objects\Collectables</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ItemShuriken.h">
+      <Filter>Game\Map Objects\Collectables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +236,18 @@
     </Filter>
     <Filter Include="Game\Enemies\Type %28Enemies%29">
       <UniqueIdentifier>{505462bd-90cd-495a-9716-0d8d26698909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scenes">
+      <UniqueIdentifier>{eccd03f1-000d-4623-857a-1726bf82dadc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scenes\Type %28Scene%29">
+      <UniqueIdentifier>{0752a9d9-90eb-4d96-aadc-85e18c9b1ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Map Objects">
+      <UniqueIdentifier>{a96343d5-f813-469a-be28-c7c25de1071d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Map Objects\Collectables">
+      <UniqueIdentifier>{57a66473-bbec-4d3b-a428-0b151a438e36}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

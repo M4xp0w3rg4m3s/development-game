@@ -4,8 +4,10 @@
 #include "Player.h"
 #include "Parallax.h"
 #include <box2d/box2d.h>
-#include "Enemy.h"
 #include "GuiControlButton.h"
+
+class Item;
+class Enemy;
 
 class Scene : public Module
 {
@@ -56,6 +58,7 @@ public:
 	void AdvanceLevel();
 
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
+	void CreateItems(pugi::xml_node enemyNode, std::vector<Item*>& itemList);
 
 	bool debug = false;
 private:
@@ -75,6 +78,10 @@ private:
 
 	std::vector<Enemy*> enemyListLevel1;
 	std::vector<Enemy*> enemyListLevel2;
+
+	std::vector<Item*> itemListLevel1;
+	std::vector<Item*> itemListLevel2;
+	std::vector<Item*> itemListLevel3;
 
 	int current_level = 1;
 
