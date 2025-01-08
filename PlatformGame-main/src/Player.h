@@ -90,7 +90,7 @@ private:
 	int attackCooldown = 2000;
 
 	Timer attackShurikenTimer;
-	int attackShurikenTime = 2000;
+	int attackShurikenTime = 500;
 
 	Timer hitTimer;
 	int hitTime = 100;

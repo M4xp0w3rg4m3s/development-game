@@ -41,7 +41,7 @@ bool Item::Start() {
 	texH = parameters.attribute("h").as_float();
 	texW = parameters.attribute("w").as_float();
 	itemId = parameters.attribute("id").as_string();
-	//isPicked = parameters.attribute("active").as_bool();
+	Entity::name = parameters.attribute("name").as_string();
 
 	//initilize textures
 	switch (currentType)
@@ -67,8 +67,8 @@ bool Item::Start() {
 		texture = Engine::GetInstance().textures->Load(textureName.c_str());
 		animator = new Sprite(texture);
 		animator->SetNumberAnimations(1);
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 5; j++) {
 				animator->AddKeyFrame(0, { j * texW, i * texH, texW, texH });
 			}
 		}
@@ -86,7 +86,7 @@ bool Item::Start() {
 
 	//Add a physics to an item - initialize the physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
 
 	// Assign collider type
 	pbody->ctype = ColliderType::ITEM;
@@ -100,11 +100,6 @@ bool Item::Start() {
 
 bool Item::Update(float dt)
 {
-	//Add a physics to an item - update the position of the object from the physics.  
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-
 	if (animator != nullptr)
 	{
 		animator->Update();
@@ -131,7 +126,7 @@ void Item::OnCollision(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER:
-		Engine::GetInstance().entityManager->DeleteEntity(this);
+		Disable();
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
