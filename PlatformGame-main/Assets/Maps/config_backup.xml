@@ -84,11 +84,15 @@ This XML file does not appear to have any style information associated with it. 
 <enemy name="hedgehog" x="3264" y="256" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h2"/>
 </enemies_lvl_3>
 <items_lvl_1>
-<item name="shuriken" x="4875" y="315" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1"/>
-<item name="ignis" x="1758" y="225" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig1"/>
-<item name="ignis" x="2303" y="97" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig2"/>
-<item name="ignis" x="4478" y="162" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig3"/>
-<item name="health" x="2860" y="220" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp1"/>
+<item name="shuriken" x="4875" y="315" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
+<item name="ignis" x="1758" y="225" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig1" />
+<item name="ignis" x="2303" y="97" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig2" />
+<item name="ignis" x="4478" y="162" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig3" />
+<item name="ignis" x="4638" y="97" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig4" />
+<item name="ignis" x="5405" y="338" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig5" />
+<item name="ignis" x="5598" y="290" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig6" />
+<item name="health" x="2860" y="220" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp1" />
+<item name="health" x="6310" y="290" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp2" />
 </items_lvl_1>
 <items_lvl_2>
 <item name="shuriken" x="200" y="200" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1"/>
