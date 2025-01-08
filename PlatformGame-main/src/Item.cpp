@@ -23,6 +23,18 @@ Item::Item() : Entity(EntityType::ITEM)
 Item::Item(ItemType currentType) : Entity(EntityType::ITEM)
 {
 	this->currentType = currentType;
+}
+
+Item::~Item() 
+{
+	delete animator;
+}
+
+bool Item::Awake() {
+	return true;
+}
+
+bool Item::Start() {
 
 	position.setX(parameters.attribute("x").as_float());
 	position.setY(parameters.attribute("y").as_float());
@@ -71,18 +83,7 @@ Item::Item(ItemType currentType) : Entity(EntityType::ITEM)
 	default:
 		break;
 	}
-}
 
-Item::~Item() 
-{
-	delete animator;
-}
-
-bool Item::Awake() {
-	return true;
-}
-
-bool Item::Start() {
 	//Add a physics to an item - initialize the physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
@@ -91,6 +92,8 @@ bool Item::Start() {
 	pbody->ctype = ColliderType::ITEM;
 
 	pbody->body->SetGravityScale(0);
+
+	pbody->listener = this;
 
 	return true;
 }

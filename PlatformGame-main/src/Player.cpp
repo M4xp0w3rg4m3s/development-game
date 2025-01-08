@@ -475,7 +475,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
-			
+			if (!physB->listener) {
+				break;
+			}
 			if (physB->listener->name == "shuriken")
 			{
 				//Sound?
