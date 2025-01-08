@@ -20,20 +20,22 @@ Item::Item() : Entity(EntityType::ITEM)
 	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Items/goldCoin.png");
 }
 
-Item::Item(const char* texturePath, int texW, int texH, ItemType currentType) : Entity(EntityType::ITEM)
+Item::Item(ItemType currentType) : Entity(EntityType::ITEM)
 {
-	name = "item";
-
-	this->texH = texH;
-	this->texW = texW;
-
 	this->currentType = currentType;
+
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
+	texH = parameters.attribute("h").as_float();
+	texW = parameters.attribute("w").as_float();
+	itemId = parameters.attribute("id").as_string();
 
 	//initilize textures
 	switch (currentType)
 	{
 	case ItemType::SHURIKEN:
-		texture = Engine::GetInstance().textures.get()->Load(texturePath);
+		textureName = parameters.attribute("texture").as_string();
+		texture = Engine::GetInstance().textures->Load(textureName.c_str());
 		animator = new Sprite(texture);
 
 		animator->SetNumberAnimations(1);
@@ -43,8 +45,17 @@ Item::Item(const char* texturePath, int texW, int texH, ItemType currentType) : 
 		animator->SetAnimation(0);
 		animator->SetLoop(true);
 		break;
+	case ItemType::HEALTH:
+		textureName = parameters.attribute("texture").as_string();
+		texture = Engine::GetInstance().textures->Load(textureName.c_str());
+		break;
+	case ItemType::IGNIS:
+		textureName = parameters.attribute("texture").as_string();
+		texture = Engine::GetInstance().textures->Load(textureName.c_str());
+		break;
 	case ItemType::COIN:
-		texture = Engine::GetInstance().textures.get()->Load(texturePath);
+		textureName = parameters.attribute("texture").as_string();
+		texture = Engine::GetInstance().textures->Load(textureName.c_str());
 		break;
 	default:
 		break;

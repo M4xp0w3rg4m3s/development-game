@@ -203,9 +203,6 @@
     <ClInclude Include="src\Item.h">
       <Filter>Game\Map Objects\Collectables</Filter>
     </ClInclude>
-    <ClInclude Include="src\ItemShuriken.h">
-      <Filter>Game\Map Objects\Collectables</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore">

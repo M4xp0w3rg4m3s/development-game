@@ -19,7 +19,7 @@ class Item : public Entity
 public:
 
 	Item();
-	Item(const char* texturePath, int texW, int texH, ItemType currentType);
+	Item(ItemType currentType);
 	virtual ~Item();
 
 	bool Awake();
@@ -28,6 +28,12 @@ public:
 	bool CleanUp();
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
+
+	void SetParameters(pugi::xml_node parameters) {
+		this->parameters = parameters;
+	}
+
+	std::string itemId;
 
 public:
 
@@ -38,8 +44,10 @@ private:
 
 	Sprite* animator = nullptr;
 	SDL_Texture* texture = nullptr;
-	const char* texturePath = "";
-	int texW, texH;
+	std::string textureName;
+	int texW = 0, texH = 0;
+
+	pugi::xml_node parameters;
 
 	//Add a physics to an item
 	PhysBody* pbody = nullptr;

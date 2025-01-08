@@ -127,6 +127,22 @@ Entity* EntityManager::CreateProjectile(b2Vec2 position, b2Vec2 direction, bool 
 	return entity;
 }
 
+Entity* EntityManager::CreateItem(ItemType type, bool doCalls)
+{
+	Entity* entity = nullptr;
+
+	entity = new Item(type);
+
+	if (doCalls) {
+		entity->Awake();
+		entity->Start();
+	}
+
+	entities.push_back(entity);
+
+	return entity;
+}
+
 void EntityManager::DestroyEntity(Entity* entity)
 {
 	for (auto it = entities.begin(); it != entities.end(); ++it)

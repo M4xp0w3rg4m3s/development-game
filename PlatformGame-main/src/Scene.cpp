@@ -554,20 +554,20 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 		Item* item = nullptr;
 
 		if (name == "coin") {
-			//enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
+			item = (Item*)Engine::GetInstance().entityManager->CreateItem(ItemType::COIN);
 		}
 		else if (name == "shuriken") {
-			//enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
+			item = (Item*)Engine::GetInstance().entityManager->CreateItem(ItemType::SHURIKEN);
 		}
 		else if (name == "health") {
-			//enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
+			item = (Item*)Engine::GetInstance().entityManager->CreateItem(ItemType::HEALTH);
 		}
 		else if (name == "ignis") {
-			//enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+			item = (Item*)Engine::GetInstance().entityManager->CreateItem(ItemType::IGNIS);
 		}
 
 		if (item) {
-			//item->SetParameters(itemNode);
+			item->SetParameters(itemNode);
 			itemList.push_back(item);
 		}
 
