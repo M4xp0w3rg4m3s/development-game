@@ -154,7 +154,7 @@ bool Hedgehog::Update(float dt)
 bool Hedgehog::CleanUp()
 {
 	LOG("Cleanup Hedgehog");
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	//Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }

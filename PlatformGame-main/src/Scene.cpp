@@ -247,11 +247,11 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	if (current_level = 1 && caveBg != nullptr) {
-		Engine::GetInstance().textures.get()->UnLoad(caveBg);
+		//Engine::GetInstance().textures.get()->UnLoad(caveBg);
 	}
 	if (img != nullptr)
 	{
-		Engine::GetInstance().textures.get()->UnLoad(img);
+		//Engine::GetInstance().textures.get()->UnLoad(img);
 	}
 	if (intro != nullptr)
 	{
