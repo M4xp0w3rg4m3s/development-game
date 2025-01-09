@@ -68,6 +68,6 @@ bool Boulder::CleanUp()
 {
 
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	//Engine::GetInstance().textures.get()->UnLoad(texture);
 	return true;
 }

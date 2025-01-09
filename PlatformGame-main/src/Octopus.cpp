@@ -114,7 +114,7 @@ bool Octopus::Update(float dt)
 
 bool Octopus::CleanUp()
 {
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	//Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }

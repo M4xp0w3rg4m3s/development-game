@@ -175,7 +175,7 @@ bool Scene::Update(float dt)
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
 
-		Engine::GetInstance().textures.get()->UnLoad(caveBg);
+		//Engine::GetInstance().textures.get()->UnLoad(caveBg);
 
 		//Enemies
 		for (const auto& enemy : enemyListLevel1) {
@@ -231,7 +231,7 @@ bool Scene::Update(float dt)
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
 
-		Engine::GetInstance().textures.get()->UnLoad(caveBg);
+		//Engine::GetInstance().textures.get()->UnLoad(caveBg);
 
 		//Enemies
 		for (const auto& enemy : enemyListLevel1) {
@@ -377,11 +377,11 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	if (current_level = 1 && caveBg != nullptr) {
-		Engine::GetInstance().textures.get()->UnLoad(caveBg);
+		//Engine::GetInstance().textures.get()->UnLoad(caveBg);
 	}
 	if (img != nullptr)
 	{
-		Engine::GetInstance().textures.get()->UnLoad(img);
+		//Engine::GetInstance().textures.get()->UnLoad(img);
 	}
 
 	return true;

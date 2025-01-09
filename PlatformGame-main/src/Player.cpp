@@ -448,7 +448,7 @@ bool Player::Update(float dt)
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	//Engine::GetInstance().textures.get()->UnLoad(texture);
 	return true;
 }
 
@@ -718,22 +718,22 @@ int Player::GetPlayerIgnis() const
 
 double Player::GetAttackTimer() const
 {
-	return attackCooldownTimer.ReadSec();
+	return attackCooldownTimer.ReadMSec();
 }
 
 int Player::GetAttackTime() const
 {
-	return attackCooldown / 1000;
+	return attackCooldown;
 }
 
 double Player::GetShurikenTimer() const
 {
-	return attackShurikenTimer.ReadSec();
+	return attackShurikenTimer.ReadMSec();
 }
 
 int Player::GetShurikenTime() const
 {
-	return attackShurikenTime / 1000;
+	return attackShurikenTime;
 }
 
 int Player::IsShurikenEnabled() const

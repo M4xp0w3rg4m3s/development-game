@@ -57,7 +57,7 @@ bool GameHUD::Start()
 	for (int i = 0; i < framesCD; i++) {
 		shurikenCDAnimator->AddKeyFrame(0, { i * CD_texW, 0, CD_texW, CD_texH });
 	}
-	shurikenCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() * 30);
+	shurikenCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() * 0.03);
 	shurikenCDAnimator->SetAnimation(0);
 	shurikenCDAnimator->SetLoop(false);
 
@@ -66,7 +66,7 @@ bool GameHUD::Start()
 	for (int i = 0; i < framesCD; i++) {
 		attackCDAnimator->AddKeyFrame(0, { i * CD_texW, 0, CD_texW, CD_texH });
 	}
-	attackCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetAttackTime() * 30);
+	attackCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetAttackTime() * 0.03);
 	attackCDAnimator->SetAnimation(0);
 	attackCDAnimator->SetLoop(false);
 
@@ -138,14 +138,14 @@ bool GameHUD::Update(float dt)
 
 bool GameHUD::CleanUp()
 {
-	LOG("Cleanup Game HUD");
+	LOG("Cleanup Game HUD");/*
 	Engine::GetInstance().textures->UnLoad(keysMenuTexture);
 	Engine::GetInstance().textures->UnLoad(lifeHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisTexture);
 	Engine::GetInstance().textures->UnLoad(heartTexture);
 	Engine::GetInstance().textures->UnLoad(shurikenCDTexture);
-	Engine::GetInstance().textures->UnLoad(attackCDTexture);
+	Engine::GetInstance().textures->UnLoad(attackCDTexture);*/
 	ignisAnimator->Release();
 	heartAnimator->Release();
 	shurikenCDAnimator->Release();

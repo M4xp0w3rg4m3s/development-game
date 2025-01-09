@@ -114,7 +114,7 @@ bool Item::Update(float dt)
 
 bool Item::CleanUp()
 {
-	Engine::GetInstance().textures->UnLoad(texture);
+	//Engine::GetInstance().textures->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 
 	return true;

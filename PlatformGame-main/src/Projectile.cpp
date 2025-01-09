@@ -107,7 +107,7 @@ bool Projectile::Update(float dt)
 bool Projectile::CleanUp()
 {
 	LOG("Cleanup Projectile");
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	//Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(body);
 
 	return true;
