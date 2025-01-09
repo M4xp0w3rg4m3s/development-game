@@ -6,10 +6,6 @@
 #include <box2d/box2d.h>
 #include "Sprite.h"
 
-class Player : public Entity
-{
-public:
-
 	enum PlayerState
 	{
 		IDLE = 1,
@@ -20,6 +16,10 @@ public:
 		DYING,
 		DEAD
 	};
+
+class Player : public Entity
+{
+public:
 
 	Player();
 
@@ -61,6 +61,14 @@ public:
 	int GetPlayerLives() const;
 	int GetPlayerIgnis() const;
 
+	double GetAttackTimer() const;
+	int GetAttackTime() const;
+	double GetShurikenTimer() const;
+	int GetShurikenTime() const;
+	int IsShurikenEnabled() const;
+
+	PlayerState GetPlayerState() const;
+
 private:
 
 	//Texture
@@ -90,7 +98,7 @@ private:
 	int attackCooldown = 2000;
 
 	Timer attackShurikenTimer;
-	int attackShurikenTime = 500;
+	int attackShurikenTime = 2000;
 
 	Timer hitTimer;
 	int hitTime = 100;
