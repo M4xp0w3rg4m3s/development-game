@@ -24,6 +24,7 @@ class GuiManager;
 class GameHUD;
 
 enum class LoopState {
+	CLEAN_ONCE,
 	INTRO,
 	TITLE,
 	MENU,
@@ -88,6 +89,8 @@ private:
 	std::list<std::shared_ptr<Module>> moduleListTitle;
 	std::list<std::shared_ptr<Module>> moduleListMenu;
 	std::list<std::shared_ptr<Module>> moduleListGame;
+
+	std::list<std::shared_ptr<Module>> moduleListCleanOnce;
 
 public:
 

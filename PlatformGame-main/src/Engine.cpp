@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <unordered_set>
 #include "Log.h"
 
 #include "Window.h"
@@ -46,6 +47,11 @@ Engine::Engine() {
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::CLEAN_ONCE);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::CLEAN_ONCE);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::CLEAN_ONCE);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::CLEAN_ONCE);
+
     AddModule(std::static_pointer_cast<Module>(window), LoopState::INTRO);
     AddModule(std::static_pointer_cast<Module>(input), LoopState::INTRO);
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::INTRO);
@@ -78,6 +84,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(gameHud), LoopState::GAME);
 
     // Render last 
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::CLEAN_ONCE);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::INTRO);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::TITLE);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::MENU);
@@ -92,7 +99,7 @@ Engine& Engine::GetInstance() {
     return instance;
 }
 
-void Engine::AddModule(std::shared_ptr<Module> module,LoopState state){
+void Engine::AddModule(std::shared_ptr<Module> module, LoopState state){
     switch (state)
     {
     case LoopState::INTRO:
@@ -110,6 +117,10 @@ void Engine::AddModule(std::shared_ptr<Module> module,LoopState state){
     case LoopState::GAME:
         module->Init();
         moduleListGame.push_back(module);
+        break;
+    case LoopState::CLEAN_ONCE:
+        module->Init();
+        moduleListCleanOnce.push_back(module);
         break;
     default:
         break;
@@ -296,30 +307,25 @@ bool Engine::CleanUp() {
 
     //Iterates the module list and calls CleanUp on each module
     bool result = true;
-    for (const auto& module : moduleListIntro) {
-        result = module.get()->CleanUp();
-        if (!result) {
-            break;
+    std::unordered_set<Module*> cleanedModules;
+
+    auto cleanModuleList = [&cleanedModules, &result](std::list<std::shared_ptr<Module>>& moduleList) {
+        for (const auto& module : moduleList) {
+            if (cleanedModules.find(module.get()) == cleanedModules.end()) {
+                result = module->CleanUp();
+                if (!result) {
+                    break;
+                }
+                cleanedModules.insert(module.get());
+            }
         }
-    }
-    for (const auto& module : moduleListTitle) {
-        result = module.get()->CleanUp();
-        if (!result) {
-            break;
-        }
-    }
-    for (const auto& module : moduleListMenu) {
-        result = module.get()->CleanUp();
-        if (!result) {
-            break;
-        }
-    }
-    for (const auto& module : moduleListGame) {
-        result = module.get()->CleanUp();
-        if (!result) {
-            break;
-        }
-    }
+    };
+
+    cleanModuleList(moduleListCleanOnce);
+    if (result) cleanModuleList(moduleListIntro);
+    if (result) cleanModuleList(moduleListTitle);
+    if (result) cleanModuleList(moduleListMenu);
+    if (result) cleanModuleList(moduleListGame);
     LOG("Timer App CleanUp(): %f", timer.ReadMSec());
 
     return result;
