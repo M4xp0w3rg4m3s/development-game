@@ -65,10 +65,15 @@ public:
 	{
 		return true;
 	}
+	bool HasAdvancedLoopState()
+	{
+		return AdvanceLoopState;
+	}
 public:
 
 	std::string name;
 	bool active;
 	xml_node configParameters;
 
+	bool AdvanceLoopState = false;
 };

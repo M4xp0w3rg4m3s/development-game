@@ -46,22 +46,42 @@ Engine::Engine() {
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
-    AddModule(std::static_pointer_cast<Module>(window));
-    AddModule(std::static_pointer_cast<Module>(input));
-    AddModule(std::static_pointer_cast<Module>(textures));
-    AddModule(std::static_pointer_cast<Module>(audio));
-    AddModule(std::static_pointer_cast<Module>(physics));
-    AddModule(std::static_pointer_cast<Module>(parallax));
-    AddModule(std::static_pointer_cast<Module>(scene));
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::INTRO);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::INTRO);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::INTRO);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::INTRO);
+
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::TITLE);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::TITLE);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::TITLE);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::TITLE);
+
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::MENU);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::MENU);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::MENU);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::MENU);
+
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::GAME);
+
+    //
+    AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(parallax), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(scene), LoopState::GAME);
     // Add the map module
-    AddModule(std::static_pointer_cast<Module>(map));
+    AddModule(std::static_pointer_cast<Module>(map), LoopState::GAME);
     // Add the entity manager
-    AddModule(std::static_pointer_cast<Module>(entityManager));
-    AddModule(std::static_pointer_cast<Module>(guiManager));
-    AddModule(std::static_pointer_cast<Module>(gameHud));
+    AddModule(std::static_pointer_cast<Module>(entityManager),LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(guiManager),LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(gameHud), LoopState::GAME);
 
     // Render last 
-    AddModule(std::static_pointer_cast<Module>(render));
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::INTRO);
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::TITLE);
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::MENU);
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::GAME);
 
     LOG("Timer App Constructor: %f", timer.ReadMSec());
 }
@@ -72,9 +92,29 @@ Engine& Engine::GetInstance() {
     return instance;
 }
 
-void Engine::AddModule(std::shared_ptr<Module> module){
-    module->Init();
-    moduleList.push_back(module);
+void Engine::AddModule(std::shared_ptr<Module> module,LoopState state){
+    switch (state)
+    {
+    case LoopState::INTRO:
+        module->Init();
+        moduleListIntro.push_back(module);
+        break;
+    case LoopState::TITLE:
+        module->Init();
+        moduleListTitle.push_back(module);
+        break;
+    case LoopState::MENU:
+        module->Init();
+        moduleListMenu.push_back(module);
+        break;
+    case LoopState::GAME:
+        module->Init();
+        moduleListGame.push_back(module);
+        break;
+    default:
+        break;
+    }
+    
 }
 
 // Called before render is available
@@ -98,12 +138,50 @@ bool Engine::Awake() {
         vsync = configFile.child("config").child("render").child("vsync").attribute("value").as_bool();
 
         //Iterates the module list and calls Awake on each module
-        bool result = true;
-        for (const auto& module : moduleList) {
-            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-            if(result) result = module.get()->Awake();
-            if (!result) {
-                break;
+        if (currentLoopState == LoopState::INTRO)
+        {
+            bool result = true;
+            for (const auto& module : moduleListIntro) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if(result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
+            }
+        }
+        if (currentLoopState == LoopState::TITLE)
+        {
+            bool result = true;
+            for (const auto& module : moduleListTitle) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
+            }
+        }
+
+        if (currentLoopState == LoopState::MENU)
+        {
+            bool result = true;
+            for (const auto& module : moduleListMenu) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
+            }
+        }
+
+        if (currentLoopState == LoopState::GAME)
+        {
+            bool result = true;
+            for (const auto& module : moduleListGame) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
             }
         }
     }
@@ -122,11 +200,45 @@ bool Engine::Start() {
     LOG("Engine::Start");
 
     //Iterates the module list and calls Start on each module
+
     bool result = true;
-    for (const auto& module : moduleList) {
-        result = module.get()->Start();
-        if (!result) {
-            break;
+
+    if (currentLoopState == LoopState::INTRO)
+    {
+        for (const auto& module : moduleListIntro) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+    if (currentLoopState == LoopState::TITLE)
+    {
+        for (const auto& module : moduleListTitle) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::MENU)
+    {
+        for (const auto& module : moduleListMenu) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::GAME)
+    {
+        for (const auto& module : moduleListGame) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
         }
     }
 
@@ -163,8 +275,9 @@ bool Engine::Update() {
         }
     }
 
-    if (ret == true)
+    if (ret == true) {
         ret = DoUpdate();
+    }
 
     if (ret == true)
         ret = PostUpdate();
@@ -183,13 +296,30 @@ bool Engine::CleanUp() {
 
     //Iterates the module list and calls CleanUp on each module
     bool result = true;
-    for (const auto& module : moduleList) {
+    for (const auto& module : moduleListIntro) {
         result = module.get()->CleanUp();
         if (!result) {
             break;
         }
     }
-
+    for (const auto& module : moduleListTitle) {
+        result = module.get()->CleanUp();
+        if (!result) {
+            break;
+        }
+    }
+    for (const auto& module : moduleListMenu) {
+        result = module.get()->CleanUp();
+        if (!result) {
+            break;
+        }
+    }
+    for (const auto& module : moduleListGame) {
+        result = module.get()->CleanUp();
+        if (!result) {
+            break;
+        }
+    }
     LOG("Timer App CleanUp(): %f", timer.ReadMSec());
 
     return result;
@@ -255,10 +385,42 @@ bool Engine::PreUpdate()
 {
     //Iterates the module list and calls PreUpdate on each module
     bool result = true;
-    for (const auto& module : moduleList) {
-        result = module.get()->PreUpdate();
-        if (!result) {
-            break;
+    if (currentLoopState == LoopState::INTRO)
+    {
+        for (const auto& module : moduleListIntro) {
+            result = module.get()->PreUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+    if (currentLoopState == LoopState::TITLE)
+    {
+        for (const auto& module : moduleListTitle) {
+            result = module.get()->PreUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::MENU)
+    {
+        for (const auto& module : moduleListMenu) {
+            result = module.get()->PreUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::GAME)
+    {
+        for (const auto& module : moduleListGame) {
+            result = module.get()->PreUpdate();
+            if (!result) {
+                break;
+            }
         }
     }
 
@@ -270,10 +432,59 @@ bool Engine::DoUpdate()
 {
     //Iterates the module list and calls Update on each module
     bool result = true;
-    for (const auto& module : moduleList) {
-        result = module.get()->Update(dt);
-        if (!result) {
-            break;
+
+    if (currentLoopState == LoopState::INTRO)
+    {
+        for (const auto& module : moduleListIntro) {
+            result = module.get()->Update(dt);
+            if (module->AdvanceLoopState)
+            {
+                currentLoopState = LoopState::TITLE;
+            }
+            if (!result) {
+                break;
+            }
+        }
+    }
+    if (currentLoopState == LoopState::TITLE)
+    {
+        for (const auto& module : moduleListTitle) {
+            result = module.get()->Update(dt); 
+            if (module->AdvanceLoopState)
+            {
+                currentLoopState = LoopState::MENU;
+            }
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::MENU)
+    {
+        for (const auto& module : moduleListMenu) {
+            result = module.get()->Update(dt);
+            if (module->AdvanceLoopState)
+            {
+                currentLoopState = LoopState::GAME;
+            }
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::GAME)
+    {
+        for (const auto& module : moduleListGame) {
+            result = module.get()->Update(dt);
+            if (module->AdvanceLoopState)
+            {
+                currentLoopState = LoopState::TITLE;
+            }
+            if (!result) {
+                break;
+            }
         }
     }
 
@@ -285,10 +496,42 @@ bool Engine::PostUpdate()
 {
     //Iterates the module list and calls PostUpdate on each module
     bool result = true;
-    for (const auto& module : moduleList) {
-        result = module.get()->PostUpdate();
-        if (!result) {
-            break;
+    if (currentLoopState == LoopState::INTRO)
+    {
+        for (const auto& module : moduleListIntro) {
+            result = module.get()->PostUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+    if (currentLoopState == LoopState::TITLE)
+    {
+        for (const auto& module : moduleListTitle) {
+            result = module.get()->PostUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::MENU)
+    {
+        for (const auto& module : moduleListMenu) {
+            result = module.get()->PostUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::GAME)
+    {
+        for (const auto& module : moduleListGame) {
+            result = module.get()->PostUpdate();
+            if (!result) {
+                break;
+            }
         }
     }
 

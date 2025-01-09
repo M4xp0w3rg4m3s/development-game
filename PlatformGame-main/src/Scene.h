@@ -20,19 +20,9 @@ public:
 
 	// Called before render is available
 	bool Awake();
-	bool AwakeIntro();
-	bool AwakeTitle();
-	bool AwakeMenu();
-	bool AwakePause();
-	bool AwakeGame();
 
 	// Called before the first frame
 	bool Start();
-	bool StartIntro();
-	bool StartTitle();
-	bool StartMenu();
-	bool StartPause();
-	bool StartGame();
 
 	// Called before all Updates
 	bool PreUpdate();
@@ -69,13 +59,6 @@ public:
 
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
-
-	void SceneIntro();
-	void SceneTitle();
-	void SceneMenu();
-	void ScenePause();
-	void SceneGame();
-
 
 	bool debug = false;
 private:
@@ -117,14 +100,4 @@ private:
 
 	GuiControlButton* guiBt = nullptr;
 
-	Timer IntroTimer;
-	int introTime = 3;
-
-	bool Scene_Intro_Enabled = true;
-	bool Scene_Title_Enabled = false;
-	bool Scene_Menu_Enabled = false;
-	bool Scene_Pause_Enabled = false;
-	bool Scene_Game_Enabled = false;
-
-	bool Game_FirstTime = true;
 };

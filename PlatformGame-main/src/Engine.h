@@ -23,6 +23,13 @@ class Parallax;
 class GuiManager;
 class GameHUD;
 
+enum class LoopState {
+	INTRO,
+	TITLE,
+	MENU,
+	GAME
+};
+
 class Engine
 {
 public:
@@ -31,7 +38,7 @@ public:
 	static Engine& GetInstance();
 
 	//	
-	void AddModule(std::shared_ptr<Module> module);
+	void AddModule(std::shared_ptr<Module> module, LoopState state);
 
 	// Called before render is available
 	bool Awake();
@@ -77,6 +84,10 @@ private:
 	bool LoadConfig();
 
 	std::list<std::shared_ptr<Module>> moduleList;
+	std::list<std::shared_ptr<Module>> moduleListIntro;
+	std::list<std::shared_ptr<Module>> moduleListTitle;
+	std::list<std::shared_ptr<Module>> moduleListMenu;
+	std::list<std::shared_ptr<Module>> moduleListGame;
 
 public:
 
@@ -104,6 +115,8 @@ public:
 	std::shared_ptr<Parallax> parallax;
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<GameHUD> gameHud;
+
+	LoopState currentLoopState = LoopState::GAME;
 
 private: 
 
