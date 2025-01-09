@@ -60,6 +60,13 @@ public:
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
 
+	void SceneIntro();
+	void SceneTitle();
+	void SceneMenu();
+	void ScenePause();
+	void SceneGame();
+
+
 	bool debug = false;
 private:
 	int enemyIndex1 = 0;
@@ -98,4 +105,10 @@ private:
 	int numEnemies3 = 11;
 
 	GuiControlButton* guiBt = nullptr;
+
+	bool Scene_Intro_Enabled = true;
+	bool Scene_Title_Enabled = false;
+	bool Scene_Menu_Enabled = false;
+	bool Scene_Pause_Enabled = false;
+	bool Scene_Game_Enabled = false;
 };

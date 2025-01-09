@@ -21,7 +21,7 @@ public:
 	std::string ReadInternalTimerFormat() const;
 
 private:
-	float internalDt;
+	float internalDt = 0;
 
 	SDL_Texture* ignisTexture = nullptr;
 	Sprite* ignisAnimator = nullptr;
@@ -46,9 +46,9 @@ private:
 
 	bool playerAttacked = false;
 
-	SDL_Texture* keysMenuTexture;
-	SDL_Texture* lifeHudTexture;
-	SDL_Texture* ignisHudTexture;
+	SDL_Texture* keysMenuTexture = nullptr;
+	SDL_Texture* lifeHudTexture = nullptr;
+	SDL_Texture* ignisHudTexture = nullptr;
 
 	bool keysMenuOn = false;
 	bool lifeHud = false;
