@@ -41,6 +41,52 @@ bool Scene::Awake()
 	LOG("Loading Scene");
 	bool ret = true;
 
+	AwakeIntro();
+
+	return ret;
+}
+
+bool Scene::AwakeIntro()
+{
+	LOG("Loading Intro");
+	bool ret = true;
+
+
+	return ret;
+}
+
+bool Scene::AwakeTitle()
+{
+	LOG("Loading Title");
+	bool ret = true;
+
+
+	return ret;
+}
+
+bool Scene::AwakeMenu()
+{
+	LOG("Loading Menu");
+	bool ret = true;
+
+
+	return ret;
+}
+
+bool Scene::AwakePause()
+{
+	LOG("Loading Pause");
+	bool ret = true;
+
+
+	return ret;
+}
+
+bool Scene::AwakeGame()
+{
+	LOG("Loading Game");
+	bool ret = true;
+	
 	parallax = Engine::GetInstance().parallax.get();
 
 	parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
@@ -49,7 +95,7 @@ bool Scene::Awake()
 	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 
-	SDL_Rect btPos = { 854-65, 0, 65, 20 };
+	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
 	guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
 
 	//Get the map name from the config file and assigns the value
@@ -68,11 +114,41 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	IntroTimer.Start();
+	StartIntro();
+
+	return true;
+}
+
+bool Scene::StartIntro()
+{
+	intro = Engine::GetInstance().textures.get()->Load("Assets/Textures/boulder.png");
+
+	return true;
+}
+
+bool Scene::StartTitle()
+{
+	return true;
+}
+
+bool Scene::StartMenu()
+{
+	return true;
+}
+
+bool Scene::StartPause()
+{
+	return true;
+}
+
+bool Scene::StartGame()
+{
 	//Background
 	Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
 
 	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
-	
+
 	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
 	//Enemies
@@ -87,6 +163,18 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	if (IntroTimer.ReadSec() > introTime)
+	{
+		Scene_Intro_Enabled = true;
+	}
+	else if (Game_FirstTime)
+	{
+		Scene_Intro_Enabled = false;
+		Scene_Game_Enabled = true;
+		AwakeGame();
+		StartGame();
+		Game_FirstTime = false;
+	}
 	return true;
 }
 
@@ -100,9 +188,30 @@ bool Scene::Update(float dt)
 	else {
 		Engine::GetInstance().render.get()->camera.x = 0;
 	}
-	if (Scene_Game_Enabled)
+
+	if (Scene_Intro_Enabled)
+	{
+		SceneIntro();
+	}
+	else if (Scene_Title_Enabled)
+	{
+		SceneTitle();
+	}
+	else if (Scene_Menu_Enabled)
+	{
+		SceneMenu();
+	}
+	else if (Scene_Pause_Enabled)
+	{
+		ScenePause();
+	}
+	else if (Scene_Game_Enabled)
 	{
 		SceneGame();
+	}
+	else
+	{
+
 	}
 
 	return true;
@@ -143,6 +252,10 @@ bool Scene::CleanUp()
 	if (img != nullptr)
 	{
 		Engine::GetInstance().textures.get()->UnLoad(img);
+	}
+	if (intro != nullptr)
+	{
+		Engine::GetInstance().textures.get()->UnLoad(intro);
 	}
 
 	return true;
@@ -637,6 +750,21 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 }
 
 void Scene::SceneIntro()
+{
+	int intro_texW = 0, intro_texH = 0;
+	Engine::GetInstance().textures.get()->GetSize(intro, intro_texW, intro_texH);
+	Engine::GetInstance().render->DrawTexture(intro, 0, 0);
+}
+
+void Scene::SceneTitle()
+{
+}
+
+void Scene::SceneMenu()
+{
+}
+
+void Scene::ScenePause()
 {
 }
 

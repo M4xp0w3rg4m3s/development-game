@@ -20,9 +20,19 @@ public:
 
 	// Called before render is available
 	bool Awake();
+	bool AwakeIntro();
+	bool AwakeTitle();
+	bool AwakeMenu();
+	bool AwakePause();
+	bool AwakeGame();
 
 	// Called before the first frame
 	bool Start();
+	bool StartIntro();
+	bool StartTitle();
+	bool StartMenu();
+	bool StartPause();
+	bool StartGame();
 
 	// Called before all Updates
 	bool PreUpdate();
@@ -86,6 +96,7 @@ private:
 
 	SDL_Texture* img = nullptr;
 	SDL_Texture* caveBg = nullptr;
+	SDL_Texture* intro = nullptr;
 
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;
@@ -106,9 +117,14 @@ private:
 
 	GuiControlButton* guiBt = nullptr;
 
+	Timer IntroTimer;
+	int introTime = 3;
+
 	bool Scene_Intro_Enabled = true;
 	bool Scene_Title_Enabled = false;
 	bool Scene_Menu_Enabled = false;
 	bool Scene_Pause_Enabled = false;
 	bool Scene_Game_Enabled = false;
+
+	bool Game_FirstTime = true;
 };

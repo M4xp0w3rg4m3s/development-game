@@ -3,9 +3,9 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_render.h"
 #include "Sprite.h"
-#include "Module.h"
+#include "Scene.h"
 
-class GameHUD : public Module {
+class GameHUD : public Scene {
 public:
 	GameHUD();
 	~GameHUD() {};
