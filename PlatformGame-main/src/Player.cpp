@@ -472,6 +472,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		{
 		case ColliderType::KILL:
 			LOG("Collision KILL");
+
+			if (godMode) break;
+
 			break;
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
@@ -505,6 +508,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::ENEMY:
 			LOG("Collision UNKNOWN");
+
+			if (godMode) break;
+
 			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 
 			if (hitTimer.ReadMSec() > hitTime)
@@ -523,8 +529,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PROJECTILE_ENEMY:
 			LOG("Collision Projectile");
-			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 
+			if (godMode) break;
+
+			body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+			
 			if (hitTimer.ReadMSec() > hitTime)
 			{
 				lives--;
@@ -580,6 +589,9 @@ void Player::ResetPlayer(int level)
 	}
 	if (level == 2) {
 		position = Vector2D(192, 320);
+	}
+	if (level == 3) {
+		position = Vector2D(192, 300);
 	}
 	state = PlayerState::IDLE;
 	lives = 3;

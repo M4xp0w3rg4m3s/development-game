@@ -68,6 +68,9 @@ private:
 	std::string tilePosDebug = "[0,0]";
 	bool once = false;
 
+	bool Lvl1_Enemies_created = false;
+	bool Lvl1_Items_created = false;
+
 	bool Lvl2_Enemies_created = false;
 	bool Lvl2_Items_created = false;
 
