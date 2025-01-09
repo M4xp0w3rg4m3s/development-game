@@ -182,7 +182,7 @@ bool Scene::Update(float dt)
 		player->ResetPlayer(current_level);
 	}
 
-	if (current_level == 1 && player->position.getX() >= 6520) {
+	if (player->position.getX() >= 6520) {
 		AdvanceLevel();
 	}
 
@@ -658,7 +658,64 @@ void Scene::AdvanceLevel()
 		for (const auto& item : itemListLevel2) {
 			item->Enable();
 		}
+		
+
+	}
+	else if (current_level == 2)
+	{
+		Engine::GetInstance().map->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
+
+		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
+		parallax->ChangeTextures();
+
+		current_level = 3;
+
 		player->ResetPlayer(current_level);
+
+		//enemies
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Disable();
+		}
+
+		if (!Lvl3_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
+
+			for (const auto& enemy : enemyListLevel3) {
+				enemy->Start();
+			}
+			Lvl3_Enemies_created = true;
+		}
+
+		for (const auto& enemy : enemyListLevel3) {
+			enemy->Enable();
+		}
+
+		//items
+		for (const auto& item : itemListLevel2) {
+			item->Disable();
+		}
+
+		if (!Lvl3_Items_created) {
+			CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
+
+			for (const auto& item : itemListLevel3) {
+				item->Start();
+			}
+			Lvl3_Items_created = true;
+		}
+
+		for (const auto& item : itemListLevel3) {
+			item->Enable();
+		}
+		player->ResetPlayer(current_level);
+	}
+	else
+	{
 
 	}
 }
