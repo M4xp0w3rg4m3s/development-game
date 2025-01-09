@@ -230,7 +230,7 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 	// Create SHAPE
 	b2ChainShape shape;
 	b2Vec2* p = new b2Vec2[size / 2];
-	for (unsigned int i = 0; i < size / 2; ++i)
+	for (unsigned int i = 0; i < (unsigned int)size / 2; ++i)
 	{
 		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
 		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
@@ -289,8 +289,8 @@ PhysBody* Physics::CreatePlayer(int x, int y, int width, int height, bodyType ty
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->GetUserData().pointer = (uintptr_t)pbody;
-	pbody->width = width * 0.5f;
-	pbody->height = height * 0.5f;
+	pbody->width = (int)(width * 0.5f);
+	pbody->height = (int)(height * 0.5f);
 
 	return pbody;
 
