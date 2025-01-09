@@ -33,6 +33,19 @@ private:
 	int heart_texW = 32, heart_texH = 32;
 	int heart_frameNumX = 4, heart_frameNumY = 2;
 
+	int CD_texW = 54, CD_texH = 54, framesCD = 21;
+	SDL_Texture* shurikenCDTexture = nullptr;
+	Sprite* shurikenCDAnimator = nullptr;
+	bool shurikenInCD = false;
+	bool beforeShuriken = true;
+
+	SDL_Texture* attackCDTexture = nullptr;
+	Sprite* attackCDAnimator = nullptr;
+	bool attackInCD = false;
+	bool beforeAttack = true;
+
+	bool playerAttacked = false;
+
 	SDL_Texture* keysMenuTexture;
 	SDL_Texture* lifeHudTexture;
 	SDL_Texture* ignisHudTexture;

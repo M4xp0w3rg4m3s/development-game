@@ -703,3 +703,33 @@ int Player::GetPlayerIgnis() const
 {
 	return currentIgnis;
 }
+
+double Player::GetAttackTimer() const
+{
+	return attackCooldownTimer.ReadSec();
+}
+
+int Player::GetAttackTime() const
+{
+	return attackCooldown / 1000;
+}
+
+double Player::GetShurikenTimer() const
+{
+	return attackShurikenTimer.ReadSec();
+}
+
+int Player::GetShurikenTime() const
+{
+	return attackShurikenTime / 1000;
+}
+
+int Player::IsShurikenEnabled() const
+{
+	return shurikenEnabled;
+}
+
+PlayerState Player::GetPlayerState() const
+{
+	return state;
+}

@@ -27,6 +27,8 @@ bool GameHUD::Start()
 	ignisTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/ignis.png");
 	ignisHudTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/ignis_counter.png");
 	heartTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/heart.png");
+	shurikenCDTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/cooldown_shuriken.png");
+	attackCDTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/cooldown_attack.png");
 
 	ignisAnimator = new Sprite(ignisTexture);
 	ignisAnimator->SetNumberAnimations(1);
@@ -49,6 +51,24 @@ bool GameHUD::Start()
 	heartAnimator->SetAnimationDelay(0, 100);
 	heartAnimator->SetAnimation(0);
 	heartAnimator->SetLoop(true);
+
+	shurikenCDAnimator = new Sprite(shurikenCDTexture);
+	shurikenCDAnimator->SetNumberAnimations(1);
+	for (int i = 0; i < framesCD; i++) {
+		shurikenCDAnimator->AddKeyFrame(0, { i * CD_texW, 0, CD_texW, CD_texH });
+	}
+	shurikenCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() * 30);
+	shurikenCDAnimator->SetAnimation(0);
+	shurikenCDAnimator->SetLoop(false);
+
+	attackCDAnimator = new Sprite(attackCDTexture);
+	attackCDAnimator->SetNumberAnimations(1);
+	for (int i = 0; i < framesCD; i++) {
+		attackCDAnimator->AddKeyFrame(0, { i * CD_texW, 0, CD_texW, CD_texH });
+	}
+	attackCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetAttackTime() * 30);
+	attackCDAnimator->SetAnimation(0);
+	attackCDAnimator->SetLoop(false);
 
 	StartInternalTimer();
 	return true;
@@ -78,6 +98,36 @@ bool GameHUD::Update(float dt)
 	ignisAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - ignis_texW, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
 	Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * (int)(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size()), 18);
 
+	if (Engine::GetInstance().scene->GetPlayer()->GetAttackTimer() < Engine::GetInstance().scene->GetPlayer()->GetAttackTime() && !beforeAttack) {
+		if (!attackInCD) {
+			attackCDAnimator->SetAnimation(0);
+		}
+		attackCDAnimator->Update();
+		attackCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
+		attackInCD = true;
+	}
+	if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::COMBO) && !playerAttacked) {
+		attackInCD = false;
+		beforeAttack = false;
+		playerAttacked = true;
+	}
+	if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::COMBO) && playerAttacked) {
+		playerAttacked = false;
+	}
+
+	if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() < Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() && Engine::GetInstance().scene->GetPlayer()->IsShurikenEnabled()) {
+		if (!shurikenInCD) {
+			shurikenCDAnimator->SetAnimation(0);
+		}
+		shurikenCDAnimator->Update();
+		shurikenCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - CD_texW, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
+		shurikenInCD = true;
+	}
+	if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() > Engine::GetInstance().scene->GetPlayer()->GetShurikenTime()) {
+		shurikenInCD = false;
+	}
+
+
 	UpdateInternalTimer();
 	std::ostringstream stream;
 	stream << std::fixed << std::setprecision(1) << internalTimer;
@@ -92,11 +142,18 @@ bool GameHUD::CleanUp()
 	Engine::GetInstance().textures->UnLoad(keysMenuTexture);
 	Engine::GetInstance().textures->UnLoad(lifeHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisHudTexture);
-	delete ignisAnimator;
-	delete heartAnimator;
 	Engine::GetInstance().textures->UnLoad(ignisTexture);
 	Engine::GetInstance().textures->UnLoad(heartTexture);
-	//memory leaks
+	Engine::GetInstance().textures->UnLoad(shurikenCDTexture);
+	Engine::GetInstance().textures->UnLoad(attackCDTexture);
+	ignisAnimator->Release();
+	heartAnimator->Release();
+	shurikenCDAnimator->Release();
+	attackCDAnimator->Release();
+	delete ignisAnimator;
+	delete heartAnimator;
+	delete shurikenCDAnimator;
+	delete attackCDAnimator;
 	return true;
 }
 
