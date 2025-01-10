@@ -13,6 +13,7 @@ enum class EntityType
 	ITEM,
 	BOULDER,
 	PROJECTILE,
+	BOSS,
 	UNKNOWN
 };
 

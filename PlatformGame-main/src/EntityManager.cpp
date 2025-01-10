@@ -13,6 +13,7 @@
 #include "Hedgehog.h"
 #include "Octopus.h"
 #include "Bee.h"
+#include "Boss.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -96,6 +97,9 @@ Entity* EntityManager::CreateEntity(EntityType type, bool doCalls)
 		break;
 	case EntityType::OCTOPUS:
 		entity = new Octopus();
+		break;
+	case EntityType::BOSS:
+		entity = new Boss();
 		break;
 	default:
 		break;

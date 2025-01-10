@@ -96,7 +96,7 @@ private:
 
 	int numEnemies1 = 13;
 	int numEnemies2 = 11;
-	int numEnemies3 = 11;
+	int numEnemies3 = 12;
 
 	GuiControlButton* guiBt = nullptr;
 

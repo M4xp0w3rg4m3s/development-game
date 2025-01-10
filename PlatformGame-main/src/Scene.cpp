@@ -20,6 +20,7 @@
 #include "Bee.h"
 #include "Hedgehog.h"
 #include "Enemy.h"
+#include "Boss.h"
 
 #include "GuiControl.h"
 #include "GuiManager.h"
@@ -841,7 +842,9 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 		else if (name == "hedgehog") {
 			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
 		}
-
+		else if (name == "boss") {
+			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
+		}
 		if (enemy) {
 			enemy->SetParameters(enemyNode);
 			enemyList.push_back(enemy);
