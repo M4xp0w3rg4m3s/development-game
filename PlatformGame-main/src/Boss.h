@@ -30,7 +30,7 @@ public:
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 	/*void GoToPath() override;*/
-
+	
 private:
 	int audioShurikenHitId = -1;
 

@@ -91,8 +91,8 @@ PhysBody* Physics::CreateRectangle(int x, int y, int width, int height, bodyType
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->GetUserData().pointer = (uintptr_t)pbody;
-	pbody->width = width * 0.5f;
-	pbody->height = height * 0.5f;
+	pbody->width = (int)(width * 0.5f);
+	pbody->height = (int)(height * 0.5f);
 
 	return pbody;
 }
@@ -128,8 +128,8 @@ PhysBody* Physics::CreateCircle(int x, int y, int radious, bodyType type)
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->GetUserData().pointer = (uintptr_t)pbody;
-	pbody->width = radious * 0.5f;
-	pbody->height = radious * 0.5f;
+	pbody->width = (int)(radious * 0.5f);
+	pbody->height = (int)(radious * 0.5f);
 
 	// Return our PhysBody class
 	return pbody;
@@ -172,8 +172,8 @@ PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type)
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
 	b->GetUserData().pointer = (uintptr_t)pbody;
-	pbody->width = radious * 0.5f;
-	pbody->height = radious * 0.5f;
+	pbody->width = (int)(radious * 0.5f);
+	pbody->height = (int)(radious * 0.5f);
 
 	// Return our PhysBody class
 	return pbody;
@@ -539,14 +539,14 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 		{
 			// do we want the normal ?
 
-			float fx = x2 - x1;
-			float fy = y2 - y1;
+			float fx = (float)(x2 - x1);
+			float fy = (float)(y2 - y1);
 			float dist = sqrtf((fx * fx) + (fy * fy));
 
 			normal_x = output.normal.x;
 			normal_y = output.normal.y;
 
-			return output.fraction * dist;
+			return (int)(output.fraction * dist);
 		}
 		fixture = fixture->GetNext();
 	}

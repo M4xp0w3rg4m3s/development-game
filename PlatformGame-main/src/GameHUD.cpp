@@ -57,7 +57,7 @@ bool GameHUD::Start()
 	for (int i = 0; i < framesCD; i++) {
 		shurikenCDAnimator->AddKeyFrame(0, { i * CD_texW, 0, CD_texW, CD_texH });
 	}
-	shurikenCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() * 0.03);
+	shurikenCDAnimator->SetAnimationDelay(0, (int)(Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() * 0.03));
 	shurikenCDAnimator->SetAnimation(0);
 	shurikenCDAnimator->SetLoop(false);
 
@@ -66,7 +66,7 @@ bool GameHUD::Start()
 	for (int i = 0; i < framesCD; i++) {
 		attackCDAnimator->AddKeyFrame(0, { i * CD_texW, 0, CD_texW, CD_texH });
 	}
-	attackCDAnimator->SetAnimationDelay(0, Engine::GetInstance().scene->GetPlayer()->GetAttackTime() * 0.03);
+	attackCDAnimator->SetAnimationDelay(0, (int)(Engine::GetInstance().scene->GetPlayer()->GetAttackTime() * 0.03));
 	attackCDAnimator->SetAnimation(0);
 	attackCDAnimator->SetLoop(false);
 
