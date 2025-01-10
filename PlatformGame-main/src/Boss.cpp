@@ -36,7 +36,7 @@ bool Boss::Start()
 
 	texH = height, texW = width;
 
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 4, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY() + height / 4, width / 4, bodyType::DYNAMIC);
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
@@ -107,15 +107,15 @@ bool Boss::Update(float dt)
 	animator->Update();
 	if (pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookLeft();
-		animator->Draw((int)position.getX(), (int)position.getY(), 10, -3);
+		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
 	}
 	else if(pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookRight();
-		animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
+		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
 	}
 	else
 	{
-		animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
+		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
 	}
 	return true;
 }

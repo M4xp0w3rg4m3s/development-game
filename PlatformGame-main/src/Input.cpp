@@ -142,10 +142,10 @@ bool Input::GetWindowEvent(EventWindow ev)
 
 Vector2D Input::GetMousePosition()
 {
-	return Vector2D(mouseX, mouseY);
+	return Vector2D((float)mouseX, (float)mouseY);
 }
 
 Vector2D Input::GetMouseMotion()
 {
-	return Vector2D(mouseMotionX, mouseMotionY);
+	return Vector2D((float)mouseMotionX, (float)mouseMotionY);
 }

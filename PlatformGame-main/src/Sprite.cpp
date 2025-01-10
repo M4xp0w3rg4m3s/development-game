@@ -128,10 +128,10 @@ void Sprite::DrawTint(int x, int y, const SDL_Color& col) const
     {
         SDL_Rect rect = animations[current_anim].frames[current_frame].rect;
         if (player_dir == direction::RIGHT) {
-            Engine::GetInstance().render->DrawTexture(img, (float)x, (float)y, &rect,(SDL_RendererFlip)0);
+            Engine::GetInstance().render->DrawTexture(img, x, y, &rect,(SDL_RendererFlip)0);
         }
         if (player_dir == direction::LEFT) {
-            Engine::GetInstance().render->DrawTexture(img, (float)x, (float)y, &rect, (SDL_RendererFlip)1);
+            Engine::GetInstance().render->DrawTexture(img, x, y, &rect, (SDL_RendererFlip)1);
         }
     }
 }
