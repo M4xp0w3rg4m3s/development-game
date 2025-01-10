@@ -38,8 +38,8 @@ bool Item::Start() {
 
 	position.setX(parameters.attribute("x").as_float());
 	position.setY(parameters.attribute("y").as_float());
-	texH = parameters.attribute("h").as_float();
-	texW = parameters.attribute("w").as_float();
+	texH = parameters.attribute("h").as_int();
+	texW = parameters.attribute("w").as_int();
 	itemId = parameters.attribute("id").as_string();
 	Entity::name = parameters.attribute("name").as_string();
 
@@ -114,7 +114,7 @@ bool Item::Update(float dt)
 
 bool Item::CleanUp()
 {
-	//Engine::GetInstance().textures->UnLoad(texture);
+	Engine::GetInstance().textures->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 
 	return true;
@@ -134,6 +134,6 @@ ItemType Item::GetCurrentType()
 Vector2D Item::GetPosition()
 {
 	b2Vec2 bodyPos = pbody->body->GetTransform().p;
-	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	Vector2D pos = Vector2D((float)(METERS_TO_PIXELS(bodyPos.x)), (float)(METERS_TO_PIXELS(bodyPos.y)));
 	return pos;
 }
