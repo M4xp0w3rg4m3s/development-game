@@ -35,4 +35,7 @@ private:
 	int audioShurikenHitId = -1;
 
 	int lives = 5;
+
+	bool IsAttacking = false;
+	bool IsUp = false;
 };

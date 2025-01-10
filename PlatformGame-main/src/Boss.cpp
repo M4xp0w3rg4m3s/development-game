@@ -57,14 +57,74 @@ bool Boss::Start()
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
 	animator = new Sprite(texture);
-	animator->SetNumberAnimations(1);
+	animator->SetNumberAnimations(6);
 
 	// IDLE
 	animator->AddKeyFrame(0, { 0, 0,width,height });
 	animator->AddKeyFrame(0, { 1 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 4 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 5 * width, 0,width,height });
 	animator->SetAnimationDelay(0, 100);
+
+	// WALK
+	animator->AddKeyFrame(1, { 0,  1 * height,width,height });
+	animator->AddKeyFrame(1, { 1 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 2 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 3 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 4 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 5 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 6 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 7 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 8 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 9 * width, 1 * height,width,height });
+	animator->SetAnimationDelay(1, 100);
+
+	// UP
+	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
+	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 5 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 6 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 7 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 8 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 9 * width, 2 * height,width,height });
+	animator->SetAnimationDelay(2, 100);
+
+	// DOWN
+	animator->AddKeyFrame(3, { 0,  3 * height,width,height });
+	animator->AddKeyFrame(3, { 1 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 2 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 3 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 4 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 5 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 6 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 7 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 8 * width, 3 * height,width,height });
+	animator->AddKeyFrame(3, { 9 * width, 3 * height,width,height });
+	animator->SetAnimationDelay(3, 100);
+
+	// DIE
+	animator->AddKeyFrame(4, { 0,  4 * height,width,height });
+	animator->AddKeyFrame(4, { 1 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 2 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 3 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 4 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 5 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 6 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 7 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 8 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 9 * width, 4 * height,width,height });
+	animator->SetAnimationDelay(4, 100);
+
+	// HIT
+	animator->AddKeyFrame(5, { 0,  5 * height,width,height });
+	animator->AddKeyFrame(5, { 1 * width, 5 * height,width,height });
+	animator->AddKeyFrame(5, { 2 * width, 5 * height,width,height });
+	animator->AddKeyFrame(5, { 3 * width, 5 * height,width,height });
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
@@ -74,11 +134,48 @@ bool Boss::Start()
 
 bool Boss::Update(float dt)
 {
+	// Animation Selection
 	if (lives <= 0)
 	{
-		Disable();
+		animator->SetAnimation(4);
+		if (animator->isAnimFinished())
+		{
+			Disable();
+		}
+	}
+	else if (IsAttacking)
+	{
+		if (IsUp)
+		{
+			//Projectile attack
+		}
+		else 
+		{
+			//melee attack
+		}
+	}
+	else
+	{
+		if (pbody->body->GetLinearVelocity().y < 0)
+		{
+			animator->SetAnimation(2);
+		}
+		else if (pbody->body->GetLinearVelocity().y > 0)
+		{
+			animator->SetAnimation(3);
+		}
+		else if (pbody->body->GetLinearVelocity().x > 0 || pbody->body->GetLinearVelocity().x < 0)
+		{
+			animator->SetAnimation(1);
+		}
+		else
+		{
+			animator->SetAnimation(0);
+		}
 	}
 
+	// Behaviour
+	
 	////Add a physics to an item - update the position of the object from the physics.  
 	//b2Transform pbodyPos = pbody->body->GetTransform();
 	//position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
@@ -105,6 +202,8 @@ bool Boss::Update(float dt)
 	//}
 
 	animator->Update();
+
+	//Draw + Flip
 	if (pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookLeft();
 		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
