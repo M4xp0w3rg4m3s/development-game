@@ -11,6 +11,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Scene.h"
+//#include "IntroScene.h"
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
@@ -39,6 +40,7 @@ Engine::Engine() {
     audio = std::make_shared<Audio>();
     physics = std::make_shared<Physics>();
     scene = std::make_shared<Scene>();
+    //introScene = std::make_shared<IntroScene>();
     map = std::make_shared<Map>();
     parallax = std::make_shared<Parallax>();
     entityManager = std::make_shared<EntityManager>();
@@ -72,12 +74,16 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(audio), LoopState::GAME);
 
-    //
+    //-------------------------------------------------------------------//
+
+    //AddModule(std::static_pointer_cast<Module>(introScene), LoopState::INTRO);
     AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(parallax), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(scene), LoopState::GAME);
+
     // Add the map module
     AddModule(std::static_pointer_cast<Module>(map), LoopState::GAME);
+
     // Add the entity manager
     AddModule(std::static_pointer_cast<Module>(entityManager),LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(guiManager),LoopState::GAME);

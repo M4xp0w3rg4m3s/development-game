@@ -32,7 +32,7 @@ bool IntroScene::Update(float dt)
 {
 	if (introTimer.ReadSec() > introTime)
 	{
-		
+		//Next Scene
 	}
 	Engine::GetInstance().render.get()->DrawTexture(texture, 0, 0);
 
