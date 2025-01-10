@@ -71,17 +71,17 @@
 				<enemy name="hedgehog" x="3264" y="256" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h2" />
 			</enemies_lvl_2>
 			<enemies_lvl_3>
-				<enemy name="boar" x="1217" y="352" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo1" />
-				<enemy name="boar" x="1500" y="65" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo2" />
-				<enemy name="boar" x="2335" y="65" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo3" />
-				<enemy name="boar" x="3135" y="350" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo4" />
-				<enemy name="octopus" x="1568" y="450" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="false" id="o1" />
-				<enemy name="octopus" x="2240" y="450" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="false" id="o2" />
-				<enemy name="bee" x="1185" y="130" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be1" />
-				<enemy name="bee" x="1920" y="65" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be2" />
-				<enemy name="bee" x="3135" y="95" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be3" />
-				<enemy name="hedgehog" x="3040" y="256" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h1" />
-				<enemy name="hedgehog" x="3264" y="256" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h2" />
+				<enemy name="boar" x="1700" y="320" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo1" />
+				<enemy name="boar" x="2100" y="160" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo2" />
+				<enemy name="boar" x="2600" y="415" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo3" />
+				<enemy name="boar" x="4250" y="380" w="48" h="32" texture="Assets/Textures/Enemies/Boar.png" gravity="true" active="false" id="bo4" />
+				<enemy name="octopus" x="1920" y="450" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="false" id="o1" />
+				<enemy name="octopus" x="2140" y="450" w="32" h="32" texture="Assets/Textures/Enemies/Octopus.png" gravity="true" active="false" id="o2" />
+				<enemy name="bee" x="2900" y="200" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be1" />
+				<enemy name="bee" x="3300" y="200" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be2" />
+				<enemy name="bee" x="5100" y="190" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be3" />
+				<enemy name="hedgehog" x="2040" y="390" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h1" />
+				<enemy name="hedgehog" x="1300" y="385" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h2" />
 			</enemies_lvl_3>
 			<items_lvl_1>
 				<item name="shuriken" x="4875" y="315" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
@@ -95,10 +95,26 @@
 				<item name="health" x="6310" y="290" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp2" />
 			</items_lvl_1>
 			<items_lvl_2>
-				<item name="shuriken" x="200" y="200" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
+				<item name="shuriken" x="2325" y="25" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
+				<item name="ignis" x="1475" y="30" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig1" />
+				<item name="ignis" x="1620" y="340" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig2" />
+				<item name="ignis" x="2190" y="340" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig3" />
+				<item name="ignis" x="3150" y="220" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig4" />
+				<item name="ignis" x="4478" y="162" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig5" />
+				<item name="health" x="1900" y="135" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp1" />
+				<item name="health" x="4065" y="290" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp2" />
 			</items_lvl_2>
 			<items_lvl_3>
-				<item name="shuriken" x="200" y="200" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
+				<item name="shuriken" x="2770" y="320" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
+				<item name="shuriken" x="5770" y="215" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />
+				<item name="ignis" x="1235" y="260" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig1" />
+				<item name="ignis" x="2035" y="380" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig2" />
+				<item name="ignis" x="1960" y="90" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig3" />
+				<item name="ignis" x="3100" y="360" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig4" />
+				<item name="ignis" x="4250" y="350" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig4" />
+				<item name="ignis" x="4750" y="250" w="32" h="32" texture="Assets/Textures/ignis.png" active="false" id="ig5" />
+				<item name="health" x="2425" y="25" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp1" />
+				<item name="health" x="2415" y="300" w="16" h="16" texture="Assets/Textures/Items/Item_Health.png" active="false" id="hp2" />
 			</items_lvl_3>
 		</entities>
 	</scene>
