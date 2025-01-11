@@ -52,6 +52,11 @@ bool Projectile::Start()
 	animator->AddKeyFrame(2, { 1 * 13,2 * 13,13,13 });
 	animator->SetAnimationDelay(2, 100);
 
+	//Boss
+	animator->AddKeyFrame(3, { 0,2 * 13,13,13 });
+	animator->AddKeyFrame(3, { 1 * 13,2 * 13,13,13 });
+	animator->SetAnimationDelay(3, 100);
+
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
 

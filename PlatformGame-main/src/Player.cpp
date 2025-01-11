@@ -552,6 +552,53 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				hitTimer.Start();
 			}
 			break;
+		case ColliderType::BOSS_ATTACK_LEFT:
+			LOG("Collision Projectile");
+
+			if (godMode) break;
+			if (true)// Engine::GetInstance().scene.GetBoss()->IsAttackingLeft()
+			{
+				body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+
+				if (hitTimer.ReadMSec() > hitTime)
+				{
+					lives--;
+					if (lives <= 0)
+					{
+						KillPlayer();
+					}
+					if (state != PlayerState::DYING && state != PlayerState::DEAD)
+					{
+						Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId); // Audio Hurt
+					}
+					hitTimer.Start();
+				}
+			}
+			
+			break;
+		case ColliderType::BOSS_ATTACK_RIGHT:
+			LOG("Collision Projectile");
+
+			if (godMode) break;
+			if (true) // Engine::GetInstance().scene.GetBoss()->IsAttackingRight()
+			{
+				body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
+
+				if (hitTimer.ReadMSec() > hitTime)
+				{
+					lives--;
+					if (lives <= 0)
+					{
+						KillPlayer();
+					}
+					if (state != PlayerState::DYING && state != PlayerState::DEAD)
+					{
+						Engine::GetInstance().audio.get()->PlayFx(audioPlayerHurtId); // Audio Hurt
+					}
+					hitTimer.Start();
+				}
+			}
+			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
 			break;

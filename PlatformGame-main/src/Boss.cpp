@@ -41,22 +41,55 @@ bool Boss::Start()
 	texH = height, texW = width;
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY() + height / 4, width / 5, bodyType::DYNAMIC);
+	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() , (int)position.getY(), 30, 30, bodyType::DYNAMIC);
+	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), 30, 30, bodyType::DYNAMIC);
+
+	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 5) ,(float)PIXEL_TO_METERS(-20) });
+	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 5),(float)PIXEL_TO_METERS(-20) });
+
+	pbody->body->SetFixedRotation(true);
+	bodyAttackLeft->body->SetFixedRotation(true);
+	bodyAttackRight->body->SetFixedRotation(true);
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
+	bodyAttackLeft->ctype = ColliderType::BOSS_ATTACK_LEFT;
+	bodyAttackRight->ctype = ColliderType::BOSS_ATTACK_RIGHT;
 
 	// Set the gravity of the body
-	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(1);
-	
+	if (!parameters.attribute("gravity").as_bool())
+	{
+		pbody->body->SetGravityScale(1);
+		bodyAttackLeft->body->SetGravityScale(1);
+		bodyAttackRight->body->SetGravityScale(1);
+	}
+
 	pbody->body->GetFixtureList()[0].SetFriction(500.0f);
+	bodyAttackLeft->body->GetFixtureList()[0].SetFriction(0);
+	bodyAttackLeft->body->GetFixtureList()[0].SetFriction(0);
 
 	//// Add friction and weight
-	b2MassData boulderMass;
-	boulderMass.mass = 500.0f;
-	boulderMass.center = pbody->body->GetLocalCenter();
-	pbody->body->SetMassData(&boulderMass);
+	b2MassData bossMass;
+	bossMass.mass = 5.0f;
+	bossMass.center = pbody->body->GetLocalCenter();
+	pbody->body->SetMassData(&bossMass);
 
-	pbody->body->SetFixedRotation(true);
+	b2MassData bodyAttackRightMass;
+	bodyAttackRightMass.mass = 0.0f;
+	bodyAttackRightMass.center = pbody->body->GetLocalCenter();
+	bodyAttackRight->body->SetMassData(&bodyAttackRightMass);
+
+	b2MassData bodyAttackLeftMass;
+	bodyAttackLeftMass.mass = 0.0f;
+	bodyAttackLeftMass.center = pbody->body->GetLocalCenter();
+	bodyAttackLeft->body->SetMassData(&bodyAttackLeftMass);
+
+	/*bodyAttackLeft->body->ResetMassData();
+	bodyAttackRight->body->ResetMassData();*/
+
+	pbody->listener = this;
+	bodyAttackLeft->listener = this;
+	bodyAttackRight->listener = this;
 	
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
@@ -137,8 +170,6 @@ bool Boss::Start()
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
 
-	pbody->listener = this;
-
 	// Seed the random number generator
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -156,7 +187,7 @@ bool Boss::Update(float dt)
 	// Behaviour
 	if (attackTimer.ReadSec() > attackTime)
 	{
-		IsAttacking = true;
+		isAttacking = true;
 	}
 
 	if (lives <= 0)
@@ -170,7 +201,7 @@ bool Boss::Update(float dt)
 			Disable();
 		}
 	}
-	else if (IsAttacking)
+	else if (isAttacking)
 	{
 		if (animator->GetAnimation() != 2)
 		{
@@ -187,7 +218,9 @@ bool Boss::Update(float dt)
 				fallingProjectiles = false;
 			}
 
-			IsAttacking = false;
+			isAttacking = false;
+			isAttackingLeft = false;
+			isAttackingRight = false;
 
 			float randomAttackTime = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX)) * 2.5f + 0.5f;
 
@@ -220,20 +253,40 @@ bool Boss::Update(float dt)
 	if (pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookLeft();
 		animator->Draw((int)position.getX(), (int)position.getY(), 26, -26);
+
+		if (isAttacking)
+		{
+			isAttackingLeft = true;
+		}
 	}
 	else if(pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookRight();
 		animator->Draw((int)position.getX(), (int)position.getY(), -26, -26);
+
+		if (isAttacking)
+		{
+			isAttackingRight = true;
+		}
 	}
 	else
 	{
 		if (animator->IsLookingRight())
 		{
 			animator->Draw((int)position.getX(), (int)position.getY(), -26, -26);
+
+			if (isAttacking)
+			{
+				isAttackingRight = true;
+			}
 		}
 		else
 		{
 			animator->Draw((int)position.getX(), (int)position.getY(), 26, -26);
+
+			if (isAttacking)
+			{
+				isAttackingLeft = true;
+			}
 		}
 		
 	}
@@ -243,8 +296,12 @@ bool Boss::Update(float dt)
 
 bool Boss::CleanUp()
 {
-	Engine::GetInstance().textures.get()->UnLoad(texture);
+	//Engine::GetInstance().textures.get()->UnLoad(texture);
+
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
+	Engine::GetInstance().physics->DeletePhysBody(bodyAttackRight);
+
 	return true;
 }
 
@@ -268,11 +325,15 @@ void Boss::Attack()
 	{
 		if (direction.x > 0)
 		{
-			pbody->body->ApplyForceToCenter({300,-500},true);
+			pbody->body->ApplyForceToCenter({ 300,-750 },true);
+			bodyAttackLeft->body->ApplyForceToCenter({300,-750 },true);
+			bodyAttackRight->body->ApplyForceToCenter({ 300,-750 },true);
 		}
 		else if (direction.x < 0)
 		{
-			pbody->body->ApplyForceToCenter({ -300,-500 }, true);
+			pbody->body->ApplyForceToCenter({ -300,-750 }, true);
+			bodyAttackLeft->body->ApplyForceToCenter({ -300,-750 }, true);
+			bodyAttackRight->body->ApplyForceToCenter({ -300,-750 }, true);
 		}
 	}
 }
@@ -305,27 +366,27 @@ void Boss::Shoot()
 	// Create and initialize the projectiles with its position and direction in world space
 	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
 	projectile->SetGravity(1);
-	projectile->SetAnimation(2);
+	projectile->SetAnimation(3);
 	projectile->SetCollisionType(1);
 
 	Projectile* projectile1 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos1, direction, true);
 	projectile1->SetGravity(1);
-	projectile1->SetAnimation(2);
+	projectile1->SetAnimation(3);
 	projectile1->SetCollisionType(1);
 
 	Projectile* projectile2 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos2, direction, true);
 	projectile2->SetGravity(1);
-	projectile2->SetAnimation(2);
+	projectile2->SetAnimation(3);
 	projectile2->SetCollisionType(1);
 
 	Projectile* projectile3 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos3, direction, true);
 	projectile3->SetGravity(1);
-	projectile3->SetAnimation(2);
+	projectile3->SetAnimation(3);
 	projectile3->SetCollisionType(1);
 
 	Projectile* projectile4 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos4, direction, true);
 	projectile4->SetGravity(1);
-	projectile4->SetAnimation(2);
+	projectile4->SetAnimation(3);
 	projectile4->SetCollisionType(1);
 
 }
@@ -423,4 +484,14 @@ void Boss::GoToPath()
 		}
 		pbody->body->SetLinearVelocity(velocity);
 	}
+}
+
+bool Boss::IsAttackingLeft()
+{
+	return isAttackingLeft;
+}
+
+bool Boss::IsAttackingRight()
+{
+	return isAttackingRight;
 }

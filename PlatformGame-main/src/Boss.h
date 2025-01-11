@@ -37,16 +37,23 @@ public:
 
 	void GoToPath() override;
 	
+	bool IsAttackingLeft();
+	bool IsAttackingRight();
+
 private:
+
+	PhysBody* bodyAttackLeft = nullptr;
+	PhysBody* bodyAttackRight = nullptr;
+
 	int audioShurikenHitId = -1;
 
 	int lives = 20;
 
-	bool IsAttacking = false;
-	bool IsUp = false;
-
 	Timer attackTimer;
-	int attackTime = 1;
+	float attackTime = 1;
 
+	bool isAttacking = false;
+	bool isAttackingLeft = false;
+	bool isAttackingRight = false;
 	bool fallingProjectiles = false;
 };
