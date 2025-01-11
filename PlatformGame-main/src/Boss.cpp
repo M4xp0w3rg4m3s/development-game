@@ -9,6 +9,7 @@
 #include "EntityManager.h"
 #include "Audio.h"
 #include "Engine.h"
+#include "Projectile.h"
 
 #include <ctime>
 
@@ -57,12 +58,13 @@ bool Boss::Start()
 
 	pbody->body->SetFixedRotation(true);
 	
-	//// Initialize pathfinding
-	//pathfinding = new Pathfinding();
-	//ResetPath();
+	// Initialize pathfinding
+	pathfinding = new Pathfinding();
+	ResetPath();
 
-	//SetPathfindingType(EnemyType::FLOOR);
+	SetPathfindingType(EnemyType::FLOOR);
 
+	// Texture + Animator
 	textureName = parameters.attribute("texture").as_string();
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
@@ -148,12 +150,16 @@ bool Boss::Update(float dt)
 {
 	animator->Update();
 
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
+
+	// Behaviour
 	if (attackTimer.ReadSec() > attackTime)
 	{
 		IsAttacking = true;
 	}
 
-	// Animation Selection
 	if (lives <= 0)
 	{
 		if (animator->GetAnimation() != 4)
@@ -176,6 +182,12 @@ bool Boss::Update(float dt)
 
 		if (animator->GetCurrentFrame_int() == 14)
 		{
+			if (fallingProjectiles)
+			{
+				Shoot();
+				fallingProjectiles = false;
+			}
+
 			IsAttacking = false;
 
 			float randomAttackTime = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX)) * 2.5f + 0.5f;
@@ -188,6 +200,7 @@ bool Boss::Update(float dt)
 	}
 	else
 	{
+		Move();
 		if (pbody->body->GetLinearVelocity().x > 0 || pbody->body->GetLinearVelocity().x < 0)
 		{
 			if (animator->GetAnimation() != 1)
@@ -203,38 +216,6 @@ bool Boss::Update(float dt)
 			}
 		}
 	}
-
-	// Behaviour
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
-
-	////Add a physics to an item - update the position of the object from the physics.  
-	//b2Transform pbodyPos = pbody->body->GetTransform();
-	//position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
-	//position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
-
-	//if (pathfinding->resetPathAfterEnd) {
-	//	Vector2D pos = GetPosition();
-	//	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
-	//	pathfinding->ResetPath(tilePos);
-	//	pathfinding->resetPathAfterEnd = false;
-	//}
-	//pathfinding->Compute();
-
-	//if (pathfinding->objectiveFound) {
-	//	GoToPath();
-	//}
-
-	//if (Engine::GetInstance().scene->debug) {
-	//	// Draw pathfinding 
-	//	pathfinding->DrawPath();
-	//}
-	//else {
-	//	pbody->body->SetLinearVelocity({ 0,0 });
-	//}
-
-	
 
 	//Draw + Flip
 	if (pbody->body->GetLinearVelocity().x < 0) {
@@ -282,18 +263,94 @@ void Boss::Attack()
 	};
 	if (randAttack == 1) //Projectiles
 	{
-		//pbody->body->ApplyForceToCenter({ -100,-200 }, true);
+		fallingProjectiles = true;
 	}
 	else //Jump
 	{
 		if (direction.x > 0)
 		{
-			pbody->body->ApplyForceToCenter({100,-200},true);
+			pbody->body->ApplyForceToCenter({300,-1000},true);
 		}
 		else if (direction.x < 0)
 		{
-			pbody->body->ApplyForceToCenter({ -100,-200 }, true);
+			pbody->body->ApplyForceToCenter({ -300,-1000 }, true);
 		}
+	}
+}
+
+void Boss::Shoot()
+{
+	b2Vec2 direction = { 0,0 };
+
+	b2Vec2 projectilePos = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX(),
+		35
+	};
+	b2Vec2 projectilePos1 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() + (int)(32 * 1.5),
+		35
+	};
+	b2Vec2 projectilePos2 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() + (32 * 3),
+		35
+	};
+	b2Vec2 projectilePos3 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - (int)(32 * 1.5),
+		35
+	};
+	b2Vec2 projectilePos4 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - (32 * 3),
+		35
+	};
+
+	// Create and initialize the projectiles with its position and direction in world space
+	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+	projectile->SetGravity(1);
+	projectile->SetAnimation(2);
+	projectile->SetCollisionType(1);
+
+	Projectile* projectile1 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos1, direction, true);
+	projectile1->SetGravity(1);
+	projectile1->SetAnimation(2);
+	projectile1->SetCollisionType(1);
+
+	Projectile* projectile2 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos2, direction, true);
+	projectile2->SetGravity(1);
+	projectile2->SetAnimation(2);
+	projectile2->SetCollisionType(1);
+
+	Projectile* projectile3 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos3, direction, true);
+	projectile3->SetGravity(1);
+	projectile3->SetAnimation(2);
+	projectile3->SetCollisionType(1);
+
+	Projectile* projectile4 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos4, direction, true);
+	projectile4->SetGravity(1);
+	projectile4->SetAnimation(2);
+	projectile4->SetCollisionType(1);
+
+}
+
+void Boss::Move()
+{
+	if (pathfinding->resetPathAfterEnd) {
+		Vector2D pos = GetPosition();
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
+		pathfinding->ResetPath(tilePos);
+		pathfinding->resetPathAfterEnd = false;
+	}
+	pathfinding->Compute();
+
+	if (pathfinding->objectiveFound) {
+		GoToPath();
+	}
+
+	if (Engine::GetInstance().scene->debug) {
+		// Draw pathfinding 
+		pathfinding->DrawPath();
+	}
+	else {
+		pbody->body->SetLinearVelocity({ 0,0 });
 	}
 }
 
@@ -310,61 +367,61 @@ void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 	}
 }
 
-//void Boss::GoToPath()
-//{
-//	Vector2D pos = GetPosition();
-//	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
-//
-//	Vector2D destination = { NULL, NULL };
-//
-//	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
-//
-//	int index = 0;
-//	for (const auto& tile : pathfinding->pathTiles) {
-//		if (tilePos == tile) {
-//			float destinationX = NULL;
-//			float destinationY = NULL;
-//			if (index == 0) {
-//				destinationX = pathfinding->pathTiles[index].getX();
-//				destinationY = pathfinding->pathTiles[index].getY();
-//			}
-//			else {
-//				destinationX = pathfinding->pathTiles[index - 1].getX();
-//				destinationY = pathfinding->pathTiles[index - 1].getY();
-//			}
-//			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
-//			break;
-//		}
-//		index++;
-//	}
-//
-//	if (destination.getX() != NULL && destination.getY() != NULL) {
-//		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
-//		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
-//
-//		if (currentPosX != destination.getX()) {
-//			if (currentPosX < destination.getX()) {
-//				velocity.x = (float)0.10 * 16;
-//			}
-//			else {
-//				velocity.x = (float)-0.10 * 16;
-//			}
-//		}
-//		else if (currentPosX == destination.getX()) {
-//			velocity.x = 0;
-//		}
-//
-//		if (currentPosY != destination.getY()) {
-//			if (currentPosY < destination.getY()) {
-//				velocity.y = (float)0.10 * 16;
-//			}
-//			else {
-//				velocity.y = (float)-0.10 * 16;
-//			}
-//		}
-//		else if (currentPosY == destination.getY()) {
-//			velocity.y = 0;
-//		}
-//		pbody->body->SetLinearVelocity(velocity);
-//	}
-//}
+void Boss::GoToPath()
+{
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
+
+	Vector2D destination = { NULL, NULL };
+
+	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
+
+	int index = 0;
+	for (const auto& tile : pathfinding->pathTiles) {
+		if (tilePos == tile) {
+			float destinationX = NULL;
+			float destinationY = NULL;
+			if (index == 0) {
+				destinationX = pathfinding->pathTiles[index].getX();
+				destinationY = pathfinding->pathTiles[index].getY();
+			}
+			else {
+				destinationX = pathfinding->pathTiles[index - 1].getX();
+				destinationY = pathfinding->pathTiles[index - 1].getY();
+			}
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+			break;
+		}
+		index++;
+	}
+
+	if (destination.getX() != NULL && destination.getY() != NULL) {
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
+
+		if (currentPosX != destination.getX()) {
+			if (currentPosX < destination.getX()) {
+				velocity.x = (float)0.10 * 16;
+			}
+			else {
+				velocity.x = (float)-0.10 * 16;
+			}
+		}
+		else if (currentPosX == destination.getX()) {
+			velocity.x = 0;
+		}
+
+		if (currentPosY != destination.getY()) {
+			if (currentPosY < destination.getY()) {
+				velocity.y = (float)0.10 * 16;
+			}
+			else {
+				velocity.y = (float)-0.10 * 16;
+			}
+		}
+		else if (currentPosY == destination.getY()) {
+			velocity.y = 0;
+		}
+		pbody->body->SetLinearVelocity(velocity);
+	}
+}

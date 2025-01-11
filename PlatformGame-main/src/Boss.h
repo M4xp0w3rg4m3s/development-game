@@ -25,13 +25,17 @@ public:
 
 	void Attack();
 
+	void Shoot();
+
+	void Move();
+
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
-	/*void GoToPath() override;*/
+	void GoToPath() override;
 	
 private:
 	int audioShurikenHitId = -1;
@@ -43,4 +47,6 @@ private:
 
 	Timer attackTimer;
 	int attackTime = 1;
+
+	bool fallingProjectiles = false;
 };
