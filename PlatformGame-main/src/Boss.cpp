@@ -58,12 +58,13 @@ bool Boss::Start()
 
 	pbody->body->SetFixedRotation(true);
 	
-	//// Initialize pathfinding
-	//pathfinding = new Pathfinding();
-	//ResetPath();
+	// Initialize pathfinding
+	pathfinding = new Pathfinding();
+	ResetPath();
 
-	//SetPathfindingType(EnemyType::FLOOR);
+	SetPathfindingType(EnemyType::FLOOR);
 
+	// Texture + Animator
 	textureName = parameters.attribute("texture").as_string();
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
@@ -149,12 +150,16 @@ bool Boss::Update(float dt)
 {
 	animator->Update();
 
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
+
+	// Behaviour
 	if (attackTimer.ReadSec() > attackTime)
 	{
 		IsAttacking = true;
 	}
 
-	// Animation Selection
 	if (lives <= 0)
 	{
 		if (animator->GetAnimation() != 4)
@@ -195,6 +200,7 @@ bool Boss::Update(float dt)
 	}
 	else
 	{
+		Move();
 		if (pbody->body->GetLinearVelocity().x > 0 || pbody->body->GetLinearVelocity().x < 0)
 		{
 			if (animator->GetAnimation() != 1)
@@ -210,38 +216,6 @@ bool Boss::Update(float dt)
 			}
 		}
 	}
-
-	// Behaviour
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
-
-	////Add a physics to an item - update the position of the object from the physics.  
-	//b2Transform pbodyPos = pbody->body->GetTransform();
-	//position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
-	//position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
-
-	//if (pathfinding->resetPathAfterEnd) {
-	//	Vector2D pos = GetPosition();
-	//	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
-	//	pathfinding->ResetPath(tilePos);
-	//	pathfinding->resetPathAfterEnd = false;
-	//}
-	//pathfinding->Compute();
-
-	//if (pathfinding->objectiveFound) {
-	//	GoToPath();
-	//}
-
-	//if (Engine::GetInstance().scene->debug) {
-	//	// Draw pathfinding 
-	//	pathfinding->DrawPath();
-	//}
-	//else {
-	//	pbody->body->SetLinearVelocity({ 0,0 });
-	//}
-
-	
 
 	//Draw + Flip
 	if (pbody->body->GetLinearVelocity().x < 0) {
@@ -357,6 +331,29 @@ void Boss::Shoot()
 
 }
 
+void Boss::Move()
+{
+	if (pathfinding->resetPathAfterEnd) {
+		Vector2D pos = GetPosition();
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
+		pathfinding->ResetPath(tilePos);
+		pathfinding->resetPathAfterEnd = false;
+	}
+	pathfinding->Compute();
+
+	if (pathfinding->objectiveFound) {
+		GoToPath();
+	}
+
+	if (Engine::GetInstance().scene->debug) {
+		// Draw pathfinding 
+		pathfinding->DrawPath();
+	}
+	else {
+		pbody->body->SetLinearVelocity({ 0,0 });
+	}
+}
+
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
@@ -370,61 +367,61 @@ void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 	}
 }
 
-//void Boss::GoToPath()
-//{
-//	Vector2D pos = GetPosition();
-//	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
-//
-//	Vector2D destination = { NULL, NULL };
-//
-//	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
-//
-//	int index = 0;
-//	for (const auto& tile : pathfinding->pathTiles) {
-//		if (tilePos == tile) {
-//			float destinationX = NULL;
-//			float destinationY = NULL;
-//			if (index == 0) {
-//				destinationX = pathfinding->pathTiles[index].getX();
-//				destinationY = pathfinding->pathTiles[index].getY();
-//			}
-//			else {
-//				destinationX = pathfinding->pathTiles[index - 1].getX();
-//				destinationY = pathfinding->pathTiles[index - 1].getY();
-//			}
-//			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
-//			break;
-//		}
-//		index++;
-//	}
-//
-//	if (destination.getX() != NULL && destination.getY() != NULL) {
-//		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
-//		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
-//
-//		if (currentPosX != destination.getX()) {
-//			if (currentPosX < destination.getX()) {
-//				velocity.x = (float)0.10 * 16;
-//			}
-//			else {
-//				velocity.x = (float)-0.10 * 16;
-//			}
-//		}
-//		else if (currentPosX == destination.getX()) {
-//			velocity.x = 0;
-//		}
-//
-//		if (currentPosY != destination.getY()) {
-//			if (currentPosY < destination.getY()) {
-//				velocity.y = (float)0.10 * 16;
-//			}
-//			else {
-//				velocity.y = (float)-0.10 * 16;
-//			}
-//		}
-//		else if (currentPosY == destination.getY()) {
-//			velocity.y = 0;
-//		}
-//		pbody->body->SetLinearVelocity(velocity);
-//	}
-//}
+void Boss::GoToPath()
+{
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap((int)(pos.getX()), (int)(pos.getY()));
+
+	Vector2D destination = { NULL, NULL };
+
+	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().x);
+
+	int index = 0;
+	for (const auto& tile : pathfinding->pathTiles) {
+		if (tilePos == tile) {
+			float destinationX = NULL;
+			float destinationY = NULL;
+			if (index == 0) {
+				destinationX = pathfinding->pathTiles[index].getX();
+				destinationY = pathfinding->pathTiles[index].getY();
+			}
+			else {
+				destinationX = pathfinding->pathTiles[index - 1].getX();
+				destinationY = pathfinding->pathTiles[index - 1].getY();
+			}
+			destination = Engine::GetInstance().map.get()->MapToWorld((int)destinationX, (int)destinationY);
+			break;
+		}
+		index++;
+	}
+
+	if (destination.getX() != NULL && destination.getY() != NULL) {
+		float currentPosX = (float)METERS_TO_PIXELS(pbody->body->GetPosition().x) - (width / 4) - 8;
+		float currentPosY = (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) - (width / 4) - 8;
+
+		if (currentPosX != destination.getX()) {
+			if (currentPosX < destination.getX()) {
+				velocity.x = (float)0.10 * 16;
+			}
+			else {
+				velocity.x = (float)-0.10 * 16;
+			}
+		}
+		else if (currentPosX == destination.getX()) {
+			velocity.x = 0;
+		}
+
+		if (currentPosY != destination.getY()) {
+			if (currentPosY < destination.getY()) {
+				velocity.y = (float)0.10 * 16;
+			}
+			else {
+				velocity.y = (float)-0.10 * 16;
+			}
+		}
+		else if (currentPosY == destination.getY()) {
+			velocity.y = 0;
+		}
+		pbody->body->SetLinearVelocity(velocity);
+	}
+}
