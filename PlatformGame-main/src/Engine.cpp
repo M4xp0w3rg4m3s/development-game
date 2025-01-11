@@ -11,6 +11,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Scene.h"
+#include "SceneIntro.h"
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
@@ -39,6 +40,7 @@ Engine::Engine() {
     audio = std::make_shared<Audio>();
     physics = std::make_shared<Physics>();
     scene = std::make_shared<Scene>();
+    sceneIntro = std::make_shared<SceneIntro>();
     map = std::make_shared<Map>();
     parallax = std::make_shared<Parallax>();
     entityManager = std::make_shared<EntityManager>();
@@ -72,7 +74,11 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(audio), LoopState::GAME);
 
-    //
+    // INTRO
+    AddModule(std::static_pointer_cast<Module>(sceneIntro), LoopState::INTRO);
+
+
+    // GAME
     AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(parallax), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(scene), LoopState::GAME);
@@ -240,10 +246,10 @@ bool Engine::CleanUp() {
     };
 
     cleanModuleList(moduleListCleanOnce);
-    if (result) cleanModuleList(moduleListIntro);
-    if (result) cleanModuleList(moduleListTitle);
-    if (result) cleanModuleList(moduleListMenu);
-    if (result) cleanModuleList(moduleListGame);
+    if (IntroStarted) if (result) cleanModuleList(moduleListIntro);
+    if (TitleStarted) if (result) cleanModuleList(moduleListTitle);
+    if (MenuStarted) if (result) cleanModuleList(moduleListMenu);
+    if (GameStarted) if (result) cleanModuleList(moduleListGame);
     LOG("Timer App CleanUp(): %f", timer.ReadMSec());
 
     return result;
@@ -492,8 +498,8 @@ float Engine::GetDeltaTime() const
 void Engine::ChangeLoopState(LoopState state)
 {
     currentLoopState = state;
-    StartCurrentLoopState();
     AwakeCurrentLoopState();
+    StartCurrentLoopState();
 }
 
 void Engine::AwakeCurrentLoopState()
@@ -557,6 +563,7 @@ bool Engine::StartCurrentLoopState()
                 break;
             }
         }
+        IntroStarted = true;
     }
     if (currentLoopState == LoopState::TITLE)
     {
@@ -566,6 +573,7 @@ bool Engine::StartCurrentLoopState()
                 break;
             }
         }
+        TitleStarted = true;
     }
 
     if (currentLoopState == LoopState::MENU)
@@ -576,6 +584,7 @@ bool Engine::StartCurrentLoopState()
                 break;
             }
         }
+        MenuStarted = true;
     }
 
     if (currentLoopState == LoopState::GAME)
@@ -586,6 +595,7 @@ bool Engine::StartCurrentLoopState()
                 break;
             }
         }
+        GameStarted = true;
     }
     return result;
 }

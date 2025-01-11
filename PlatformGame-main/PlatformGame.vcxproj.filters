@@ -79,7 +79,7 @@
     <ClCompile Include="src\Scene.cpp">
       <Filter>Game\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="src\CreditsScene.cpp">
+    <ClCompile Include="src\SceneIntro.cpp">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClCompile>
     <ClCompile Include="src\MainMenu.cpp">
@@ -190,7 +190,7 @@
     <ClInclude Include="src\Scene.h">
       <Filter>Game\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="src\CreditsScene.h">
+    <ClInclude Include="src\SceneIntro.h">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClInclude>
     <ClInclude Include="src\MainMenu.h">
