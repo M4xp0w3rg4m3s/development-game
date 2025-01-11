@@ -16,7 +16,7 @@ class Render;
 class Textures;
 class Audio;
 class Scene;
-//class IntroScene;
+class SceneIntro;
 class EntityManager;
 class Map;
 class Physics;
@@ -56,6 +56,10 @@ public:
 
 	// Get the delta time
 	float GetDeltaTime() const;
+
+	void ChangeLoopState(LoopState state);
+	void AwakeCurrentLoopState();
+	bool StartCurrentLoopState();
 
 private:
 
@@ -113,7 +117,7 @@ public:
 	std::shared_ptr<Textures> textures;
 	std::shared_ptr<Audio> audio;
 	std::shared_ptr<Scene> scene;
-	//std::shared_ptr<IntroScene> introScene;
+	std::shared_ptr<SceneIntro> sceneIntro;
 	std::shared_ptr<EntityManager> entityManager;
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
@@ -121,9 +125,13 @@ public:
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<GameHUD> gameHud;
 
-	LoopState currentLoopState = LoopState::GAME;
+	LoopState currentLoopState = LoopState::INTRO;
 
 private: 
+	bool IntroStarted = false;
+	bool TitleStarted = false;
+	bool MenuStarted = false;
+	bool GameStarted = false;
 
 	// Delta time
 	float dt; 
