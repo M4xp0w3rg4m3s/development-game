@@ -9,6 +9,8 @@
 #include "EntityManager.h"
 #include "Audio.h"
 
+#include <ctime>
+
 Boss::Boss() : Enemy(EntityType::BOSS)
 {
 	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
@@ -43,10 +45,17 @@ bool Boss::Start()
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+	
+	pbody->body->GetFixtureList()[0].SetFriction(100.0f);
 
-	// Assign projectile class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-	pbody->listener = this;
+	//// Add friction and weight
+	b2MassData boulderMass;
+	boulderMass.mass = 500.0f;
+	boulderMass.center = pbody->body->GetLocalCenter();
+	pbody->body->SetMassData(&boulderMass);
 
+	pbody->body->SetFixedRotation(true);
+	
 	//// Initialize pathfinding
 	//pathfinding = new Pathfinding();
 	//ResetPath();
@@ -57,7 +66,7 @@ bool Boss::Start()
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
 	animator = new Sprite(texture);
-	animator->SetNumberAnimations(6);
+	animator->SetNumberAnimations(5);
 
 	// IDLE
 	animator->AddKeyFrame(0, { 0, 0,width,height });
@@ -66,6 +75,8 @@ bool Boss::Start()
 	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 4 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 5 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 6 * width, 0,width,height });
+	animator->AddKeyFrame(0, { 7 * width, 0,width,height });
 	animator->SetAnimationDelay(0, 100);
 
 	// WALK
@@ -81,7 +92,7 @@ bool Boss::Start()
 	animator->AddKeyFrame(1, { 9 * width, 1 * height,width,height });
 	animator->SetAnimationDelay(1, 100);
 
-	// UP
+	// ATTACK
 	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
 	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
@@ -92,19 +103,14 @@ bool Boss::Start()
 	animator->AddKeyFrame(2, { 7 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 8 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 9 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 10 * width, 2 * height,width,height });
 	animator->SetAnimationDelay(2, 100);
 
-	// DOWN
+	// HURT
 	animator->AddKeyFrame(3, { 0,  3 * height,width,height });
 	animator->AddKeyFrame(3, { 1 * width, 3 * height,width,height });
 	animator->AddKeyFrame(3, { 2 * width, 3 * height,width,height });
 	animator->AddKeyFrame(3, { 3 * width, 3 * height,width,height });
-	animator->AddKeyFrame(3, { 4 * width, 3 * height,width,height });
-	animator->AddKeyFrame(3, { 5 * width, 3 * height,width,height });
-	animator->AddKeyFrame(3, { 6 * width, 3 * height,width,height });
-	animator->AddKeyFrame(3, { 7 * width, 3 * height,width,height });
-	animator->AddKeyFrame(3, { 8 * width, 3 * height,width,height });
-	animator->AddKeyFrame(3, { 9 * width, 3 * height,width,height });
 	animator->SetAnimationDelay(3, 100);
 
 	// DIE
@@ -118,26 +124,34 @@ bool Boss::Start()
 	animator->AddKeyFrame(4, { 7 * width, 4 * height,width,height });
 	animator->AddKeyFrame(4, { 8 * width, 4 * height,width,height });
 	animator->AddKeyFrame(4, { 9 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 10 * width, 4 * height,width,height });
+	animator->AddKeyFrame(4, { 11 * width, 4 * height,width,height });
 	animator->SetAnimationDelay(4, 100);
-
-	// HIT
-	animator->AddKeyFrame(5, { 0,  5 * height,width,height });
-	animator->AddKeyFrame(5, { 1 * width, 5 * height,width,height });
-	animator->AddKeyFrame(5, { 2 * width, 5 * height,width,height });
-	animator->AddKeyFrame(5, { 3 * width, 5 * height,width,height });
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
+
+	pbody->listener = this;
 
 	return true;
 }
 
 bool Boss::Update(float dt)
 {
+	animator->Update();
+
+	if (attackTimer.ReadSec() > attackTime)
+	{
+		IsAttacking = true;
+	}
+
 	// Animation Selection
 	if (lives <= 0)
 	{
-		animator->SetAnimation(4);
+		if (animator->GetAnimation() != 4)
+		{
+			animator->SetAnimation(4);
+		}
 		if (animator->isAnimFinished())
 		{
 			Disable();
@@ -145,37 +159,38 @@ bool Boss::Update(float dt)
 	}
 	else if (IsAttacking)
 	{
-		if (IsUp)
-		{
-			//Projectile attack
-		}
-		else 
-		{
-			//melee attack
-		}
+		// Seed the random number generator
+		std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+		Attack();
+
+		int randomAttackTime = (std::rand() % 4) + 3;
+		attackTime = randomAttackTime;
+		attackTimer.Start();
 	}
 	else
 	{
-		if (pbody->body->GetLinearVelocity().y < 0)
+		if (pbody->body->GetLinearVelocity().x > 0 || pbody->body->GetLinearVelocity().x < 0)
 		{
-			animator->SetAnimation(2);
-		}
-		else if (pbody->body->GetLinearVelocity().y > 0)
-		{
-			animator->SetAnimation(3);
-		}
-		else if (pbody->body->GetLinearVelocity().x > 0 || pbody->body->GetLinearVelocity().x < 0)
-		{
-			animator->SetAnimation(1);
+			if (animator->GetAnimation() != 1)
+			{
+				animator->SetAnimation(1);
+			}
 		}
 		else
 		{
-			animator->SetAnimation(0);
+			if (animator->GetAnimation() != 0)
+			{
+				animator->SetAnimation(0);
+			}
 		}
 	}
 
 	// Behaviour
-	
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
+
 	////Add a physics to an item - update the position of the object from the physics.  
 	//b2Transform pbodyPos = pbody->body->GetTransform();
 	//position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
@@ -201,21 +216,30 @@ bool Boss::Update(float dt)
 	//	pbody->body->SetLinearVelocity({ 0,0 });
 	//}
 
-	animator->Update();
+	
 
 	//Draw + Flip
-	if (pbody->body->GetLinearVelocity().x > 0) {
+	if (pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookLeft();
-		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
+		animator->Draw((int)position.getX(), (int)position.getY(), 10, -8);
 	}
-	else if(pbody->body->GetLinearVelocity().x < 0) {
+	else if(pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookRight();
-		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
+		animator->Draw((int)position.getX(), (int)position.getY(), -10, -8);
 	}
 	else
 	{
-		animator->Draw((int)position.getX(), (int)position.getY(), -width / 2, -5);
+		if (animator->IsLookingRight())
+		{
+			animator->Draw((int)position.getX(), (int)position.getY(), -10, -8);
+		}
+		else
+		{
+			animator->Draw((int)position.getX(), (int)position.getY(), 10, -8);
+		}
+		
 	}
+
 	return true;
 }
 
@@ -224,6 +248,23 @@ bool Boss::CleanUp()
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
+}
+
+void Boss::Attack()
+{
+	// Seed the random number generator
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+	int randAttack = std::rand() % 2;
+	
+	if (randAttack == 1) //Projectiles
+	{
+
+	}
+	else //Jump
+	{
+
+	}
 }
 
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)

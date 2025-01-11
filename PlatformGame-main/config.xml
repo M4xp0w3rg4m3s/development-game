@@ -82,7 +82,7 @@
 				<enemy name="bee" x="5100" y="190" w="48" h="48" texture="Assets/Textures/Enemies/Bee.png" gravity="false" active="false" id="be3" />
 				<enemy name="hedgehog" x="2040" y="390" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h1" />
 				<enemy name="hedgehog" x="1300" y="385" w="24" h="24" texture="Assets/Textures/Enemies/Hedgehog.png" gravity="true" active="false" id="h2" />
-				<enemy name="boss" x="1000" y="200" w="90" h="64" texture="Assets/Textures/Enemies/Boss/Boss_Golem.png" gravity="false" active="false" id="b1" />
+				<enemy name="boss" x="1000" y="200" w="90" h="64" texture="Assets/Textures/Enemies/Boss/Boss_Golem.png" gravity="true" active="false" id="b1" />
 			</enemies_lvl_3>
 			<items_lvl_1>
 				<item name="shuriken" x="4875" y="315" w="13" h="13" texture="Assets/Textures/Items/Item_Shuriken.png" active="false" id="sk1" />

@@ -23,6 +23,8 @@ public:
 
 	bool CleanUp();
 
+	void Attack();
+
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
@@ -34,8 +36,11 @@ public:
 private:
 	int audioShurikenHitId = -1;
 
-	int lives = 5;
+	int lives = 20;
 
 	bool IsAttacking = false;
 	bool IsUp = false;
+
+	Timer attackTimer;
+	int attackTime = 1;
 };
