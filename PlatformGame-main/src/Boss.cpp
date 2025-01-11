@@ -40,13 +40,13 @@ bool Boss::Start()
 
 	texH = height, texW = width;
 
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY() + height / 4, width / 4, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY() + height / 4, width / 5, bodyType::DYNAMIC);
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
 
 	// Set the gravity of the body
-	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(1);
 	
 	pbody->body->GetFixtureList()[0].SetFriction(500.0f);
 
@@ -96,7 +96,6 @@ bool Boss::Start()
 	animator->SetAnimationDelay(1, 100);
 
 	// ATTACK
-	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
 	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
 	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
@@ -180,7 +179,7 @@ bool Boss::Update(float dt)
 			Attack();
 		}
 
-		if (animator->GetCurrentFrame_int() == 14)
+		if (animator->GetCurrentFrame_int() == 13)
 		{
 			if (fallingProjectiles)
 			{
@@ -220,21 +219,21 @@ bool Boss::Update(float dt)
 	//Draw + Flip
 	if (pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookLeft();
-		animator->Draw((int)position.getX(), (int)position.getY(), 10, -8);
+		animator->Draw((int)position.getX(), (int)position.getY(), 26, -26);
 	}
 	else if(pbody->body->GetLinearVelocity().x > 0) {
 		animator->LookRight();
-		animator->Draw((int)position.getX(), (int)position.getY(), -10, -8);
+		animator->Draw((int)position.getX(), (int)position.getY(), -26, -26);
 	}
 	else
 	{
 		if (animator->IsLookingRight())
 		{
-			animator->Draw((int)position.getX(), (int)position.getY(), -10, -8);
+			animator->Draw((int)position.getX(), (int)position.getY(), -26, -26);
 		}
 		else
 		{
-			animator->Draw((int)position.getX(), (int)position.getY(), 10, -8);
+			animator->Draw((int)position.getX(), (int)position.getY(), 26, -26);
 		}
 		
 	}
@@ -269,11 +268,11 @@ void Boss::Attack()
 	{
 		if (direction.x > 0)
 		{
-			pbody->body->ApplyForceToCenter({300,-1000},true);
+			pbody->body->ApplyForceToCenter({300,-500},true);
 		}
 		else if (direction.x < 0)
 		{
-			pbody->body->ApplyForceToCenter({ -300,-1000 }, true);
+			pbody->body->ApplyForceToCenter({ -300,-500 }, true);
 		}
 	}
 }
