@@ -42,6 +42,8 @@ bool SceneIntro::Start()
 	imageTimer.Start();
 	sceneTimer.Start();
 
+	FadeOut();
+
 	return true;
 }
 // Called each loop iteration
@@ -56,14 +58,50 @@ bool SceneIntro::Update(float dt)
 	
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
-	if (imageTimer.ReadMSec() < image1Time * 1000) {
+	if (imageTimer.ReadMSec() < image1Time) {
 		Engine::GetInstance().render->DrawTexture(intro1, 0, 0);
+		if (imageTimer.ReadMSec() >= (image1Time - fadetime) && !first_fadeIn) {
+			FadeIn();
+			first_fadeIn = true;
+		}
 	}
 	else {
+		if (!first_fadeOut) {
+			FadeOut();
+			first_fadeOut = true;
+		}
+		if (sceneTimer.ReadMSec() >= (sceneTime - fadetime) && !last_fadeIn) {
+			FadeIn();
+			last_fadeIn = true;
+		}
 		Engine::GetInstance().render->DrawTexture(intro2, 0, 0);
 	}
 
-	if (sceneTimer.ReadMSec() > sceneTime * 1000) {
+	if (fadingIn) {
+		double elapsedTime = fadeTimer.ReadMSec();
+		if (elapsedTime >= fadetime) {
+			opacity = 255;
+			fadingIn = false;
+		}
+		else {
+			opacity = static_cast<int>((elapsedTime / (fadetime)) * 255);
+		}
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
+	}
+
+	if (fadingOut) {
+		double elapsedTime = fadeTimer.ReadMSec();
+		if (elapsedTime >= fadetime) {
+			opacity = 0;
+			fadingOut = false;
+		}
+		else {
+			opacity = 255 - static_cast<int>((elapsedTime / (fadetime)) * 255);
+		}
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
+	}
+
+	if (sceneTimer.ReadMSec() > sceneTime) {
 		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
 	}
 
@@ -95,4 +133,18 @@ bool SceneIntro::CleanUp()
 		Engine::GetInstance().textures.get()->UnLoad(intro2);
 	}
 	return true;
+}
+
+void SceneIntro::FadeIn()
+{
+	fadeTimer.Start();
+	fadingIn = true;
+	fadingOut = false;
+}
+
+void SceneIntro::FadeOut()
+{
+	fadeTimer.Start();
+	fadingOut = true;
+	fadingIn = false;
 }
