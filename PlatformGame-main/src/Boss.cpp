@@ -8,6 +8,7 @@
 #include "Textures.h"
 #include "EntityManager.h"
 #include "Audio.h"
+#include "Engine.h"
 
 #include <ctime>
 
@@ -46,7 +47,7 @@ bool Boss::Start()
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
 	
-	pbody->body->GetFixtureList()[0].SetFriction(100.0f);
+	pbody->body->GetFixtureList()[0].SetFriction(500.0f);
 
 	//// Add friction and weight
 	b2MassData boulderMass;
@@ -94,8 +95,12 @@ bool Boss::Start()
 
 	// ATTACK
 	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
+	animator->AddKeyFrame(2, { 0,  2 * height,width,height });
+	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 5 * width, 2 * height,width,height });
@@ -133,6 +138,9 @@ bool Boss::Start()
 
 	pbody->listener = this;
 
+	// Seed the random number generator
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
 	return true;
 }
 
@@ -159,14 +167,24 @@ bool Boss::Update(float dt)
 	}
 	else if (IsAttacking)
 	{
-		// Seed the random number generator
-		std::srand(static_cast<unsigned int>(std::time(nullptr)));
+		if (animator->GetAnimation() != 2)
+		{
+			animator->SetAnimation(2);
+			
+			Attack();
+		}
 
-		Attack();
+		if (animator->GetCurrentFrame_int() == 14)
+		{
+			IsAttacking = false;
 
-		int randomAttackTime = (std::rand() % 4) + 3;
-		attackTime = randomAttackTime;
-		attackTimer.Start();
+			float randomAttackTime = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX)) * 2.5f + 0.5f;
+
+			attackTime = randomAttackTime;
+			attackTimer.Start();
+
+		}
+		
 	}
 	else
 	{
@@ -252,18 +270,30 @@ bool Boss::CleanUp()
 
 void Boss::Attack()
 {
-	// Seed the random number generator
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
 	int randAttack = std::rand() % 2;
 	
+	// Get the player's center position in world coordinates
+	b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
+
+	// Calculate the direction vector from the player's center to the mouse position
+	b2Vec2 direction = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - centerPos.x,
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getY() - centerPos.y
+	};
 	if (randAttack == 1) //Projectiles
 	{
-
+		//pbody->body->ApplyForceToCenter({ -100,-200 }, true);
 	}
 	else //Jump
 	{
-
+		if (direction.x > 0)
+		{
+			pbody->body->ApplyForceToCenter({100,-200},true);
+		}
+		else if (direction.x < 0)
+		{
+			pbody->body->ApplyForceToCenter({ -100,-200 }, true);
+		}
 	}
 }
 
