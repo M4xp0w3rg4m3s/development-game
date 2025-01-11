@@ -497,7 +497,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			else if (physB->listener->name == "health")
 			{
 				//Sound?
-				lives++;
+				if (lives < 3)
+				{
+					lives++;
+				}
+				
 				physB->listener->Disable();
 			}
 			else if (physB->listener->name == "coin")
