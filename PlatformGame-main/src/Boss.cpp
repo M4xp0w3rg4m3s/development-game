@@ -9,6 +9,7 @@
 #include "EntityManager.h"
 #include "Audio.h"
 #include "Engine.h"
+#include "Projectile.h"
 
 #include <ctime>
 
@@ -179,6 +180,7 @@ bool Boss::Update(float dt)
 			if (fallingProjectiles)
 			{
 				Shoot();
+				fallingProjectiles = false;
 			}
 
 			IsAttacking = false;
@@ -293,17 +295,66 @@ void Boss::Attack()
 	{
 		if (direction.x > 0)
 		{
-			pbody->body->ApplyForceToCenter({100,-200},true);
+			pbody->body->ApplyForceToCenter({300,-1000},true);
 		}
 		else if (direction.x < 0)
 		{
-			pbody->body->ApplyForceToCenter({ -100,-200 }, true);
+			pbody->body->ApplyForceToCenter({ -300,-1000 }, true);
 		}
 	}
 }
 
 void Boss::Shoot()
 {
+	b2Vec2 direction = { 0,0 };
+
+	b2Vec2 projectilePos = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX(),
+		35
+	};
+	b2Vec2 projectilePos1 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() + (int)(32 * 1.5),
+		35
+	};
+	b2Vec2 projectilePos2 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() + (32 * 3),
+		35
+	};
+	b2Vec2 projectilePos3 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - (int)(32 * 1.5),
+		35
+	};
+	b2Vec2 projectilePos4 = {
+		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - (32 * 3),
+		35
+	};
+
+	// Create and initialize the projectiles with its position and direction in world space
+	Projectile* projectile = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos, direction, true);
+	projectile->SetGravity(1);
+	projectile->SetAnimation(2);
+	projectile->SetCollisionType(1);
+
+	Projectile* projectile1 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos1, direction, true);
+	projectile1->SetGravity(1);
+	projectile1->SetAnimation(2);
+	projectile1->SetCollisionType(1);
+
+	Projectile* projectile2 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos2, direction, true);
+	projectile2->SetGravity(1);
+	projectile2->SetAnimation(2);
+	projectile2->SetCollisionType(1);
+
+	Projectile* projectile3 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos3, direction, true);
+	projectile3->SetGravity(1);
+	projectile3->SetAnimation(2);
+	projectile3->SetCollisionType(1);
+
+	Projectile* projectile4 = (Projectile*)Engine::GetInstance().entityManager->CreateProjectile(projectilePos4, direction, true);
+	projectile4->SetGravity(1);
+	projectile4->SetAnimation(2);
+	projectile4->SetCollisionType(1);
+
 }
 
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
