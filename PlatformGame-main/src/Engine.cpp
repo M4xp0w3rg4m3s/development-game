@@ -149,52 +149,7 @@ bool Engine::Awake() {
         vsync = configFile.child("config").child("render").child("vsync").attribute("value").as_bool();
 
         //Iterates the module list and calls Awake on each module
-        if (currentLoopState == LoopState::INTRO)
-        {
-            bool result = true;
-            for (const auto& module : moduleListIntro) {
-                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-                if(result) result = module.get()->Awake();
-                if (!result) {
-                    break;
-                }
-            }
-        }
-        if (currentLoopState == LoopState::TITLE)
-        {
-            bool result = true;
-            for (const auto& module : moduleListTitle) {
-                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-                if (result) result = module.get()->Awake();
-                if (!result) {
-                    break;
-                }
-            }
-        }
-
-        if (currentLoopState == LoopState::MENU)
-        {
-            bool result = true;
-            for (const auto& module : moduleListMenu) {
-                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-                if (result) result = module.get()->Awake();
-                if (!result) {
-                    break;
-                }
-            }
-        }
-
-        if (currentLoopState == LoopState::GAME)
-        {
-            bool result = true;
-            for (const auto& module : moduleListGame) {
-                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-                if (result) result = module.get()->Awake();
-                if (!result) {
-                    break;
-                }
-            }
-        }
+        AwakeCurrentLoopState();
     }
 
     LOG("Timer App Awake(): %f", timer.ReadMSec());
@@ -214,44 +169,7 @@ bool Engine::Start() {
 
     bool result = true;
 
-    if (currentLoopState == LoopState::INTRO)
-    {
-        for (const auto& module : moduleListIntro) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
-            }
-        }
-    }
-    if (currentLoopState == LoopState::TITLE)
-    {
-        for (const auto& module : moduleListTitle) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
-            }
-        }
-    }
-
-    if (currentLoopState == LoopState::MENU)
-    {
-        for (const auto& module : moduleListMenu) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
-            }
-        }
-    }
-
-    if (currentLoopState == LoopState::GAME)
-    {
-        for (const auto& module : moduleListGame) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
-            }
-        }
-    }
+    result = StartCurrentLoopState();
 
     LOG("Timer App Start(): %f", timer.ReadMSec());
 
@@ -569,4 +487,105 @@ bool Engine::LoadConfig()
 float Engine::GetDeltaTime() const
 {
     return dt;
+}
+
+void Engine::ChangeLoopState(LoopState state)
+{
+    currentLoopState = state;
+    StartCurrentLoopState();
+    AwakeCurrentLoopState();
+}
+
+void Engine::AwakeCurrentLoopState()
+{
+    if (currentLoopState == LoopState::INTRO)
+    {
+        bool result = true;
+        for (const auto& module : moduleListIntro) {
+            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+            if (result) result = module.get()->Awake();
+            if (!result) {
+                break;
+            }
+        }
+    }
+    if (currentLoopState == LoopState::TITLE)
+    {
+        bool result = true;
+        for (const auto& module : moduleListTitle) {
+            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+            if (result) result = module.get()->Awake();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::MENU)
+    {
+        bool result = true;
+        for (const auto& module : moduleListMenu) {
+            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+            if (result) result = module.get()->Awake();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::GAME)
+    {
+        bool result = true;
+        for (const auto& module : moduleListGame) {
+            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+            if (result) result = module.get()->Awake();
+            if (!result) {
+                break;
+            }
+        }
+    }
+}
+
+bool Engine::StartCurrentLoopState()
+{
+    bool result = true;
+    if (currentLoopState == LoopState::INTRO)
+    {
+        for (const auto& module : moduleListIntro) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+    if (currentLoopState == LoopState::TITLE)
+    {
+        for (const auto& module : moduleListTitle) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::MENU)
+    {
+        for (const auto& module : moduleListMenu) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::GAME)
+    {
+        for (const auto& module : moduleListGame) {
+            result = module.get()->Start();
+            if (!result) {
+                break;
+            }
+        }
+    }
+    return result;
 }

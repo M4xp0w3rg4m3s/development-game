@@ -56,6 +56,10 @@ public:
 	// Get the delta time
 	float GetDeltaTime() const;
 
+	void ChangeLoopState(LoopState state);
+	void AwakeCurrentLoopState();
+	bool StartCurrentLoopState();
+
 private:
 
 	// Private constructor to prevent instantiation
