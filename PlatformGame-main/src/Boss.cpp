@@ -176,6 +176,11 @@ bool Boss::Update(float dt)
 
 		if (animator->GetCurrentFrame_int() == 14)
 		{
+			if (fallingProjectiles)
+			{
+				Shoot();
+			}
+
 			IsAttacking = false;
 
 			float randomAttackTime = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX)) * 2.5f + 0.5f;
@@ -282,7 +287,7 @@ void Boss::Attack()
 	};
 	if (randAttack == 1) //Projectiles
 	{
-		//pbody->body->ApplyForceToCenter({ -100,-200 }, true);
+		fallingProjectiles = true;
 	}
 	else //Jump
 	{
@@ -295,6 +300,10 @@ void Boss::Attack()
 			pbody->body->ApplyForceToCenter({ -100,-200 }, true);
 		}
 	}
+}
+
+void Boss::Shoot()
+{
 }
 
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)

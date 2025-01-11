@@ -25,6 +25,8 @@ public:
 
 	void Attack();
 
+	void Shoot();
+
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
@@ -43,4 +45,6 @@ private:
 
 	Timer attackTimer;
 	int attackTime = 1;
+
+	bool fallingProjectiles = false;
 };
