@@ -77,9 +77,7 @@ private:
 	bool Lvl3_Enemies_created = false;
 	bool Lvl3_Items_created = false;
 
-	SDL_Texture* img = nullptr;
 	SDL_Texture* caveBg = nullptr;
-	SDL_Texture* intro = nullptr;
 
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;

@@ -28,7 +28,6 @@
 Scene::Scene() : Module()
 {
 	name = "scene";
-	img = nullptr;
 }
 
 // Destructor
@@ -93,258 +92,182 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	//Camera
-	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
-		Engine::GetInstance().render.get()->camera.x = (int)(-((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2));
-	}
-	else {
-		Engine::GetInstance().render.get()->camera.x = 0;
-	}
+    // Camera Update
+    if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
+        Engine::GetInstance().render.get()->camera.x = (int)(-((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2));
+    }
+    else {
+        Engine::GetInstance().render.get()->camera.x = 0;
+    }
 
 	if (current_level == 1) {
 		Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
 	}
 
-	//Level 1
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+    // Level 1
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+        Engine::GetInstance().map->CleanUp();
+        Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx", true);
 
-		//Background
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx", true);
+        parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
+        parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
+        parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
+        parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
+        parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
+        parallax->ChangeTextures();
 
-		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
-		parallax->ChangeTextures();
+        // Disable enemies/items from other levels
+        for (const auto& enemy : enemyListLevel2) enemy->Disable();
+        for (const auto& enemy : enemyListLevel3) enemy->Disable();
+        for (const auto& item : itemListLevel2) item->Disable();
+        for (const auto& item : itemListLevel3) item->Disable();
 
-		caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
+        // Create and enable level 1 enemies/items
+        if (!Lvl1_Enemies_created) {
+            CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
+            for (const auto& enemy : enemyListLevel1) enemy->Start();
+            Lvl1_Enemies_created = true;
+        }
+        for (const auto& enemy : enemyListLevel1) enemy->Enable();
 
-		//Enemies
-		for (const auto& enemy : enemyListLevel2) {
-			enemy->Disable();
-		}
-		for (const auto& enemy : enemyListLevel3) {
-			enemy->Disable();
-		}
-		if (!Lvl1_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
-			for (const auto& enemy : enemyListLevel1) {
-				enemy->Start();
-			}
-			Lvl1_Enemies_created = true;
-		}
-		for (const auto& enemy : enemyListLevel1) {
-			enemy->Enable();
-		}
+        if (!Lvl1_Items_created) {
+            CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
+            for (const auto& item : itemListLevel1) item->Start();
+            Lvl1_Items_created = true;
+        }
+        for (const auto& item : itemListLevel1) item->Enable();
 
-		//Items
-		for (const auto& item : itemListLevel2) {
-			item->Disable();
-		}
-		for (const auto& item : itemListLevel3) {
-			item->Disable();
-		}
-		if (!Lvl1_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
-			for (const auto& item : itemListLevel1) {
-				item->Start();
-			}
-			Lvl1_Items_created = true;
-		}
-		for (const auto& item : itemListLevel1) {
-			item->Enable();
-		}
+        current_level = 1;
+        player->ResetPlayer(current_level);
+    }
 
-		current_level = 1;
-		player->ResetPlayer(current_level);
-	}
+    // Level 2
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+        Engine::GetInstance().map->CleanUp();
+        Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 
-	//Level 2
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+        parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+        parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
+        parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
+        parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
+        parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+        parallax->ChangeTextures();
 
-		//Background
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+        // Disable enemies/items from other levels
+        for (const auto& enemy : enemyListLevel1) enemy->Disable();
+        for (const auto& enemy : enemyListLevel3) enemy->Disable();
+        for (const auto& item : itemListLevel1) item->Disable();
+        for (const auto& item : itemListLevel3) item->Disable();
 
-		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
-		parallax->ChangeTextures();
+        // Create and enable level 2 enemies/items
+        if (!Lvl2_Enemies_created) {
+            CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+            for (const auto& enemy : enemyListLevel2) enemy->Start();
+            Lvl2_Enemies_created = true;
+        }
+        for (const auto& enemy : enemyListLevel2) enemy->Enable();
 
-		Engine::GetInstance().textures.get()->UnLoad(caveBg);
+        if (!Lvl2_Items_created) {
+            CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
+            for (const auto& item : itemListLevel2) item->Start();
+            Lvl2_Items_created = true;
+        }
+        for (const auto& item : itemListLevel2) item->Enable();
 
-		//Enemies
-		for (const auto& enemy : enemyListLevel1) {
-			enemy->Disable();
-		}
-		for (const auto& enemy : enemyListLevel3) {
-			enemy->Disable();
-		}
-		if (!Lvl2_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-			for (const auto& enemy : enemyListLevel2) {
-				enemy->Start();
-			}
-			Lvl2_Enemies_created = true;
-		}
-		for (const auto& enemy : enemyListLevel2) {
-			enemy->Enable();
-		}
+        current_level = 2;
+        player->ResetPlayer(current_level);
+    }
 
-		//Items
-		for (const auto& item : itemListLevel1) {
-			item->Disable();
-		}
-		for (const auto& item : itemListLevel3) {
-			item->Disable();
-		}
-		if (!Lvl2_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
-			for (const auto& item : itemListLevel2) {
-				item->Start();
-			}
-			Lvl2_Items_created = true;
-		}
-		for (const auto& item : itemListLevel2) {
-			item->Enable();
-		}
+    // Level 3
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+        Engine::GetInstance().map->CleanUp();
+        Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
 
-		current_level = 2;
-		player->ResetPlayer(current_level);
-	}
+        parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
+        parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
+        parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
+        parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
+        parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
+        parallax->ChangeTextures();
 
-	//Level 3
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+        // Disable enemies/items from other levels
+        for (const auto& enemy : enemyListLevel1) enemy->Disable();
+        for (const auto& enemy : enemyListLevel2) enemy->Disable();
+        for (const auto& item : itemListLevel1) item->Disable();
+        for (const auto& item : itemListLevel2) item->Disable();
 
-		//Background
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
+        // Create and enable level 3 enemies/items
+        if (!Lvl3_Enemies_created) {
+            CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
+            for (const auto& enemy : enemyListLevel3) enemy->Start();
+            Lvl3_Enemies_created = true;
+        }
+        for (const auto& enemy : enemyListLevel3) enemy->Enable();
 
-		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
-		parallax->ChangeTextures();
+        if (!Lvl3_Items_created) {
+            CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
+            for (const auto& item : itemListLevel3) item->Start();
+            Lvl3_Items_created = true;
+        }
+        for (const auto& item : itemListLevel3) item->Enable();
 
-		Engine::GetInstance().textures.get()->UnLoad(caveBg);
+        current_level = 3;
+        player->ResetPlayer(current_level);
+    }
 
-		//Enemies
-		for (const auto& enemy : enemyListLevel1) {
-			enemy->Disable();
-		}
-		for (const auto& enemy : enemyListLevel2) {
-			enemy->Disable();
-		}
-		if (!Lvl3_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-			for (const auto& enemy : enemyListLevel3) {
-				enemy->Start();
-			}
-			Lvl3_Enemies_created = true;
-		}
-		for (const auto& enemy : enemyListLevel3) {
-			enemy->Enable();
-		}
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
+        player->ResetPlayer(current_level);
+    }
 
-		//Items
-		for (const auto& item : itemListLevel1) {
-			item->Disable();
-		}
-		for (const auto& item : itemListLevel2) {
-			item->Disable();
-		}
-		if (!Lvl3_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
-			for (const auto& item : itemListLevel3) {
-				item->Start();
-			}
-			Lvl3_Items_created = true;
-		}
-		for (const auto& item : itemListLevel3) {
-			item->Enable();
-		}
+    // Level advancement logic
+    if ((current_level == 1 && player->position.getX() >= 6520) || (current_level == 2 && player->position.getX() >= 4250)) {
+        AdvanceLevel();
+    }
 
-		current_level = 3;
-		player->ResetPlayer(current_level);
-	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-		player->ResetPlayer(current_level);
-	}
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+        debug = !debug;
 
-	if (current_level == 1 && player->position.getX() >= 6520) {
-		AdvanceLevel();
-	}
-	if (current_level == 2 && player->position.getX() >= 4250)
-	{
-		AdvanceLevel();
-	}
+    // Get mouse position and obtain the map coordinate
+    Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
+    Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap((int)mousePos.getX() - Engine::GetInstance().render.get()->camera.x, (int)mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-		debug = !debug;
+    // Save the tile position for debugging
+    if (mouseTile.getX() >= 0 && mouseTile.getY() >= 0 || once) {
+        tilePosDebug = "[" + std::to_string((int)mouseTile.getX()) + "," + std::to_string((int)mouseTile.getY()) + "] ";
+        once = true;
+    }
 
-	//Get mouse position and obtain the map coordinate
-	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
-	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap((int)mousePos.getX() - Engine::GetInstance().render.get()->camera.x, (int)mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
+    if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) {
+        if (current_level == 1 && enemyListLevel1[enemyIndex1]->active) {
+            enemyListLevel1[enemyIndex1]->SetPosition(Vector2D(mouseTile.getX(), mouseTile.getY()));
+            enemyListLevel1[enemyIndex1]->ResetPath();
+        }
+        else if (current_level == 2 && enemyListLevel2[enemyIndex2]->active) {
+            enemyListLevel2[enemyIndex2]->SetPosition(Vector2D(mouseTile.getX(), mouseTile.getY()));
+            enemyListLevel2[enemyIndex2]->ResetPath();
+        }
+    }
 
-	Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld((int)mouseTile.getX(), (int)mouseTile.getY());
-	SDL_Rect rect = { 0,0,32,32 };
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
+        if (current_level == 1) {
+            enemyIndex1++;
+            if (enemyIndex1 >= numEnemies1) enemyIndex1 = 0;
+        }
+        else if (current_level == 2) {
+            enemyIndex2++;
+            if (enemyIndex2 >= numEnemies2) enemyIndex2 = 0;
+        }
+    }
 
-	// saves the tile pos for debugging purposes
-	if (mouseTile.getX() >= 0 && mouseTile.getY() >= 0 || once) {
-		tilePosDebug = "[" + std::to_string((int)mouseTile.getX()) + "," + std::to_string((int)mouseTile.getY()) + "] ";
-		once = true;
-	}
+    for (auto checkpoint : Engine::GetInstance().map->checkpoints) {
+        if ((current_level == 1 && player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 1 && !checkpoint->activated) || 
+            (current_level == 2 && player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 2 && !checkpoint->activated)) {
+            checkpoint->activated = true;
+            SaveState();
+        }
+    }
 
-	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) {
-		if (current_level == 1) {
-			if (enemyListLevel1[enemyIndex1]->active) {
-				enemyListLevel1[enemyIndex1]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-				enemyListLevel1[enemyIndex1]->ResetPath();
-			}
-		}
-		else if (current_level == 2) {
-			if (enemyListLevel2[enemyIndex2]->active) {
-				enemyListLevel2[enemyIndex2]->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-				enemyListLevel2[enemyIndex2]->ResetPath();
-			}
-		}
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
-		if (current_level == 1) {
-			enemyIndex1++;
-			if (enemyIndex1 >= numEnemies1) {
-				enemyIndex1 = 0;
-			}
-		}
-		else if (current_level == 2) {
-			enemyIndex2++;
-			if (enemyIndex2 >= numEnemies2) {
-				enemyIndex2 = 0;
-			}
-		}
-	}
-
-	for (auto checkpoint : Engine::GetInstance().map->checkpoints) {
-		if (current_level == 1) {
-			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 1 && !checkpoint->activated) {
-				checkpoint->activated = true;
-				SaveState();
-			}
-		}
-		else if (current_level == 2) {
-			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 2 && !checkpoint->activated) {
-				checkpoint->activated = true;
-				SaveState();
-			}
-		}
-	}
-	return true;
+    return true;
 }
 
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
@@ -378,14 +301,6 @@ bool Scene::CleanUp()
 
 	if (current_level = 1 && caveBg != nullptr) {
 		//Engine::GetInstance().textures.get()->UnLoad(caveBg);
-	}
-	if (img != nullptr)
-	{
-		//Engine::GetInstance().textures.get()->UnLoad(img);
-	}
-	if (intro != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(intro);
 	}
 
 	return true;
@@ -441,8 +356,6 @@ void Scene::LoadState()
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
 
-		SDL_DestroyTexture(caveBg);
-
 		current_level = 2;
 
 		player->ResetPlayer(current_level);
@@ -459,8 +372,6 @@ void Scene::LoadState()
 		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
-
-		caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
 
 		current_level = 1;
 
@@ -721,8 +632,6 @@ void Scene::AdvanceLevel()
 		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
-
-		SDL_DestroyTexture(caveBg);
 
 		current_level = 2;
 
