@@ -333,105 +333,93 @@ void Scene::LoadState()
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
 
-	if (result == NULL)
-	{
+	if (!result) {
 		LOG("Could not load file. Pugi error: %s", result.description());
 		return;
 	}
 
 	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
+	int level = sceneNode.child("level").attribute("currentlevel").as_int();
 
-	//Read XML and restore information
+	if (level != current_level) {
+		const char* levelMusic = "Assets/Audio/Music/Background_Level1.wav";
+		const char* levelMap = (level == 2) ? "Level2Map.tmx" : "Level1Map.tmx";
+		const char* texturePrefix = (level == 2) ? "layers2" : "layers";
 
-	if (sceneNode.child("level").attribute("currentlevel").as_int() == 2 && current_level == 1) {
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
-
+		Engine::GetInstance().audio->PlayMusic(levelMusic);
 		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+		Engine::GetInstance().map->Load("Assets/Maps/", levelMap, true);
 
-		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+		parallax->textureName1 = configParameters.child(texturePrefix).child("one").attribute("texturePath").as_string();
+		parallax->textureName2 = configParameters.child(texturePrefix).child("two").attribute("texturePath").as_string();
+		parallax->textureName3 = configParameters.child(texturePrefix).child("three").attribute("texturePath").as_string();
+		parallax->textureName4 = configParameters.child(texturePrefix).child("four").attribute("texturePath").as_string();
+		parallax->textureName5 = configParameters.child(texturePrefix).child("five").attribute("texturePath").as_string();
+
 		parallax->ChangeTextures();
 
-		current_level = 2;
-
-		player->ResetPlayer(current_level);
-
-	} else if (sceneNode.child("level").attribute("currentlevel").as_int() == 1 && current_level != 1) {
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
-
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx",true);
-
-		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
-
-		current_level = 1;
-
+		current_level = level;
 		player->ResetPlayer(current_level);
 	}
 
-	//Player position
 	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_float(), sceneNode.child("player").attribute("y").as_float());
 	player->SetPosition(playerPos);
 
-	//enemies
+	auto updateEntities = [&](int level, auto& entityList, const std::string& entityPrefix, auto& entityListLevel, bool isEnemy) {
+		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("entity"); entityNode; entityNode = entityNode.next_sibling("entity")) {
+			Vector2D entityPos = Vector2D(entityNode.attribute("x").as_float(), entityNode.attribute("y").as_float());
+			bool entityActive = entityNode.attribute("active").as_bool();
+
+			for (const auto& entity : entityListLevel) {
+				if (entity) {
+					if (isEnemy) {
+						Enemy* enemy = dynamic_cast<Enemy*>(entity); // Intentar convertir a Enemy
+						if (enemy && enemy->enemyId == entityNode.attribute("id").as_string()) {
+							if (!enemy->active && entityActive) {
+								enemy->Enable();
+							}
+							if (entityActive) {
+								enemy->SetPosition(entityPos);
+							}
+						}
+					}
+					else {
+						Item* item = dynamic_cast<Item*>(entity); // Intentar convertir a Item
+						if (item && item->itemId == entityNode.attribute("id").as_string()) {
+							if (!item->active && entityActive) {
+								item->Enable();
+							}
+							if (entityActive) {
+								item->SetPosition(entityPos);
+							}
+						}
+					}
+				}
+			}
+		}
+		};
+
+	auto disableOtherEntities = [&](int level, auto& entityListLevel, auto& otherEntityListLevel) {
+		for (const auto& entity : otherEntityListLevel) {
+			entity->Disable();
+		}
+		for (const auto& entity : entityListLevel) {
+			entity->Enable();
+		}
+		};
+
+
 	if (current_level == 1) {
-		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_1").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-		{
-			Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float());
+		updateEntities(1, enemyListLevel1, "enemies_lvl_1", enemyListLevel1, true);
+		disableOtherEntities(1, enemyListLevel1, enemyListLevel2);
 
-			bool enemyActive = enemyNode.attribute("active").as_bool();
-
-			for (const auto& enemy : enemyListLevel1) {
-				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
-					if (!enemy->active && enemyActive) {
-						enemy->Enable();
-					}
-					if (enemyActive) {
-						enemy->SetPosition(enemyPos);
-					}
-				}
-			}
-
-			for (const auto& enemy : enemyListLevel2) {
-				enemy->Disable();
-			}
-
-			for (const auto& enemy : enemyListLevel1) {
-				enemy->Enable();
-			}
-		}
+		updateEntities(1, itemListLevel1, "items_lvl_1", itemListLevel1, false);
+		disableOtherEntities(1, itemListLevel1, itemListLevel2);
 	}
-	if (current_level == 2) {
-		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_2").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-		{
-			Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float());
-
-			bool enemyActive = enemyNode.attribute("active").as_bool();
-
-			for (const auto& enemy : enemyListLevel2) {
-				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
-					if (!enemy->active && enemyActive) {
-						enemy->Enable();
-					}
-					if (enemyActive) {
-						enemy->SetPosition(enemyPos);
-					}
-				}
-			}
-		}
-
-		for (const auto& enemy : enemyListLevel1) {
-			enemy->Disable();
-		}
+	else if (current_level == 2) {
+		updateEntities(2, enemyListLevel2, "enemies_lvl_2", enemyListLevel2, true);
+		disableOtherEntities(2, enemyListLevel2, enemyListLevel1);
 
 		if (!Lvl2_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
@@ -441,61 +429,8 @@ void Scene::LoadState()
 			Lvl2_Enemies_created = true;
 		}
 
-		for (const auto& enemy : enemyListLevel2) {
-			enemy->Enable();
-		}
-	}
-
-	//items
-	if (current_level == 1) {
-		for (pugi::xml_node itemNode = sceneNode.child("entities").child("enemies_lvl_1").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
-		{
-			Vector2D itemPos = Vector2D(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
-
-			bool itemActive = itemNode.attribute("active").as_bool();
-
-			for (const auto& item : itemListLevel1) {
-				if (item && item->itemId == itemNode.attribute("id").as_string()) {
-					if (!item->active && itemActive) {
-						item->Enable();
-					}
-					if (itemActive) {
-						item->SetPosition(itemPos);
-					}
-				}
-			}
-
-			for (const auto& item : itemListLevel2) {
-				item->Disable();
-			}
-
-			for (const auto& item : itemListLevel1) {
-				item->Enable();
-			}
-		}
-	}
-	if (current_level == 2) {
-		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_2").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
-		{
-			Vector2D itemPos = Vector2D(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
-
-			bool itemActive = itemNode.attribute("active").as_bool();
-
-			for (const auto& item : itemListLevel2) {
-				if (item && item->itemId == itemNode.attribute("id").as_string()) {
-					if (!item->active && itemActive) {
-						item->Enable();
-					}
-					if (itemActive) {
-						item->SetPosition(itemPos);
-					}
-				}
-			}
-		}
-
-		for (const auto& item : itemListLevel1) {
-			item->Disable();
-		}
+		updateEntities(2, itemListLevel2, "items_lvl_2", itemListLevel2, false);
+		disableOtherEntities(2, itemListLevel2, itemListLevel1);
 
 		if (!Lvl2_Items_created) {
 			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
@@ -503,10 +438,6 @@ void Scene::LoadState()
 				item->Start();
 			}
 			Lvl2_Items_created = true;
-		}
-
-		for (const auto& item : itemListLevel2) {
-			item->Enable();
 		}
 	}
 }
@@ -516,7 +447,7 @@ void Scene::SaveState()
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
 
-	if (result == NULL)
+	if (!result)
 	{
 		LOG("Could not load file. Pugi error: %s", result.description());
 		return;
@@ -524,100 +455,68 @@ void Scene::SaveState()
 
 	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
 
-	//Save info to XML 
-
-	//Player position
+	// Save player position
 	sceneNode.child("player").attribute("x").set_value(player->GetPosition().getX());
 	sceneNode.child("player").attribute("y").set_value(player->GetPosition().getY());
 
 	sceneNode.child("level").attribute("currentlevel").set_value(current_level);
 
-	//enemies
+	auto saveEntities = [&](int level, auto& entityList, const std::string& entityPrefix, bool isEnemy) {
+		// Loop through all the entities in the specified level
+		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("entity"); entityNode; entityNode = entityNode.next_sibling("entity"))
+		{
+			bool entityActive = entityNode.attribute("active").as_bool();
+
+			// Iterate through the entity list based on level and entity type (Enemy/Item)
+			for (const auto& entity : entityList) {
+				if (entity) {
+					if (isEnemy) {
+						Enemy* enemy = dynamic_cast<Enemy*>(entity);
+						if (enemy && enemy->enemyId == entityNode.attribute("id").as_string()) {
+							if (entityActive) {
+								if (!enemy->active) {
+									entityNode.attribute("active").set_value("false");
+								}
+								else {
+									entityNode.attribute("x").set_value(enemy->GetPosition().getX());
+									entityNode.attribute("y").set_value(enemy->GetPosition().getY());
+								}
+							}
+						}
+					}
+					else {
+						Item* item = dynamic_cast<Item*>(entity);
+						if (item && item->itemId == entityNode.attribute("id").as_string()) {
+							if (entityActive) {
+								if (!item->active) {
+									entityNode.attribute("active").set_value("false");
+								}
+								else {
+									entityNode.attribute("x").set_value(item->GetPosition().getX());
+									entityNode.attribute("y").set_value(item->GetPosition().getY());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		};
+
+	// Save entities based on current level
 	if (current_level == 1) {
-		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_1").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-		{
-			bool enemyActive = enemyNode.attribute("active").as_bool();
-
-			for (const auto& enemy : enemyListLevel1) {
-				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
-					if (enemyActive) {
-						if (!enemy->active) {
-							enemyNode.attribute("active").set_value("false");
-						}
-						else {
-							enemyNode.attribute("x").set_value(enemy->GetPosition().getX());
-							enemyNode.attribute("y").set_value(enemy->GetPosition().getY());
-						}
-					}
-				}
-			}
-		}
+		saveEntities(current_level, enemyListLevel1, "enemies_lvl_1", true);
+		saveEntities(current_level, itemListLevel1, "items_lvl_1", false);
 	}
-	if (current_level == 2) {
-		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_2").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-		{
-			bool enemyActive = enemyNode.attribute("active").as_bool();
-
-			for (const auto& enemy : enemyListLevel2) {
-				if (enemy && enemy->enemyId == enemyNode.attribute("id").as_string()) {
-					if (enemyActive) {
-						if (!enemy->active) {
-							enemyNode.attribute("active").set_value("false");
-						}
-						else {
-							enemyNode.attribute("x").set_value(enemy->GetPosition().getX());
-							enemyNode.attribute("y").set_value(enemy->GetPosition().getY());
-						}
-					}
-				}
-			}
-		}
+	else if (current_level == 2) {
+		saveEntities(current_level, enemyListLevel2, "enemies_lvl_2", true);
+		saveEntities(current_level, itemListLevel2, "items_lvl_2", false);
 	}
 
-	//items
-	if (current_level == 1) {
-		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_1").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
-		{
-			bool itemActive = itemNode.attribute("active").as_bool();
-
-			for (const auto& item : itemListLevel1) {
-				if (item && item->itemId == itemNode.attribute("id").as_string()) {
-					if (itemActive) {
-						if (!item->active) {
-							itemNode.attribute("active").set_value("false");
-						}
-						else {
-							itemNode.attribute("x").set_value(item->GetPosition().getX());
-							itemNode.attribute("y").set_value(item->GetPosition().getY());
-						}
-					}
-				}
-			}
-		}
-	}
-	if (current_level == 2) {
-		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_2").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
-		{
-			bool itemActive = itemNode.attribute("active").as_bool();
-
-			for (const auto& item : itemListLevel2) {
-				if (item && item->itemId == itemNode.attribute("id").as_string()) {
-					if (itemActive) {
-						if (!item->active) {
-							itemNode.attribute("active").set_value("false");
-						}
-						else {
-							itemNode.attribute("x").set_value(item->GetPosition().getX());
-							itemNode.attribute("y").set_value(item->GetPosition().getY());
-						}
-					}
-				}
-			}
-		}
-	}
-	//Saves the modifications to the XML 
+	// Save the modifications to the XML file
 	loadFile.save_file("config.xml");
 }
+
 
 void Scene::AdvanceLevel()
 {
