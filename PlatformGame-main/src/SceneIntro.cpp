@@ -6,7 +6,6 @@
 #include "Render.h"
 #include "Window.h"
 #include "Log.h"
-#include "Parallax.h"
 #include <string>
 
 #include "GuiControl.h"
@@ -67,8 +66,6 @@ bool SceneIntro::Update(float dt)
 	if (sceneTimer.ReadMSec() > sceneTime * 1000) {
 		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
 	}
-
-	printf("%d\n", sceneTimer.ReadSec());
 
 	return true;
 }
