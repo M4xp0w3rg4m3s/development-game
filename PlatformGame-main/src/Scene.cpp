@@ -377,6 +377,11 @@ Player* Scene::GetPlayer() const
 	return player;
 }
 
+Enemy* Scene::GetBoss() const
+{
+	return boss;
+}
+
 int Scene::GetCurrentLevel() const
 {
 	return current_level;
@@ -853,6 +858,7 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 		}
 		else if (name == "boss") {
 			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
+			boss = enemy;
 		}
 
 		if (enemy) {

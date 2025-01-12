@@ -418,6 +418,12 @@ void Boss::Move()
 
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 {
+	if (physA->ctype == ColliderType::BOSS_ATTACK_LEFT && physB->ctype == ColliderType::PLAYER && isAttackingLeft) {
+		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
+	}
+	else if (physA->ctype == ColliderType::BOSS_ATTACK_RIGHT && physB->ctype == ColliderType::PLAYER && isAttackingRight) {
+		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
+	}
 	switch (physB->ctype)
 	{
 	case ColliderType::PROJECTILE_PLAYER:

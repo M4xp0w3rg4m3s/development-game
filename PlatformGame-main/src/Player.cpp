@@ -556,7 +556,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			LOG("Collision Projectile");
 
 			if (godMode) break;
-			if (true)// Engine::GetInstance().scene.GetBoss()->IsAttackingLeft()
+			if (canBeAttacked)
 			{
 				body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 
@@ -573,6 +573,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 					}
 					hitTimer.Start();
 				}
+				canBeAttacked = false;
 			}
 			
 			break;
@@ -580,7 +581,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			LOG("Collision Projectile");
 
 			if (godMode) break;
-			if (true) // Engine::GetInstance().scene.GetBoss()->IsAttackingRight()
+			if (canBeAttacked) 
 			{
 				body->body->ApplyLinearImpulseToCenter({ 0,-1 }, true);
 
@@ -597,6 +598,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 					}
 					hitTimer.Start();
 				}
+				canBeAttacked = false;
 			}
 			break;
 		case ColliderType::UNKNOWN:
@@ -774,6 +776,11 @@ int Player::GetPlayerIgnis() const
 void Player::SetPlayerIgnis(int givenIgnis)
 {
 	currentIgnis = givenIgnis;
+}
+
+void Player::SetCanBeAttacked(bool canBeAttacked)
+{
+	this->canBeAttacked = canBeAttacked;
 }
 
 double Player::GetAttackTimer() const
