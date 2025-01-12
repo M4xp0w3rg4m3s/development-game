@@ -342,9 +342,18 @@ bool Player::Update(float dt)
 		}
 	}
 	else if (state == PlayerState::DEAD) {
-		if (deadTimer.ReadSec() == deadTime) {
+		if (deadTimer.ReadSec() == totalDeadTime - 2) {
 			ResetPlayer();
 		}
+		else if(deadTimer.ReadSec() >= shownDeadTime ) {
+			insideDeadTime = true;
+			Engine::GetInstance().entityManager->playerInDeadTime = true;
+		}
+	}
+
+	if (deadTimer.ReadSec() == totalDeadTime && insideDeadTime) {
+		insideDeadTime = false;
+		Engine::GetInstance().entityManager->playerInDeadTime = false;
 	}
 
 	//Jump SoundFX
@@ -799,6 +808,11 @@ int Player::GetShurikenTime() const
 int Player::IsShurikenEnabled() const
 {
 	return shurikenEnabled;
+}
+
+bool Player::InsideDeadTime() const
+{
+	return insideDeadTime;
 }
 
 PlayerState Player::GetPlayerState() const

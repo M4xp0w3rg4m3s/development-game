@@ -29,6 +29,7 @@ bool GameHUD::Start()
 	heartTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/heart.png");
 	shurikenCDTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/cooldown_shuriken.png");
 	attackCDTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/cooldown_attack.png");
+	dieScreen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Die-screen.png");
 
 	ignisAnimator = new Sprite(ignisTexture);
 	ignisAnimator->SetNumberAnimations(1);
@@ -76,63 +77,171 @@ bool GameHUD::Start()
 
 bool GameHUD::Update(float dt)
 {
-	internalDt = dt;
+	if (!Engine::GetInstance().scene->GetPlayer()->InsideDeadTime()) {
+		internalDt = dt;
 
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
-		if (!keysMenuOn) keysMenuOn = true;
-		else keysMenuOn = false;
-	}
-
-	if (keysMenuOn) {
-		Engine::GetInstance().render->DrawTexture(keysMenuTexture, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
-	}
-
-	Engine::GetInstance().render->DrawTexture(lifeHudTexture, -Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400);
-	Engine::GetInstance().render->DrawRectangle({ -Engine::GetInstance().render->camera.x + 16 + 54, Engine::GetInstance().render->camera.y + 400 + 42, 94 * Engine::GetInstance().scene->GetPlayer()->GetPlayerLives(), 16 }, 100, 0, 0);
-	heartAnimator->Update();
-	heartAnimator->Draw(-Engine::GetInstance().render->camera.x + 16 + 9, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
-
-
-	Engine::GetInstance().render->DrawTexture(ignisHudTexture, -Engine::GetInstance().render->camera.x + 719, Engine::GetInstance().render->camera.y + 400);
-	ignisAnimator->Update();
-	ignisAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - ignis_texW, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
-	Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * (int)(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size()), 18);
-
-	if (Engine::GetInstance().scene->GetPlayer()->GetAttackTimer() < Engine::GetInstance().scene->GetPlayer()->GetAttackTime() && !beforeAttack) {
-		if (!attackInCD) {
-			attackCDAnimator->SetAnimation(0);
+		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
+			if (!keysMenuOn) keysMenuOn = true;
+			else keysMenuOn = false;
 		}
-		attackCDAnimator->Update();
-		attackCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
-		attackInCD = true;
-	}
-	if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::COMBO) && !playerAttacked) {
-		attackInCD = false;
-		beforeAttack = false;
-		playerAttacked = true;
-	}
-	if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::COMBO) && playerAttacked) {
-		playerAttacked = false;
-	}
 
-	if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() < Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() && Engine::GetInstance().scene->GetPlayer()->IsShurikenEnabled()) {
-		if (!shurikenInCD) {
-			shurikenCDAnimator->SetAnimation(0);
+		if (keysMenuOn) {
+			Engine::GetInstance().render->DrawTexture(keysMenuTexture, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
 		}
-		shurikenCDAnimator->Update();
-		shurikenCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - CD_texW, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
-		shurikenInCD = true;
-	}
-	if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() > Engine::GetInstance().scene->GetPlayer()->GetShurikenTime()) {
-		shurikenInCD = false;
-	}
+
+		Engine::GetInstance().render->DrawTexture(lifeHudTexture, -Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400);
+		Engine::GetInstance().render->DrawRectangle({ -Engine::GetInstance().render->camera.x + 16 + 54, Engine::GetInstance().render->camera.y + 400 + 42, 94 * Engine::GetInstance().scene->GetPlayer()->GetPlayerLives(), 16 }, 100, 0, 0);
+		heartAnimator->Update();
+		heartAnimator->Draw(-Engine::GetInstance().render->camera.x + 16 + 9, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
 
 
-	UpdateInternalTimer();
-	std::ostringstream stream;
-	stream << std::fixed << std::setprecision(1) << internalTimer;
-	Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * (int)(ReadInternalTimerFormat().size()), 10, 10 * (int)(ReadInternalTimerFormat().size()), 18);
-	
+		Engine::GetInstance().render->DrawTexture(ignisHudTexture, -Engine::GetInstance().render->camera.x + 719, Engine::GetInstance().render->camera.y + 400);
+		ignisAnimator->Update();
+		ignisAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - ignis_texW, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
+		Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * (int)(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size()), 18);
+
+		if (Engine::GetInstance().scene->GetPlayer()->GetAttackTimer() < Engine::GetInstance().scene->GetPlayer()->GetAttackTime() && !beforeAttack) {
+			if (!attackInCD) {
+				attackCDAnimator->SetAnimation(0);
+			}
+			attackCDAnimator->Update();
+			attackCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
+			attackInCD = true;
+		}
+		if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::COMBO) && !playerAttacked) {
+			attackInCD = false;
+			beforeAttack = false;
+			playerAttacked = true;
+		}
+		if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::COMBO) && playerAttacked) {
+			playerAttacked = false;
+		}
+
+		if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() < Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() && Engine::GetInstance().scene->GetPlayer()->IsShurikenEnabled()) {
+			if (!shurikenInCD) {
+				shurikenCDAnimator->SetAnimation(0);
+			}
+			shurikenCDAnimator->Update();
+			shurikenCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - CD_texW, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
+			shurikenInCD = true;
+		}
+		if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() > Engine::GetInstance().scene->GetPlayer()->GetShurikenTime()) {
+			shurikenInCD = false;
+		}
+
+
+		UpdateInternalTimer();
+		std::ostringstream stream;
+		stream << std::fixed << std::setprecision(1) << internalTimer;
+		Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * (int)(ReadInternalTimerFormat().size()), 10, 10 * (int)(ReadInternalTimerFormat().size()), 18);
+		ResetFadeStates();
+	}
+	else {
+		fadeRect.x = -Engine::GetInstance().render->camera.x;
+		fadeRect.y = Engine::GetInstance().render->camera.y;
+
+		if (sceneTimer.ReadMSec() < fadetime) {
+			internalDt = dt;
+
+			if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
+				if (!keysMenuOn) keysMenuOn = true;
+				else keysMenuOn = false;
+			}
+
+			if (keysMenuOn) {
+				Engine::GetInstance().render->DrawTexture(keysMenuTexture, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
+			}
+
+			Engine::GetInstance().render->DrawTexture(lifeHudTexture, -Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400);
+			Engine::GetInstance().render->DrawRectangle({ -Engine::GetInstance().render->camera.x + 16 + 54, Engine::GetInstance().render->camera.y + 400 + 42, 94 * Engine::GetInstance().scene->GetPlayer()->GetPlayerLives(), 16 }, 100, 0, 0);
+			heartAnimator->Update();
+			heartAnimator->Draw(-Engine::GetInstance().render->camera.x + 16 + 9, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
+
+
+			Engine::GetInstance().render->DrawTexture(ignisHudTexture, -Engine::GetInstance().render->camera.x + 719, Engine::GetInstance().render->camera.y + 400);
+			ignisAnimator->Update();
+			ignisAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - ignis_texW, Engine::GetInstance().render->camera.y + 400 + 23, 0, 0);
+			Engine::GetInstance().render->DrawText(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).c_str(), 735, 440, 10 * (int)(std::to_string(Engine::GetInstance().scene->GetPlayer()->GetPlayerIgnis()).size()), 18);
+
+			if (Engine::GetInstance().scene->GetPlayer()->GetAttackTimer() < Engine::GetInstance().scene->GetPlayer()->GetAttackTime() && !beforeAttack) {
+				if (!attackInCD) {
+					attackCDAnimator->SetAnimation(0);
+				}
+				attackCDAnimator->Update();
+				attackCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 16, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
+				attackInCD = true;
+			}
+			if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() == PlayerState::COMBO) && !playerAttacked) {
+				attackInCD = false;
+				beforeAttack = false;
+				playerAttacked = true;
+			}
+			if ((Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::WOMBO || Engine::GetInstance().scene->GetPlayer()->GetPlayerState() != PlayerState::COMBO) && playerAttacked) {
+				playerAttacked = false;
+			}
+
+			if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() < Engine::GetInstance().scene->GetPlayer()->GetShurikenTime() && Engine::GetInstance().scene->GetPlayer()->IsShurikenEnabled()) {
+				if (!shurikenInCD) {
+					shurikenCDAnimator->SetAnimation(0);
+				}
+				shurikenCDAnimator->Update();
+				shurikenCDAnimator->Draw(-Engine::GetInstance().render->camera.x + 854 - 16 - CD_texW, Engine::GetInstance().render->camera.y + 400 - 64, 0, 0);
+				shurikenInCD = true;
+			}
+			if (Engine::GetInstance().scene->GetPlayer()->GetShurikenTimer() > Engine::GetInstance().scene->GetPlayer()->GetShurikenTime()) {
+				shurikenInCD = false;
+			}
+
+
+			UpdateInternalTimer();
+			std::ostringstream stream;
+			stream << std::fixed << std::setprecision(1) << internalTimer;
+			Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * (int)(ReadInternalTimerFormat().size()), 10, 10 * (int)(ReadInternalTimerFormat().size()), 18);
+		}
+		if (!first_fadeIn) {
+			FadeIn();
+			sceneTimer.Start();
+			first_fadeIn = true;
+		}
+		if (sceneTimer.ReadMSec() > fadetime && !first_fadeOut) {
+			FadeOut();
+			first_fadeOut = true;
+		}
+		if (sceneTimer.ReadMSec() > fadetime && sceneTimer.ReadMSec() < (sceneTime - fadetime)) {
+			Engine::GetInstance().render->DrawTexture(dieScreen, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
+		}
+		if (sceneTimer.ReadMSec() > (sceneTime - (fadetime * 2)) && !last_fadeIn) {
+			FadeIn();
+			last_fadeIn = true;
+		}
+		if (sceneTimer.ReadMSec() > (sceneTime - fadetime) && !last_fadeOut) {
+			FadeOut();
+			last_fadeOut = true;
+		}
+	}
+	if (fadingIn) {
+		double elapsedTime = fadeTimer.ReadMSec();
+		if (elapsedTime >= fadetime) {
+			opacity = 255;
+			fadingIn = false;
+		}
+		else {
+			opacity = static_cast<int>((elapsedTime / (fadetime)) * 255);
+		}
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
+	}
+
+	if (fadingOut) {
+		double elapsedTime = fadeTimer.ReadMSec();
+		if (elapsedTime >= fadetime) {
+			opacity = 0;
+			fadingOut = false;
+		}
+		else {
+			opacity = 255 - static_cast<int>((elapsedTime / (fadetime)) * 255);
+		}
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
+	}
 	return true;
 }
 
@@ -181,4 +290,29 @@ std::string GameHUD::ReadInternalTimerFormat() const
 	stream << std::setw(2) << std::setfill('0') << minutes << ":" << std::setw(2) << std::setfill('0') << seconds;
 
 	return stream.str();
+}
+
+void GameHUD::FadeIn()
+{
+	fadeTimer.Start();
+	fadingIn = true;
+	fadingOut = false;
+}
+
+void GameHUD::FadeOut()
+{
+	fadeTimer.Start();
+	fadingOut = true;
+	fadingIn = false;
+}
+
+void GameHUD::ResetFadeStates()
+{
+	first_fadeIn = false;
+	first_fadeOut = false;
+	last_fadeIn = false;
+	last_fadeOut = false;
+	fadingIn = false;
+	fadingOut = false;
+	opacity = 0;
 }

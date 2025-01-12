@@ -69,6 +69,8 @@ public:
 	int GetShurikenTime() const;
 	int IsShurikenEnabled() const;
 
+	bool InsideDeadTime() const;
+
 	PlayerState GetPlayerState() const;
 
 private:
@@ -91,7 +93,10 @@ private:
 	PlayerState state = IDLE;
 
 	Timer deadTimer;
-	int deadTime = 2;
+	int shownDeadTime = 2;
+	int totalDeadTime = 7;
+
+	bool insideDeadTime = false;
 
 	//Attack
 	Timer attackReactionTimer;

@@ -42,6 +42,8 @@ public:
 
 public:
 
+	bool playerInDeadTime = false;
+
 	std::list<Entity*> entities;
 
 	std::list<Entity*> entitiesToDelete;
