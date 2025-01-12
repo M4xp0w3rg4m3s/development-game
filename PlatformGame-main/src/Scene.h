@@ -64,22 +64,18 @@ public:
 private:
 	int enemyIndex1 = 0;
 	int enemyIndex2 = 0;
+	int enemyIndex3 = 0;
 
 	std::string tilePosDebug = "[0,0]";
 	bool once = false;
 
-	bool Lvl1_Enemies_created = false;
-	bool Lvl1_Items_created = false;
-
 	bool Lvl2_Enemies_created = false;
-	bool Lvl2_Items_created = false;
-
 	bool Lvl3_Enemies_created = false;
+
+	bool Lvl2_Items_created = false;
 	bool Lvl3_Items_created = false;
 
-	SDL_Texture* img = nullptr;
 	SDL_Texture* caveBg = nullptr;
-	SDL_Texture* intro = nullptr;
 
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;

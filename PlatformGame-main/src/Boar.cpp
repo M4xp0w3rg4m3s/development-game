@@ -89,13 +89,13 @@ bool Boar::Update(float dt)
 	if (pathfinding->objectiveFound) {
 		GoToPath();
 	}
+	else {
+		pbody->body->SetLinearVelocity({ 0,0 });
+	}
 
 	if (Engine::GetInstance().scene->debug) {
 		// Draw pathfinding 
 		pathfinding->DrawPath();
-	}
-	else {
-		pbody->body->SetLinearVelocity({ 0,0 });
 	}
 	
 	animator->Update();
@@ -114,6 +114,7 @@ bool Boar::Update(float dt)
 bool Boar::CleanUp()
 {
 	/*Engine::GetInstance().textures.get()->UnLoad(texture);*/
+	pbody->listener->Disable();
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }

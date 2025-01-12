@@ -761,10 +761,19 @@ int Player::GetPlayerLives() const
 	}
 	return 0;
 }
+void Player::SetPlayerLives(int givenLives)
+{
+	lives = givenLives;
+}
 
 int Player::GetPlayerIgnis() const
 {
 	return currentIgnis;
+}
+
+void Player::SetPlayerIgnis(int givenIgnis)
+{
+	currentIgnis = givenIgnis;
 }
 
 double Player::GetAttackTimer() const
