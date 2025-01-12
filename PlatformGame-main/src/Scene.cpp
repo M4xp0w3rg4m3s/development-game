@@ -52,7 +52,6 @@ bool Scene::Awake()
 	//Get the player texture name from the config file and assigns the value
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
-
 	return ret;
 }
 
@@ -60,11 +59,9 @@ bool Scene::Awake()
 bool Scene::Start()
 {
 	player->Start();
-
 	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
 
 	LoadState();
-	LoadLevel(current_level);
 
 	return true;
 }
@@ -187,7 +184,7 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	if (current_level = 1 && caveBg != nullptr) {
+	if (current_level == 1 && caveBg != nullptr) {
 		//Engine::GetInstance().textures.get()->UnLoad(caveBg);
 	}
 
@@ -231,22 +228,9 @@ void Scene::LoadState()
 
 	if (level != current_level) {
 		const char* levelMusic = "Assets/Audio/Music/Background_Level1.wav";
-		const char* levelMap = (level == 2) ? "Level2Map.tmx" : "Level1Map.tmx";
-		const char* texturePrefix = (level == 2) ? "layers2" : "layers";
-
 		Engine::GetInstance().audio->PlayMusic(levelMusic);
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", levelMap, true);
 
-		parallax->textureName1 = configParameters.child(texturePrefix).child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child(texturePrefix).child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child(texturePrefix).child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child(texturePrefix).child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child(texturePrefix).child("five").attribute("texturePath").as_string();
-
-		parallax->ChangeTextures();
-		current_level = level;
-		player->ResetPlayer(current_level);
+		LoadLevel(level);
 	}
 
 	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_float(), sceneNode.child("player").attribute("y").as_float());
@@ -263,11 +247,13 @@ void Scene::LoadState()
 					if (!enemy->active && entityActive) {
 						enemy->Enable();
 					}
-					if (entityActive) {
-						enemy->SetPosition(entityPos);
-					}
-					else {
-						enemy->Disable();
+					if (enemy->active) {
+						if (!entityActive) {
+							enemy->Disable();
+						}
+						else {
+							enemy->SetPosition(entityPos);
+						}
 					}
 				}
 			}
@@ -283,13 +269,16 @@ void Scene::LoadState()
 			for (Item* item : itemList) {
 				if (item && item->itemId == entityNode.attribute("id").as_string()) {
 					if (!item->active && entityActive) {
+						item->Start();
 						item->Enable();
 					}
-					if (entityActive) {
-						item->SetPosition(entityPos);
-					}
-					else {
-						item->Disable();
+					if (item->active) {
+						if (!entityActive) {
+							item->Disable();
+						}
+						else {
+							item->SetPosition(entityPos);
+						}
 					}
 				}
 			}
@@ -297,25 +286,25 @@ void Scene::LoadState()
 		};
 
 
-	auto disableOtherEntities = [&](auto& entityListLevel, auto& otherEntityListLevel) {
-		for (const auto& entity : otherEntityListLevel) {
+	auto disableEnemiesAndEntities = [&](auto& enmiesToDisable, auto& itemsToDisable) {
+		for (const auto& entity : enmiesToDisable) {
 			entity->Disable();
 		}
-		for (const auto& entity : entityListLevel) {
-			entity->Enable();
+		for (const auto& entity : itemsToDisable) {
+			entity->Disable();
 		}
 		};
 
 	if (current_level == 1) {
 		updateEnemies(1, enemyListLevel1, "enemies_lvl_1");
 		updateItems(1, itemListLevel1, "items_lvl_1");
-		//disableOtherEntities(itemListLevel2, enemyListLevel2);
+		disableEnemiesAndEntities(itemListLevel2, enemyListLevel2);
 
 	}
 	else if (current_level == 2) {
 		updateEnemies(2, enemyListLevel2, "enemies_lvl_2");
 		updateItems(2, itemListLevel2, "items_lvl_2");
-		//disableOtherEntities(itemListLevel1, enemyListLevel1);
+		disableEnemiesAndEntities(itemListLevel1, enemyListLevel1);
 	}
 }
 
@@ -392,12 +381,14 @@ void Scene::SaveState()
 
 
 void Scene::LoadLevel(int level) {
-	// Map loading
+	// Map and texture loading (same as before)
+	current_level = level;
 	const char* mapFile = (level == 1) ? "Level1Map.tmx" : (level == 2) ? "Level2Map.tmx" : "Level3Map.tmx";
-	Engine::GetInstance().map->CleanUp();
+	if (Engine::GetInstance().map->active && Engine::GetInstance().map) {
+		Engine::GetInstance().map->CleanUp();
+	}
 	Engine::GetInstance().map->Load("Assets/Maps/", mapFile, true);
 
-	// Parallax textures
 	const char* texturePrefix = (level == 1) ? "layers" : (level == 2) ? "layers2" : "layers3";
 	parallax->textureName1 = configParameters.child(texturePrefix).child("one").attribute("texturePath").as_string();
 	parallax->textureName2 = configParameters.child(texturePrefix).child("two").attribute("texturePath").as_string();
@@ -406,60 +397,70 @@ void Scene::LoadLevel(int level) {
 	parallax->textureName5 = configParameters.child(texturePrefix).child("five").attribute("texturePath").as_string();
 	parallax->ChangeTextures();
 
-	// Disable enemies/items from other levels
+	// Disable entities from other levels
 	DisableEnemiesAndItems(level);
 
-	// Create and enable level-specific enemies/items
-	if (level == 1) {
-		if (!Lvl1_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
-			for (const auto& enemy : enemyListLevel1) enemy->Start();
-			Lvl1_Enemies_created = true;
-		}
-		for (const auto& enemy : enemyListLevel1) enemy->Enable();
-
-		if (!Lvl1_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
-			for (const auto& item : itemListLevel1) item->Start();
-			Lvl1_Items_created = true;
-		}
-		for (const auto& item : itemListLevel1) item->Enable();
-	}
-	else if (level == 2) {
-		if (!Lvl2_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-			for (const auto& enemy : enemyListLevel2) enemy->Start();
-			Lvl2_Enemies_created = true;
-		}
-		for (const auto& enemy : enemyListLevel2) enemy->Enable();
-
-		if (!Lvl2_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
-			for (const auto& item : itemListLevel2) item->Start();
-			Lvl2_Items_created = true;
-		}
-		for (const auto& item : itemListLevel2) item->Enable();
-	}
-	else if (level == 3) {
-		if (!Lvl3_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-			for (const auto& enemy : enemyListLevel3) enemy->Start();
-			Lvl3_Enemies_created = true;
-		}
-		for (const auto& enemy : enemyListLevel3) enemy->Enable();
-
-		if (!Lvl3_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
-			for (const auto& item : itemListLevel3) item->Start();
-			Lvl3_Items_created = true;
-		}
-		for (const auto& item : itemListLevel3) item->Enable();
-	}
-
-	current_level = level;
-	player->ResetPlayer(current_level);
+	//// Initialize and enable entities for the current level
+	InitializeEntitiesForLevel(level);
+	for (auto& enemy : GetEnemyList(level)) enemy->Enable();
+	for (auto& item : GetItemList(level)) item->Enable();
 }
 
+void Scene::InitializeEntitiesForLevel(int level)
+{
+	if (level == 1 && !Lvl1_Enemies_created) {
+		CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
+		Lvl1_Enemies_created = true;
+	}
+	if (level == 1 && !Lvl1_Items_created) {
+		CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
+		Lvl1_Items_created = true;
+	}
+
+	if (level == 2 && !Lvl2_Enemies_created) {
+		CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+		Lvl2_Enemies_created = true;
+	}
+	if (level == 2 && !Lvl2_Items_created) {
+		CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
+		Lvl2_Items_created = true;
+	}
+
+	if (level == 3 && !Lvl3_Enemies_created) {
+		CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
+		Lvl3_Enemies_created = true;
+	}
+	if (level == 3 && !Lvl3_Items_created) {
+		CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
+		Lvl3_Items_created = true;
+	}
+}
+
+std::vector<Enemy*> Scene::GetEnemyList(int level)
+{
+	if (level == 1) {
+		return enemyListLevel1;
+	}
+	else if (level == 2) {
+		return enemyListLevel2;
+	}
+	else if (level == 3) {
+		return enemyListLevel3;
+	}
+}
+
+std::vector<Item*> Scene::GetItemList(int level)
+{
+	if (level == 1) {
+		return itemListLevel1;
+	}
+	else if (level == 2) {
+		return itemListLevel2;
+	}
+	else if (level == 3) {
+		return itemListLevel3;
+	}
+}
 
 void Scene::DisableEnemiesAndItems(int level) {
 	if (level != 1) {
@@ -493,38 +494,27 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 
 		// Create the enemy based on its name
 		if (name == "boar") {
-			enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
-			if (!enemy) {
-				LOG("Failed to create enemy of type BOAR!");
-			}
+			enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR, true);
 		}
 		else if (name == "octopus") {
-			enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
+			enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS, true);
 		}
 		else if (name == "bee") {
-			enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE);
+			enemy = (Bee*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BEE, true);
 		}
 		else if (name == "hedgehog") {
-			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
+			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG, true);
 		}
 		else if (name == "boss") {
-			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
+			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS, true);
 		}
 
-		// If the enemy is successfully created, set its parameters
 		if (enemy) {
 			enemy->SetParameters(enemyNode);
-
-			// Check if the enemy is active, and set it accordingly
-			bool isActive = enemyNode.attribute("active").as_bool(true);  // Default to true if attribute is missing or invalid
-			if (!isActive) {
-				enemy->Disable();  // Disable the enemy if inactive
-			}
-
 			enemyList.push_back(enemy);
 		}
 
-		enemyNode = enemyNode.next_sibling("enemy");  // Move to the next enemy node
+		enemyNode = enemyNode.next_sibling("enemy");
 	}
 }
 

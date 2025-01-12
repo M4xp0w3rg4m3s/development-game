@@ -114,6 +114,7 @@ bool Boar::Update(float dt)
 bool Boar::CleanUp()
 {
 	/*Engine::GetInstance().textures.get()->UnLoad(texture);*/
+	pbody->listener->Disable();
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	return true;
 }
