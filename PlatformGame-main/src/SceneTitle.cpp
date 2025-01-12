@@ -34,25 +34,25 @@ bool SceneTitle::Awake()
 
 	// Big Button
 	int playWidth = 120, playHeight = 50;
-	SDL_Rect btPlayPos = { sizeWindow.x / 2 - playWidth/2, (sizeWindow.y / 10) * 3 - playHeight/2 , playWidth,playHeight};
+	SDL_Rect btPlayPos = { sizeWindow.x / 2 - playWidth/2, (sizeWindow.y / 10) * 4.25 - playHeight/2 , playWidth,playHeight};
 	playButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "  Play  ", btPlayPos, this);
 
 	// Small Buttons
-	int continueWidth = 10, continueHeight = 10;
-	SDL_Rect btContinuePos = { sizeWindow.x / 2 - continueWidth / 2, (sizeWindow.y / 10) * 5 - continueHeight / 2 , continueWidth,continueHeight };
-	continueButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, " Continue ", btContinuePos, this);
+	int continueWidth = 100, continueHeight = 25;
+	SDL_Rect btContinuePos = { sizeWindow.x / 2 - continueWidth / 2, (sizeWindow.y / 10) * 5.5 - continueHeight / 2 , continueWidth,continueHeight };
+	continueButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "  Continue  ", btContinuePos, this);
 
-	int settingsWidth = 10, settingsHeight = 10;
-	SDL_Rect btSettingsPos = { sizeWindow.x / 2 - settingsWidth / 2, (sizeWindow.y / 10) * 6 - settingsHeight / 2 , settingsWidth,settingsHeight };
-	settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, " Settings ", btSettingsPos, this);
+	int settingsWidth = 100, settingsHeight = 25;
+	SDL_Rect btSettingsPos = { sizeWindow.x / 2 - settingsWidth / 2, (sizeWindow.y / 10) * 6.5 - settingsHeight / 2 , settingsWidth,settingsHeight };
+	settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "  Settings  ", btSettingsPos, this);
 
-	int creditsWidth = 10, creditsHeight = 10;
-	SDL_Rect btCreditsPos = { sizeWindow.x / 2 - creditsWidth / 2, (sizeWindow.y / 10) * 7 - creditsHeight / 2 , creditsWidth,creditsHeight };
-	creditsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, " Credits ", btCreditsPos, this);
+	int creditsWidth = 100, creditsHeight = 25;
+	SDL_Rect btCreditsPos = { sizeWindow.x / 2 - creditsWidth / 2, (sizeWindow.y / 10) * 7.5 - creditsHeight / 2 , creditsWidth,creditsHeight };
+	creditsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "   Credits   ", btCreditsPos, this);
 
-	int exitWidth = 10, exitHeight = 10;
-	SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8 - exitHeight / 2 , exitWidth,exitHeight };
-	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, " Exit ", btExitPos, this);
+	int exitWidth = 100, exitHeight = 25;
+	SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8.5 - exitHeight / 2 , exitWidth,exitHeight };
+	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 
 	return ret;
 }
@@ -273,25 +273,25 @@ void SceneTitle::HandleCredits()
 
 		// Big Button
 		int playWidth = 120, playHeight = 50;
-		SDL_Rect btPlayPos = { sizeWindow.x / 2 - playWidth / 2, (sizeWindow.y / 10) * 3 - playHeight / 2 , playWidth,playHeight };
+		SDL_Rect btPlayPos = { sizeWindow.x / 2 - playWidth / 2, (sizeWindow.y / 10) * 4.25 - playHeight / 2 , playWidth,playHeight };
 		playButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "  Play  ", btPlayPos, this);
 
 		// Small Buttons
-		int continueWidth = 10, continueHeight = 10;
-		SDL_Rect btContinuePos = { sizeWindow.x / 2 - continueWidth / 2, (sizeWindow.y / 10) * 5 - continueHeight / 2 , continueWidth,continueHeight };
-		continueButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, " Continue ", btContinuePos, this);
+		int continueWidth = 100, continueHeight = 25;
+		SDL_Rect btContinuePos = { sizeWindow.x / 2 - continueWidth / 2, (sizeWindow.y / 10) * 5.5 - continueHeight / 2 , continueWidth,continueHeight };
+		continueButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "  Continue  ", btContinuePos, this);
 
-		int settingsWidth = 10, settingsHeight = 10;
-		SDL_Rect btSettingsPos = { sizeWindow.x / 2 - settingsWidth / 2, (sizeWindow.y / 10) * 6 - settingsHeight / 2 , settingsWidth,settingsHeight };
-		settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, " Settings ", btSettingsPos, this);
+		int settingsWidth = 100, settingsHeight = 25;
+		SDL_Rect btSettingsPos = { sizeWindow.x / 2 - settingsWidth / 2, (sizeWindow.y / 10) * 6.5 - settingsHeight / 2 , settingsWidth,settingsHeight };
+		settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "  Settings  ", btSettingsPos, this);
 
-		int creditsWidth = 10, creditsHeight = 10;
-		SDL_Rect btCreditsPos = { sizeWindow.x / 2 - creditsWidth / 2, (sizeWindow.y / 10) * 7 - creditsHeight / 2 , creditsWidth,creditsHeight };
-		creditsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, " Credits ", btCreditsPos, this);
+		int creditsWidth = 100, creditsHeight = 25;
+		SDL_Rect btCreditsPos = { sizeWindow.x / 2 - creditsWidth / 2, (sizeWindow.y / 10) * 7.5 - creditsHeight / 2 , creditsWidth,creditsHeight };
+		creditsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "   Credits   ", btCreditsPos, this);
 
-		int exitWidth = 10, exitHeight = 10;
-		SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8 - exitHeight / 2 , exitWidth,exitHeight };
-		exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, " Exit ", btExitPos, this);
+		int exitWidth = 100, exitHeight = 25;
+		SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8.5 - exitHeight / 2 , exitWidth,exitHeight };
+		exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 	}
 }
 
