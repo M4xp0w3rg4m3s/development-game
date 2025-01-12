@@ -43,18 +43,8 @@ bool Scene::Awake()
 
 	parallax = Engine::GetInstance().parallax.get();
 
-	parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
-	parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
-	parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
-	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
-	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
-
 	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
 	guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
-
-	//Get the map name from the config file and assigns the value
-	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
-	Engine::GetInstance().map.get()->mapPath = configParameters.child("map").attribute("path").as_string();
 
 	//Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
@@ -62,24 +52,19 @@ bool Scene::Awake()
 	//Get the player texture name from the config file and assigns the value
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
+
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
-	//Background
-	Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
+	player->Start();
 
 	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
 
-	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
-
-	//Enemies
-	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
-
-	//Items
-	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
+	LoadState();
+	LoadLevel(current_level);
 
 	return true;
 }
@@ -105,118 +90,21 @@ bool Scene::Update(float dt)
 	}
 
     // Level 1
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-        Engine::GetInstance().map->CleanUp();
-        Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx", true);
-
-        parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
-        parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
-        parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
-        parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
-        parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
-        parallax->ChangeTextures();
-
-        // Disable enemies/items from other levels
-        for (const auto& enemy : enemyListLevel2) enemy->Disable();
-        for (const auto& enemy : enemyListLevel3) enemy->Disable();
-        for (const auto& item : itemListLevel2) item->Disable();
-        for (const auto& item : itemListLevel3) item->Disable();
-
-        // Create and enable level 1 enemies/items
-        if (!Lvl1_Enemies_created) {
-            CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
-            for (const auto& enemy : enemyListLevel1) enemy->Start();
-            Lvl1_Enemies_created = true;
-        }
-        for (const auto& enemy : enemyListLevel1) enemy->Enable();
-
-        if (!Lvl1_Items_created) {
-            CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
-            for (const auto& item : itemListLevel1) item->Start();
-            Lvl1_Items_created = true;
-        }
-        for (const auto& item : itemListLevel1) item->Enable();
-
-        current_level = 1;
-        player->ResetPlayer(current_level);
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN && current_level != 1) {
+		LoadLevel(1);
     }
-
     // Level 2
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-        Engine::GetInstance().map->CleanUp();
-        Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
-
-        parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
-        parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
-        parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
-        parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
-        parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
-        parallax->ChangeTextures();
-
-        // Disable enemies/items from other levels
-        for (const auto& enemy : enemyListLevel1) enemy->Disable();
-        for (const auto& enemy : enemyListLevel3) enemy->Disable();
-        for (const auto& item : itemListLevel1) item->Disable();
-        for (const auto& item : itemListLevel3) item->Disable();
-
-        // Create and enable level 2 enemies/items
-        if (!Lvl2_Enemies_created) {
-            CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-            for (const auto& enemy : enemyListLevel2) enemy->Start();
-            Lvl2_Enemies_created = true;
-        }
-        for (const auto& enemy : enemyListLevel2) enemy->Enable();
-
-        if (!Lvl2_Items_created) {
-            CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
-            for (const auto& item : itemListLevel2) item->Start();
-            Lvl2_Items_created = true;
-        }
-        for (const auto& item : itemListLevel2) item->Enable();
-
-        current_level = 2;
-        player->ResetPlayer(current_level);
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN && current_level != 2) {
+		LoadLevel(2);        
     }
 
     // Level 3
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-        Engine::GetInstance().map->CleanUp();
-        Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
-
-        parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
-        parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
-        parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
-        parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
-        parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
-        parallax->ChangeTextures();
-
-        // Disable enemies/items from other levels
-        for (const auto& enemy : enemyListLevel1) enemy->Disable();
-        for (const auto& enemy : enemyListLevel2) enemy->Disable();
-        for (const auto& item : itemListLevel1) item->Disable();
-        for (const auto& item : itemListLevel2) item->Disable();
-
-        // Create and enable level 3 enemies/items
-        if (!Lvl3_Enemies_created) {
-            CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-            for (const auto& enemy : enemyListLevel3) enemy->Start();
-            Lvl3_Enemies_created = true;
-        }
-        for (const auto& enemy : enemyListLevel3) enemy->Enable();
-
-        if (!Lvl3_Items_created) {
-            CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
-            for (const auto& item : itemListLevel3) item->Start();
-            Lvl3_Items_created = true;
-        }
-        for (const auto& item : itemListLevel3) item->Enable();
-
-        current_level = 3;
-        player->ResetPlayer(current_level);
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN && current_level != 3) {
+		LoadLevel(3);
     }
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-        player->ResetPlayer(current_level);
+       player->ResetPlayer(current_level);
     }
 
     // Level advancement logic
@@ -357,8 +245,6 @@ void Scene::LoadState()
 		parallax->textureName5 = configParameters.child(texturePrefix).child("five").attribute("texturePath").as_string();
 
 		parallax->ChangeTextures();
-
-		parallax->ChangeTextures();
 		current_level = level;
 		player->ResetPlayer(current_level);
 	}
@@ -366,41 +252,52 @@ void Scene::LoadState()
 	Vector2D playerPos = Vector2D(sceneNode.child("player").attribute("x").as_float(), sceneNode.child("player").attribute("y").as_float());
 	player->SetPosition(playerPos);
 
-	auto updateEntities = [&](int level, auto& entityList, const std::string& entityPrefix, auto& entityListLevel, bool isEnemy) {
-		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("entity"); entityNode; entityNode = entityNode.next_sibling("entity")) {
+	// Lambda to update enemy entities
+	auto updateEnemies = [&](int level, auto& enemyList, const std::string& entityPrefix) {
+		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("enemy"); entityNode; entityNode = entityNode.next_sibling("entity")) {
 			Vector2D entityPos = Vector2D(entityNode.attribute("x").as_float(), entityNode.attribute("y").as_float());
 			bool entityActive = entityNode.attribute("active").as_bool();
 
-			for (const auto& entity : entityListLevel) {
-				if (entity) {
-					if (isEnemy) {
-						Enemy* enemy = dynamic_cast<Enemy*>(entity); // Intentar convertir a Enemy
-						if (enemy && enemy->enemyId == entityNode.attribute("id").as_string()) {
-							if (!enemy->active && entityActive) {
-								enemy->Enable();
-							}
-							if (entityActive) {
-								enemy->SetPosition(entityPos);
-							}
-						}
+			for (Enemy* enemy : enemyList) {
+				if (enemy && enemy->enemyId == entityNode.attribute("id").as_string()) {
+					if (!enemy->active && entityActive) {
+						enemy->Enable();
+					}
+					if (entityActive) {
+						enemy->SetPosition(entityPos);
 					}
 					else {
-						Item* item = dynamic_cast<Item*>(entity); // Intentar convertir a Item
-						if (item && item->itemId == entityNode.attribute("id").as_string()) {
-							if (!item->active && entityActive) {
-								item->Enable();
-							}
-							if (entityActive) {
-								item->SetPosition(entityPos);
-							}
-						}
+						enemy->Disable();
 					}
 				}
 			}
 		}
 		};
 
-	auto disableOtherEntities = [&](int level, auto& entityListLevel, auto& otherEntityListLevel) {
+	// Lambda to update item entities
+	auto updateItems = [&](int level, auto& itemList, const std::string& entityPrefix) {
+		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("item"); entityNode; entityNode = entityNode.next_sibling("entity")) {
+			Vector2D entityPos = Vector2D(entityNode.attribute("x").as_float(), entityNode.attribute("y").as_float());
+			bool entityActive = entityNode.attribute("active").as_bool();
+
+			for (Item* item : itemList) {
+				if (item && item->itemId == entityNode.attribute("id").as_string()) {
+					if (!item->active && entityActive) {
+						item->Enable();
+					}
+					if (entityActive) {
+						item->SetPosition(entityPos);
+					}
+					else {
+						item->Disable();
+					}
+				}
+			}
+		}
+		};
+
+
+	auto disableOtherEntities = [&](auto& entityListLevel, auto& otherEntityListLevel) {
 		for (const auto& entity : otherEntityListLevel) {
 			entity->Disable();
 		}
@@ -409,38 +306,19 @@ void Scene::LoadState()
 		}
 		};
 
-
 	if (current_level == 1) {
-		updateEntities(1, enemyListLevel1, "enemies_lvl_1", enemyListLevel1, true);
-		disableOtherEntities(1, enemyListLevel1, enemyListLevel2);
+		updateEnemies(1, enemyListLevel1, "enemies_lvl_1");
+		updateItems(1, itemListLevel1, "items_lvl_1");
+		//disableOtherEntities(itemListLevel2, enemyListLevel2);
 
-		updateEntities(1, itemListLevel1, "items_lvl_1", itemListLevel1, false);
-		disableOtherEntities(1, itemListLevel1, itemListLevel2);
 	}
 	else if (current_level == 2) {
-		updateEntities(2, enemyListLevel2, "enemies_lvl_2", enemyListLevel2, true);
-		disableOtherEntities(2, enemyListLevel2, enemyListLevel1);
-
-		if (!Lvl2_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-			for (const auto& enemy : enemyListLevel2) {
-				enemy->Start();
-			}
-			Lvl2_Enemies_created = true;
-		}
-
-		updateEntities(2, itemListLevel2, "items_lvl_2", itemListLevel2, false);
-		disableOtherEntities(2, itemListLevel2, itemListLevel1);
-
-		if (!Lvl2_Items_created) {
-			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
-			for (const auto& item : itemListLevel2) {
-				item->Start();
-			}
-			Lvl2_Items_created = true;
-		}
+		updateEnemies(2, enemyListLevel2, "enemies_lvl_2");
+		updateItems(2, itemListLevel2, "items_lvl_2");
+		//disableOtherEntities(itemListLevel1, enemyListLevel1);
 	}
 }
+
 
 void Scene::SaveState()
 {
@@ -455,180 +333,155 @@ void Scene::SaveState()
 
 	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
 
-	// Save player position
 	sceneNode.child("player").attribute("x").set_value(player->GetPosition().getX());
 	sceneNode.child("player").attribute("y").set_value(player->GetPosition().getY());
 
 	sceneNode.child("level").attribute("currentlevel").set_value(current_level);
 
-	auto saveEntities = [&](int level, auto& entityList, const std::string& entityPrefix, bool isEnemy) {
-		// Loop through all the entities in the specified level
-		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("entity"); entityNode; entityNode = entityNode.next_sibling("entity"))
+	// Lambda to save enemy entities
+	auto saveEnemies = [&](int level, auto& enemyList, const std::string& entityPrefix) {
+		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("enemy"); entityNode; entityNode = entityNode.next_sibling("enemy"))
 		{
-			bool entityActive = entityNode.attribute("active").as_bool();
-
-			// Iterate through the entity list based on level and entity type (Enemy/Item)
-			for (const auto& entity : entityList) {
-				if (entity) {
-					if (isEnemy) {
-						Enemy* enemy = dynamic_cast<Enemy*>(entity);
-						if (enemy && enemy->enemyId == entityNode.attribute("id").as_string()) {
-							if (entityActive) {
-								if (!enemy->active) {
-									entityNode.attribute("active").set_value("false");
-								}
-								else {
-									entityNode.attribute("x").set_value(enemy->GetPosition().getX());
-									entityNode.attribute("y").set_value(enemy->GetPosition().getY());
-								}
-							}
-						}
+			for (Enemy* enemy : enemyList) {
+				if (enemy && enemy->enemyId == entityNode.attribute("id").as_string()) {
+					if (!enemy->active) {
+						entityNode.attribute("active").set_value("false");
 					}
 					else {
-						Item* item = dynamic_cast<Item*>(entity);
-						if (item && item->itemId == entityNode.attribute("id").as_string()) {
-							if (entityActive) {
-								if (!item->active) {
-									entityNode.attribute("active").set_value("false");
-								}
-								else {
-									entityNode.attribute("x").set_value(item->GetPosition().getX());
-									entityNode.attribute("y").set_value(item->GetPosition().getY());
-								}
-							}
-						}
+						entityNode.attribute("active").set_value("true");
+						entityNode.attribute("x").set_value(enemy->GetPosition().getX());
+						entityNode.attribute("y").set_value(enemy->GetPosition().getY());
 					}
 				}
 			}
 		}
 		};
 
-	// Save entities based on current level
+	// Lambda to save item entities
+	auto saveItems = [&](int level, auto& itemList, const std::string& entityPrefix) {
+		for (pugi::xml_node entityNode = sceneNode.child("entities").child(entityPrefix.c_str()).child("item"); entityNode; entityNode = entityNode.next_sibling("item"))
+		{
+			for (Item* item : itemList) {
+				if (item && item->itemId == entityNode.attribute("id").as_string()) {
+					if (!item->active) {
+						entityNode.attribute("active").set_value("false");
+					}
+					else {
+						entityNode.attribute("active").set_value("true");
+						entityNode.attribute("x").set_value(item->GetPosition().getX());
+						entityNode.attribute("y").set_value(item->GetPosition().getY());
+					}
+				}
+			}
+		}
+		};
+
+	// Save data for current level entities
 	if (current_level == 1) {
-		saveEntities(current_level, enemyListLevel1, "enemies_lvl_1", true);
-		saveEntities(current_level, itemListLevel1, "items_lvl_1", false);
+		saveEnemies(current_level, enemyListLevel1, "enemies_lvl_1");
+		saveItems(current_level, itemListLevel1, "items_lvl_1");
+
 	}
 	else if (current_level == 2) {
-		saveEntities(current_level, enemyListLevel2, "enemies_lvl_2", true);
-		saveEntities(current_level, itemListLevel2, "items_lvl_2", false);
+		saveEnemies(current_level, enemyListLevel2, "enemies_lvl_2");
+		saveItems(current_level, itemListLevel2, "items_lvl_2");
 	}
 
-	// Save the modifications to the XML file
 	loadFile.save_file("config.xml");
 }
 
 
-void Scene::AdvanceLevel()
-{
-	if (current_level == 1) {
+void Scene::LoadLevel(int level) {
+	// Map loading
+	const char* mapFile = (level == 1) ? "Level1Map.tmx" : (level == 2) ? "Level2Map.tmx" : "Level3Map.tmx";
+	Engine::GetInstance().map->CleanUp();
+	Engine::GetInstance().map->Load("Assets/Maps/", mapFile, true);
 
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+	// Parallax textures
+	const char* texturePrefix = (level == 1) ? "layers" : (level == 2) ? "layers2" : "layers3";
+	parallax->textureName1 = configParameters.child(texturePrefix).child("one").attribute("texturePath").as_string();
+	parallax->textureName2 = configParameters.child(texturePrefix).child("two").attribute("texturePath").as_string();
+	parallax->textureName3 = configParameters.child(texturePrefix).child("three").attribute("texturePath").as_string();
+	parallax->textureName4 = configParameters.child(texturePrefix).child("four").attribute("texturePath").as_string();
+	parallax->textureName5 = configParameters.child(texturePrefix).child("five").attribute("texturePath").as_string();
+	parallax->ChangeTextures();
 
-		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers2").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
-		parallax->ChangeTextures();
+	// Disable enemies/items from other levels
+	DisableEnemiesAndItems(level);
 
-		current_level = 2;
-
-		player->ResetPlayer(current_level);
-
-		//enemies
-		for (const auto& enemy : enemyListLevel1) {
-			enemy->Disable();
+	// Create and enable level-specific enemies/items
+	if (level == 1) {
+		if (!Lvl1_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
+			for (const auto& enemy : enemyListLevel1) enemy->Start();
+			Lvl1_Enemies_created = true;
 		}
+		for (const auto& enemy : enemyListLevel1) enemy->Enable();
 
+		if (!Lvl1_Items_created) {
+			CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
+			for (const auto& item : itemListLevel1) item->Start();
+			Lvl1_Items_created = true;
+		}
+		for (const auto& item : itemListLevel1) item->Enable();
+	}
+	else if (level == 2) {
 		if (!Lvl2_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-
-			for (const auto& enemy : enemyListLevel2) {
-				enemy->Start();
-			}
+			for (const auto& enemy : enemyListLevel2) enemy->Start();
 			Lvl2_Enemies_created = true;
 		}
-
-		for (const auto& enemy : enemyListLevel2) {
-			enemy->Enable();
-		}
-
-		//items
-		for (const auto& item : itemListLevel1) {
-			item->Disable();
-		}
+		for (const auto& enemy : enemyListLevel2) enemy->Enable();
 
 		if (!Lvl2_Items_created) {
 			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
-
-			for (const auto& item : itemListLevel2) {
-				item->Start();
-			}
+			for (const auto& item : itemListLevel2) item->Start();
 			Lvl2_Items_created = true;
 		}
-
-		for (const auto& item : itemListLevel2) {
-			item->Enable();
-		}
-		
-
+		for (const auto& item : itemListLevel2) item->Enable();
 	}
-	else if (current_level == 2)
-	{
-		Engine::GetInstance().map->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
-
-		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
-		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
-		parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
-		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
-		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
-		parallax->ChangeTextures();
-
-		current_level = 3;
-
-		player->ResetPlayer(current_level);
-
-		//enemies
-		for (const auto& enemy : enemyListLevel2) {
-			enemy->Disable();
-		}
-
+	else if (level == 3) {
 		if (!Lvl3_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-
-			for (const auto& enemy : enemyListLevel3) {
-				enemy->Start();
-			}
+			for (const auto& enemy : enemyListLevel3) enemy->Start();
 			Lvl3_Enemies_created = true;
 		}
-
-		for (const auto& enemy : enemyListLevel3) {
-			enemy->Enable();
-		}
-
-		//items
-		for (const auto& item : itemListLevel2) {
-			item->Disable();
-		}
+		for (const auto& enemy : enemyListLevel3) enemy->Enable();
 
 		if (!Lvl3_Items_created) {
 			CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
-
-			for (const auto& item : itemListLevel3) {
-				item->Start();
-			}
+			for (const auto& item : itemListLevel3) item->Start();
 			Lvl3_Items_created = true;
 		}
-
-		for (const auto& item : itemListLevel3) {
-			item->Enable();
-		}
+		for (const auto& item : itemListLevel3) item->Enable();
 	}
-	else
-	{
 
+	current_level = level;
+	player->ResetPlayer(current_level);
+}
+
+
+void Scene::DisableEnemiesAndItems(int level) {
+	if (level != 1) {
+		if (Lvl1_Enemies_created) { for (const auto& enemy : enemyListLevel1) enemy->Disable(); }
+		if (Lvl1_Items_created) { for (const auto& item : itemListLevel1) item->Disable(); }
+	}
+	if (level != 2) {
+		if (Lvl2_Enemies_created) for (const auto& enemy : enemyListLevel2) enemy->Disable();
+		if (Lvl2_Items_created) for (const auto& item : itemListLevel2) item->Disable();
+	}
+	if (level != 3) {
+		if (Lvl3_Enemies_created) for (const auto& enemy : enemyListLevel3) enemy->Disable();
+		if (Lvl3_Items_created) for (const auto& item : itemListLevel3) item->Disable();
+	}
+}
+
+void Scene::AdvanceLevel() {
+	if (current_level == 1) {
+		LoadLevel(2);
+	}
+	else if (current_level == 2) {
+		LoadLevel(3);
 	}
 }
 
@@ -638,8 +491,12 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 		std::string name = enemyNode.attribute("name").as_string();
 		Enemy* enemy = nullptr;
 
+		// Create the enemy based on its name
 		if (name == "boar") {
 			enemy = (Boar*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOAR);
+			if (!enemy) {
+				LOG("Failed to create enemy of type BOAR!");
+			}
 		}
 		else if (name == "octopus") {
 			enemy = (Octopus*)Engine::GetInstance().entityManager->CreateEntity(EntityType::OCTOPUS);
@@ -653,12 +510,21 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 		else if (name == "boss") {
 			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
 		}
+
+		// If the enemy is successfully created, set its parameters
 		if (enemy) {
 			enemy->SetParameters(enemyNode);
+
+			// Check if the enemy is active, and set it accordingly
+			bool isActive = enemyNode.attribute("active").as_bool(true);  // Default to true if attribute is missing or invalid
+			if (!isActive) {
+				enemy->Disable();  // Disable the enemy if inactive
+			}
+
 			enemyList.push_back(enemy);
 		}
 
-		enemyNode = enemyNode.next_sibling("enemy");
+		enemyNode = enemyNode.next_sibling("enemy");  // Move to the next enemy node
 	}
 }
 

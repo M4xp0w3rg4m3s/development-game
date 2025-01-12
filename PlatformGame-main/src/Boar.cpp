@@ -89,13 +89,13 @@ bool Boar::Update(float dt)
 	if (pathfinding->objectiveFound) {
 		GoToPath();
 	}
+	else {
+		pbody->body->SetLinearVelocity({ 0,0 });
+	}
 
 	if (Engine::GetInstance().scene->debug) {
 		// Draw pathfinding 
 		pathfinding->DrawPath();
-	}
-	else {
-		pbody->body->SetLinearVelocity({ 0,0 });
 	}
 	
 	animator->Update();

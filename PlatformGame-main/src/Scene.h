@@ -56,6 +56,8 @@ public:
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	void AdvanceLevel();
+	void LoadLevel(int level);
+	void DisableEnemiesAndItems(int level);
 
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
@@ -90,7 +92,7 @@ private:
 	std::vector<Item*> itemListLevel2;
 	std::vector<Item*> itemListLevel3;
 
-	int current_level = 1;
+	int current_level = 0;
 
 	int numEnemies1 = 13;
 	int numEnemies2 = 11;
