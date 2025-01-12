@@ -35,7 +35,7 @@ bool Projectile::Awake()
 
 bool Projectile::Start()
 {
-	animator->SetNumberAnimations(3);
+	animator->SetNumberAnimations(4);
 	
 	//Shuriken
 	animator->AddKeyFrame(0, { 0,0,13,13 });
@@ -53,8 +53,8 @@ bool Projectile::Start()
 	animator->SetAnimationDelay(2, 100);
 
 	//Boss
-	animator->AddKeyFrame(3, { 0,2 * 13,13,13 });
-	animator->AddKeyFrame(3, { 1 * 13,2 * 13,13,13 });
+	animator->AddKeyFrame(3, { 0, 3 * 13, 13, 13 });
+	animator->AddKeyFrame(3, { 1 * 13, 3 * 13, 13, 13 });
 	animator->SetAnimationDelay(3, 100);
 
 	animator->SetAnimation(0);

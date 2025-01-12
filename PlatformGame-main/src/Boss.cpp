@@ -184,6 +184,11 @@ bool Boss::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
 
+	b2Vec2 linearVelocity = { pbody->body->GetLinearVelocity().x, pbody->body->GetLinearVelocity().y };
+	if (fabs(linearVelocity.x) < VELOCITY_THRESHOLD) {
+		linearVelocity.x = 0;
+	}
+
 	// Behaviour
 	if (attackTimer.ReadSec() > attackTime)
 	{
@@ -206,7 +211,7 @@ bool Boss::Update(float dt)
 		if (animator->GetAnimation() != 2)
 		{
 			animator->SetAnimation(2);
-			
+
 			Attack();
 		}
 
@@ -228,12 +233,12 @@ bool Boss::Update(float dt)
 			attackTimer.Start();
 
 		}
-		
+
 	}
 	else
 	{
 		Move();
-		if (pbody->body->GetLinearVelocity().x > 0 || pbody->body->GetLinearVelocity().x < 0)
+		if (linearVelocity.x > 0 || linearVelocity.x < 0)
 		{
 			if (animator->GetAnimation() != 1)
 			{
@@ -250,45 +255,44 @@ bool Boss::Update(float dt)
 	}
 
 	//Draw + Flip
-	if (pbody->body->GetLinearVelocity().x < 0) {
+	int drawScaleX = (linearVelocity.x < 0 || (linearVelocity.x == 0 && !animator->IsLookingRight())) ? 26 : -26;
+
+	if (linearVelocity.x < 0) {
 		animator->LookLeft();
-		animator->Draw((int)position.getX(), (int)position.getY(), 26, -26);
-
-		if (isAttacking)
-		{
-			isAttackingLeft = true;
-		}
 	}
-	else if(pbody->body->GetLinearVelocity().x > 0) {
+	else if (linearVelocity.x > 0) {
 		animator->LookRight();
-		animator->Draw((int)position.getX(), (int)position.getY(), -26, -26);
-
-		if (isAttacking)
-		{
-			isAttackingRight = true;
-		}
 	}
 	else
 	{
-		if (animator->IsLookingRight())
-		{
-			animator->Draw((int)position.getX(), (int)position.getY(), -26, -26);
+		b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
 
-			if (isAttacking)
+		b2Vec2 directionToPlayer = {
+			Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - centerPos.x,
+			Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getY() - centerPos.y
+		};
+
+		if (linearVelocity.y == 0)
+		{
+			if (directionToPlayer.x < 0)
 			{
-				isAttackingRight = true;
+				animator->LookLeft();
+			}
+			else {
+				animator->LookRight();
 			}
 		}
-		else
-		{
-			animator->Draw((int)position.getX(), (int)position.getY(), 26, -26);
+	}
+	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -26);
 
-			if (isAttacking)
-			{
-				isAttackingLeft = true;
-			}
+	// Track attack direction
+	if (isAttacking) {
+		if (drawScaleX == 26) {
+			isAttackingLeft = true;
 		}
-		
+		else {
+			isAttackingRight = true;
+		}
 	}
 
 	return true;
@@ -309,10 +313,8 @@ void Boss::Attack()
 {
 	int randAttack = std::rand() % 2;
 	
-	// Get the player's center position in world coordinates
 	b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
 
-	// Calculate the direction vector from the player's center to the mouse position
 	b2Vec2 direction = {
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - centerPos.x,
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getY() - centerPos.y

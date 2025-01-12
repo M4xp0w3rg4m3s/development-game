@@ -56,4 +56,6 @@ private:
 	bool isAttackingLeft = false;
 	bool isAttackingRight = false;
 	bool fallingProjectiles = false;
+
+	const float VELOCITY_THRESHOLD = 0.1f;
 };
