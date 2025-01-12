@@ -89,30 +89,28 @@ bool SceneTitle::Update(float dt)
 		ButtonInteraction();
 	}
 
-	if (sceneTimer.ReadMSec() > sceneTime || !first_fadeIn && !first_fadeOut && !last_fadeIn)
+
+	if (playPressed)
 	{
-		if (playPressed)
-		{
-			Engine::GetInstance().guiManager->DeleteButtons();
-			Engine::GetInstance().ChangeLoopState(LoopState::GAME);
-		}
-		else if (continuePressed)
-		{
-			// Continue functionality can be implemented here
-		}
-		else if (settingsPressed)
-		{
-			// Settings functionality can be implemented here
-		}
-		else if (creditsPressed)
-		{
-			Engine::GetInstance().guiManager->DeleteButtons();
-			HandleCredits();
-		}
-		else if (exitPressed)
-		{
-			ret = false;
-		}
+		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
+	}
+	else if (continuePressed)
+	{
+		// Continue functionality can be implemented here
+	}
+	else if (settingsPressed)
+	{
+		// Settings functionality can be implemented here
+	}
+	else if (creditsPressed)
+	{
+		Engine::GetInstance().guiManager->DeleteButtons();
+		HandleCredits();
+	}
+	else if (exitPressed)
+	{
+		ret = false;
 	}
 
 	if (fadingIn)
@@ -176,7 +174,7 @@ void SceneTitle::ButtonInteraction()
 	{
 		playPressed = true;
 	}
-	else if (continueButton->state == GuiControlState::PRESSED) // && there is a previous game
+	else if (continueButton->state == GuiControlState::PRESSED)
 	{
 		continuePressed = true;
 	}
