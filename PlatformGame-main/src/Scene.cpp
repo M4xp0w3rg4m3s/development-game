@@ -166,6 +166,23 @@ bool Scene::Update(float dt)
 
 		player->ResetPlayer(current_level);
 
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Disable();
+		}
+		for (const auto& enemy : enemyListLevel3) {
+			enemy->Disable();
+		}
+		if (!Lvl2_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+			for (const auto& enemy : enemyListLevel2) {
+				enemy->Start();
+			}
+			Lvl2_Enemies_created = true;
+		}
+		for (const auto& enemy : enemyListLevel2) {
+			enemy->Enable();
+		}
+
 		for (const auto& item : itemListLevel1) {
 			item->Disable();
 		}
