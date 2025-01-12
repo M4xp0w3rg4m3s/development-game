@@ -21,6 +21,9 @@ public:
 
 	GuiControl* CreateGuiControl(GuiControlType type, int id, const char* text, SDL_Rect bounds, Module* observer, SDL_Rect sliderBounds = { 0,0,0,0 });
 
+	bool DeleteButton(int id);
+
+	bool DeleteButtons();
 public:
 
 	std::list<GuiControl*> guiControlsList;

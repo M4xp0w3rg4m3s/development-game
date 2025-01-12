@@ -56,7 +56,7 @@ bool SceneIntro::PreUpdate()
 bool SceneIntro::Update(float dt)
 {
 	
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+	/*if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
 	if (imageTimer.ReadMSec() < image1Time) {
 		Engine::GetInstance().render->DrawTexture(intro1, 0, 0);
@@ -103,7 +103,7 @@ bool SceneIntro::Update(float dt)
 
 	if (sceneTimer.ReadMSec() > sceneTime) {
 		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
-	}
+	}*/
 
 	return true;
 }

@@ -82,10 +82,10 @@
     <ClCompile Include="src\SceneIntro.cpp">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainMenu.cpp">
+    <ClCompile Include="src\SceneTitle.cpp">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClCompile>
-    <ClCompile Include="src\OptionsScene.cpp">
+    <ClCompile Include="src\SceneSettings.cpp">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClCompile>
     <ClCompile Include="src\Boulder.cpp">
@@ -198,10 +198,10 @@
     <ClInclude Include="src\SceneIntro.h">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClInclude>
-    <ClInclude Include="src\MainMenu.h">
+    <ClInclude Include="src\SceneTitle.h">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClInclude>
-    <ClInclude Include="src\OptionsScene.h">
+    <ClInclude Include="src\SceneSettings.h">
       <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClInclude>
     <ClInclude Include="src\Boulder.h">

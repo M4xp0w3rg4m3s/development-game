@@ -17,6 +17,8 @@ class Textures;
 class Audio;
 class Scene;
 class SceneIntro;
+class SceneTitle;
+class SceneSettings;
 class EntityManager;
 class Map;
 class Physics;
@@ -28,7 +30,7 @@ enum class LoopState {
 	CLEAN_ONCE,
 	INTRO,
 	TITLE,
-	MENU,
+	SETTINGS,
 	GAME
 };
 
@@ -92,7 +94,7 @@ private:
 	std::list<std::shared_ptr<Module>> moduleList;
 	std::list<std::shared_ptr<Module>> moduleListIntro;
 	std::list<std::shared_ptr<Module>> moduleListTitle;
-	std::list<std::shared_ptr<Module>> moduleListMenu;
+	std::list<std::shared_ptr<Module>> moduleListSettings;
 	std::list<std::shared_ptr<Module>> moduleListGame;
 
 	std::list<std::shared_ptr<Module>> moduleListCleanOnce;
@@ -118,6 +120,8 @@ public:
 	std::shared_ptr<Audio> audio;
 	std::shared_ptr<Scene> scene;
 	std::shared_ptr<SceneIntro> sceneIntro;
+	std::shared_ptr<SceneTitle> sceneTitle;
+	std::shared_ptr<SceneSettings> sceneSettings;
 	std::shared_ptr<EntityManager> entityManager;
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
@@ -125,12 +129,12 @@ public:
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<GameHUD> gameHud;
 
-	LoopState currentLoopState = LoopState::GAME;
+	LoopState currentLoopState = LoopState::TITLE;
 
 private: 
 	bool IntroStarted = false;
 	bool TitleStarted = false;
-	bool MenuStarted = false;
+	bool SettingsStarted = false;
 	bool GameStarted = false;
 
 	// Delta time

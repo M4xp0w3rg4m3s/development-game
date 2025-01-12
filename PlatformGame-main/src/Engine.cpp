@@ -12,6 +12,8 @@
 #include "Audio.h"
 #include "Scene.h"
 #include "SceneIntro.h"
+#include "SceneTitle.h"
+#include "SceneSettings.h"
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
@@ -41,6 +43,8 @@ Engine::Engine() {
     physics = std::make_shared<Physics>();
     scene = std::make_shared<Scene>();
     sceneIntro = std::make_shared<SceneIntro>();
+    sceneTitle = std::make_shared<SceneTitle>();
+    sceneSettings = std::make_shared<SceneSettings>();
     map = std::make_shared<Map>();
     parallax = std::make_shared<Parallax>();
     entityManager = std::make_shared<EntityManager>();
@@ -64,10 +68,10 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::TITLE);
     AddModule(std::static_pointer_cast<Module>(audio), LoopState::TITLE);
 
-    AddModule(std::static_pointer_cast<Module>(window), LoopState::MENU);
-    AddModule(std::static_pointer_cast<Module>(input), LoopState::MENU);
-    AddModule(std::static_pointer_cast<Module>(textures), LoopState::MENU);
-    AddModule(std::static_pointer_cast<Module>(audio), LoopState::MENU);
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::SETTINGS);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::SETTINGS);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::SETTINGS);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::SETTINGS);
 
     AddModule(std::static_pointer_cast<Module>(window), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(input), LoopState::GAME);
@@ -77,6 +81,13 @@ Engine::Engine() {
     // INTRO
     AddModule(std::static_pointer_cast<Module>(sceneIntro), LoopState::INTRO);
 
+    // TITLE
+    AddModule(std::static_pointer_cast<Module>(sceneTitle), LoopState::TITLE);
+    AddModule(std::static_pointer_cast<Module>(guiManager), LoopState::TITLE);
+
+    // SETTINGS
+    AddModule(std::static_pointer_cast<Module>(sceneSettings), LoopState::SETTINGS);
+    AddModule(std::static_pointer_cast<Module>(guiManager), LoopState::SETTINGS);
 
     // GAME
     AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
@@ -95,7 +106,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(render), LoopState::CLEAN_ONCE);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::INTRO);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::TITLE);
-    AddModule(std::static_pointer_cast<Module>(render), LoopState::MENU);
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::SETTINGS);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::GAME);
 
     LOG("Timer App Constructor: %f", timer.ReadMSec());
@@ -118,9 +129,9 @@ void Engine::AddModule(std::shared_ptr<Module> module, LoopState state){
         module->Init();
         moduleListTitle.push_back(module);
         break;
-    case LoopState::MENU:
+    case LoopState::SETTINGS:
         module->Init();
-        moduleListMenu.push_back(module);
+        moduleListSettings.push_back(module);
         break;
     case LoopState::GAME:
         module->Init();
@@ -250,7 +261,7 @@ bool Engine::CleanUp() {
     cleanModuleList(moduleListCleanOnce);
     if (IntroStarted) if (result) cleanModuleList(moduleListIntro);
     if (TitleStarted) if (result) cleanModuleList(moduleListTitle);
-    if (MenuStarted) if (result) cleanModuleList(moduleListMenu);
+    if (SettingsStarted) if (result) cleanModuleList(moduleListSettings);
     if (GameStarted) if (result) cleanModuleList(moduleListGame);
     LOG("Timer App CleanUp(): %f", timer.ReadMSec());
 
@@ -336,9 +347,9 @@ bool Engine::PreUpdate()
         }
     }
 
-    if (currentLoopState == LoopState::MENU)
+    if (currentLoopState == LoopState::SETTINGS)
     {
-        for (const auto& module : moduleListMenu) {
+        for (const auto& module : moduleListSettings) {
             result = module.get()->PreUpdate();
             if (!result) {
                 break;
@@ -384,7 +395,7 @@ bool Engine::DoUpdate()
             result = module.get()->Update(dt); 
             if (module->AdvanceLoopState)
             {
-                currentLoopState = LoopState::MENU;
+                currentLoopState = LoopState::SETTINGS;
             }
             if (!result) {
                 break;
@@ -392,9 +403,9 @@ bool Engine::DoUpdate()
         }
     }
 
-    if (currentLoopState == LoopState::MENU)
+    if (currentLoopState == LoopState::SETTINGS)
     {
-        for (const auto& module : moduleListMenu) {
+        for (const auto& module : moduleListSettings) {
             result = module.get()->Update(dt);
             if (module->AdvanceLoopState)
             {
@@ -447,9 +458,9 @@ bool Engine::PostUpdate()
         }
     }
 
-    if (currentLoopState == LoopState::MENU)
+    if (currentLoopState == LoopState::SETTINGS)
     {
-        for (const auto& module : moduleListMenu) {
+        for (const auto& module : moduleListSettings) {
             result = module.get()->PostUpdate();
             if (!result) {
                 break;
@@ -529,10 +540,10 @@ void Engine::AwakeCurrentLoopState()
         }
     }
 
-    if (currentLoopState == LoopState::MENU)
+    if (currentLoopState == LoopState::SETTINGS)
     {
         bool result = true;
-        for (const auto& module : moduleListMenu) {
+        for (const auto& module : moduleListSettings) {
             result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
             if (result) result = module.get()->Awake();
             if (!result) {
@@ -578,15 +589,15 @@ bool Engine::StartCurrentLoopState()
         TitleStarted = true;
     }
 
-    if (currentLoopState == LoopState::MENU)
+    if (currentLoopState == LoopState::SETTINGS)
     {
-        for (const auto& module : moduleListMenu) {
+        for (const auto& module : moduleListSettings) {
             result = module.get()->Start();
             if (!result) {
                 break;
             }
         }
-        MenuStarted = true;
+        SettingsStarted = true;
     }
 
     if (currentLoopState == LoopState::GAME)

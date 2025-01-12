@@ -160,10 +160,10 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\Log.cpp" />
-    <ClCompile Include="src\MainMenu.cpp" />
+    <ClCompile Include="src\SceneTitle.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Octopus.cpp" />
-    <ClCompile Include="src\OptionsScene.cpp" />
+    <ClCompile Include="src\SceneSettings.cpp" />
     <ClCompile Include="src\Parallax.cpp" />
     <ClCompile Include="src\Pathfinding.cpp" />
     <ClCompile Include="src\PerfTimer.cpp" />
@@ -198,11 +198,11 @@
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Log.h" />
-    <ClInclude Include="src\MainMenu.h" />
+    <ClInclude Include="src\SceneTitle.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />
     <ClInclude Include="src\Octopus.h" />
-    <ClInclude Include="src\OptionsScene.h" />
+    <ClInclude Include="src\SceneSettings.h" />
     <ClInclude Include="src\Parallax.h" />
     <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />

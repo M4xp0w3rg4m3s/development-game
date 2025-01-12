@@ -35,6 +35,29 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	return guiControl;
 }
 
+bool GuiManager::DeleteButton(int id)
+{
+	for (const auto& control : guiControlsList)
+	{
+		if (id == control->id)
+		{
+			delete control;
+		}
+	}
+	return true;
+}
+
+bool GuiManager::DeleteButtons()
+{
+	for (const auto& control : guiControlsList)
+	{
+		delete control;
+	}
+	guiControlsList.clear();
+
+	return true;
+}
+
 bool GuiManager::Update(float dt)
 {
 	for (const auto& control : guiControlsList)
