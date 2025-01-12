@@ -56,7 +56,7 @@ bool Boar::Start()
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
 	animator = new Sprite(texture);
-	animator->SetNumberAnimations(1);
+	animator->SetNumberAnimations(2);
 	
 	// IDLE
 	animator->AddKeyFrame(0, { 0, 0,width,height });
@@ -64,6 +64,13 @@ bool Boar::Start()
 	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
 	animator->SetAnimationDelay(0, 100);
+
+	// WALK
+	animator->AddKeyFrame(1, { 0, 0,width,height });
+	animator->AddKeyFrame(1, { 1 * width, 0,width,height });
+	animator->AddKeyFrame(1, { 2 * width, 0,width,height });
+	animator->AddKeyFrame(1, { 3 * width, 0,width,height });
+	animator->SetAnimationDelay(1, 100);
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
