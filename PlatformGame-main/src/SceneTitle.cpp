@@ -89,7 +89,7 @@ bool SceneTitle::Update(float dt)
 		ButtonInteraction();
 	}
 
-	if (fadeTimer.ReadMSec() > fadeTime)
+	if (sceneTimer.ReadMSec() > sceneTime || !first_fadeIn && !first_fadeOut && !last_fadeIn)
 	{
 		if (playPressed)
 		{
@@ -117,11 +117,27 @@ bool SceneTitle::Update(float dt)
 
 	if (fadingIn)
 	{
-		UpdateFadeIn();
+		double elapsedTime = fadeTimer.ReadMSec();
+		if (elapsedTime >= fadetime) {
+			opacity = 255;
+			fadingIn = false;
+		}
+		else {
+			opacity = static_cast<int>((elapsedTime / (fadetime)) * 255);
+		}
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
 	}
 	if (fadingOut)
 	{
-		UpdateFadeOut();
+		double elapsedTime = fadeTimer.ReadMSec();
+		if (elapsedTime >= fadetime) {
+			opacity = 0;
+			fadingOut = false;
+		}
+		else {
+			opacity = 255 - static_cast<int>((elapsedTime / (fadetime)) * 255);
+		}
+		Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
 	}
 
 	return ret;
@@ -158,60 +174,27 @@ void SceneTitle::ButtonInteraction()
 	// Handle button pressed states
 	if (playButton->state == GuiControlState::PRESSED)
 	{
-		FadeOut();
 		playPressed = true;
 	}
 	else if (continueButton->state == GuiControlState::PRESSED) // && there is a previous game
 	{
-		FadeOut();
 		continuePressed = true;
 	}
 	else if (settingsButton->state == GuiControlState::PRESSED)
 	{
-		FadeOut();
 		settingsPressed = true;
 	}
 	else if (creditsButton->state == GuiControlState::PRESSED)
 	{
-		FadeOut();
 		creditsPressed = true;
 		imageTimer.Start();
 		sceneTimer.Start();
+		FadeOut();
 	}
 	else if (exitButton->state == GuiControlState::PRESSED)
 	{
-		FadeOut();
 		exitPressed = true;
 	}
-}
-void SceneTitle::UpdateFadeIn()
-{
-	double elapsedTime = fadeTimer.ReadMSec();
-	if (elapsedTime >= fadeTime)
-	{
-		opacity = 0;
-		fadingIn = false;
-	}
-	else
-	{
-		opacity = 255 - static_cast<int>((elapsedTime / fadeTime) * 255);
-	}
-	Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
-}
-
-void SceneTitle::UpdateFadeOut()
-{
-	double elapsedTime = fadeTimer.ReadMSec();
-	if (elapsedTime >= fadeTime)
-	{
-		opacity = 255;
-		fadingOut = false;
-	}
-	else
-	{
-		opacity = static_cast<int>((elapsedTime / fadeTime) * 255);
-	}
-	Engine::GetInstance().render->DrawRectangle(fadeRect, 0, 0, 0, opacity);
 }
 
 void SceneTitle::FadeIn()
@@ -219,7 +202,6 @@ void SceneTitle::FadeIn()
 	fadeTimer.Start();
 	fadingIn = true;
 	fadingOut = false;
-	opacity = 255;
 }
 
 void SceneTitle::FadeOut()
@@ -227,43 +209,27 @@ void SceneTitle::FadeOut()
 	fadeTimer.Start();
 	fadingOut = true;
 	fadingIn = false;
-	opacity = 0;
 }
 void SceneTitle::HandleCredits()
 {
-	double currentTime = imageTimer.ReadMSec();
-
-	if (currentTime < image1Time)
+	if (imageTimer.ReadMSec() <= image1Time)
 	{
 		Engine::GetInstance().render->DrawTexture(credits1, 0, 0);
-
-		if (currentTime >= (image1Time - fadeTime) && !first_fadeOut)
-		{
-			FadeOut();
-			first_fadeOut = true;
-		}
-		if (currentTime <= fadeTime && !first_fadeIn)
-		{
+		if (imageTimer.ReadMSec() >= (image1Time - fadetime) && !first_fadeIn) {
 			FadeIn();
 			first_fadeIn = true;
 		}
 	}
-	else if (currentTime < (image1Time + image2Time))
+	else if (imageTimer.ReadMSec() <= sceneTime)
 	{
 		Engine::GetInstance().render->DrawTexture(credits2, 0, 0);
-
-		double secondImageTime = currentTime - image1Time;
-
-		if (secondImageTime <= fadeTime && !second_fadeIn)
-		{
-			FadeIn();
-			second_fadeIn = true;
-		}
-
-		if (secondImageTime >= (image2Time - fadeTime) && !second_fadeOut)
-		{
+		if (!first_fadeOut) {
 			FadeOut();
-			second_fadeOut = true;
+			first_fadeOut = true;
+		}
+		if (sceneTimer.ReadMSec() >= (sceneTime - fadetime) && !last_fadeIn) {
+			FadeIn();
+			last_fadeIn = true;
 		}
 	}
 	else
@@ -299,9 +265,7 @@ void SceneTitle::ResetFadeStates()
 {
 	first_fadeIn = false;
 	first_fadeOut = false;
-	second_fadeIn = false;
-	second_fadeOut = false;
 	fadingIn = false;
 	fadingOut = false;
-	opacity = 0;
+	opacity = 255;
 }

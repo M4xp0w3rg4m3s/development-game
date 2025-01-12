@@ -129,7 +129,7 @@ public:
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<GameHUD> gameHud;
 
-	LoopState currentLoopState = LoopState::INTRO;
+	LoopState currentLoopState = LoopState::TITLE;
 
 private: 
 	bool IntroStarted = false;
