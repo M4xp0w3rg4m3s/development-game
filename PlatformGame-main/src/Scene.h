@@ -56,12 +56,7 @@ public:
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
 	void AdvanceLevel();
-	void LoadLevel(int level);
-	
-	void InitializeEntitiesForLevel(int level);
-	std::vector<Enemy*> GetEnemyList(int level);
-	std::vector<Item*> GetItemList(int level);
-	void DisableEnemiesAndItems(int level);
+
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
 
@@ -69,17 +64,15 @@ public:
 private:
 	int enemyIndex1 = 0;
 	int enemyIndex2 = 0;
+	int enemyIndex3 = 0;
 
 	std::string tilePosDebug = "[0,0]";
 	bool once = false;
 
-	bool Lvl1_Enemies_created = false;
-	bool Lvl1_Items_created = false;
-
 	bool Lvl2_Enemies_created = false;
-	bool Lvl2_Items_created = false;
-
 	bool Lvl3_Enemies_created = false;
+
+	bool Lvl2_Items_created = false;
 	bool Lvl3_Items_created = false;
 
 	SDL_Texture* caveBg = nullptr;
@@ -95,7 +88,7 @@ private:
 	std::vector<Item*> itemListLevel2;
 	std::vector<Item*> itemListLevel3;
 
-	int current_level = -1;
+	int current_level = 1;
 
 	int numEnemies1 = 13;
 	int numEnemies2 = 11;

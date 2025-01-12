@@ -59,7 +59,9 @@ public:
 	std::string textureName;
 
 	int GetPlayerLives() const;
+	void SetPlayerLives(int givenLives);
 	int GetPlayerIgnis() const;
+	void SetPlayerIgnis(int givenIgnis);
 
 	double GetAttackTimer() const;
 	int GetAttackTime() const;
