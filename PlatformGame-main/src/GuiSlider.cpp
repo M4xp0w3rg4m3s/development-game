@@ -11,7 +11,7 @@ GuiSlider::GuiSlider(int id, SDL_Rect bounds, const char* text, Module* observer
     SetObserver(observer);
 
     Vector2D thumbSize = { 20, 20 };
-    SDL_Rect thumbPos = { bounds.x - thumbSize.getX() / 2, bounds.y + bounds.h / 2 - thumbSize.getY() / 2, thumbSize.getX(), thumbSize.getY() };
+    SDL_Rect thumbPos = { bounds.x, bounds.y + bounds.h / 2 - thumbSize.getY() / 2, thumbSize.getX(), thumbSize.getY() };
     thumb = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, id + 1, "", thumbPos, observer);
 }
 
@@ -52,8 +52,23 @@ bool GuiSlider::Update(float dt)
 
 void GuiSlider::Draw(Render* render)
 {
-    render->DrawRectangle(bounds, 0, 0, 255, 255, true, true);
-    render->DrawRectangle(thumb->bounds, 100, 100, 255, 255, true, true);
+    render->DrawRectangle(bounds, 107, 124, 132, 106, true, true);
+
+    switch (state)
+    {
+    case GuiControlState::DISABLED:
+        Engine::GetInstance().render->DrawRectangle(thumb->bounds, 200, 200, 200, 255, true, false);
+        break;
+    case GuiControlState::NORMAL:
+        Engine::GetInstance().render->DrawRectangle(thumb->bounds, 107, 124, 132, 106, true, false);
+        break;
+    case GuiControlState::FOCUSED:
+        Engine::GetInstance().render->DrawRectangle(thumb->bounds, 107, 124, 132, 168, true, false);
+        break;
+    case GuiControlState::PRESSED:
+        Engine::GetInstance().render->DrawRectangle(thumb->bounds, 200, 206, 209, 168, true, false);
+        break;
+    }
 }
 
 void GuiSlider::SetValue(float valueToSet)
