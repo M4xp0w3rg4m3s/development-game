@@ -55,13 +55,15 @@ private:
 	SDL_Texture* ignisHudTexture = nullptr;
 
 	SDL_Texture* dieScreen = nullptr;
+	SDL_Texture* lvl2Screen = nullptr;
+	SDL_Texture* lvl3Screen = nullptr;
 
 	bool keysMenuOn = false;
 	bool lifeHud = false;
 
 	double internalTimer = 0;
 
-	//----- Fade -----//
+	//-------------- Fade ---------------//
 	Timer sceneTimer;
 	int sceneTime = 5 * 1000;
 
@@ -69,6 +71,16 @@ private:
 	bool first_fadeOut = false;
 	bool last_fadeIn = false;
 	bool last_fadeOut = false;
+
+	//Advancing Levels
+	bool begin_fadeOut = false;
+
+	bool advance_fadeIn1 = false;
+	bool advance_fadeOut1 = false;
+	bool advance_fadeIn2 = false;
+	bool advance_fadeOut2 = false;
+	Timer advanceTimer;
+	int advanceTime = 6 * 1000;
 
 	Timer fadeTimer;
 	double fadetime = 1 * 1000;

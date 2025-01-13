@@ -88,6 +88,11 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (!gameStarted) {
+		goingToLvl1 = true;
+		gameStarted = true;
+	}
+
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
 	}
@@ -743,6 +748,8 @@ void Scene::AdvanceLevel()
 {
 	if (current_level == 1) {
 
+		goingToLvl2 = true;
+
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 
@@ -789,7 +796,9 @@ void Scene::AdvanceLevel()
 			item->Enable();
 		}
 	}
-	if (current_level == 2) {
+	if (current_level == 2 && !goingToLvl2) {
+
+		goingToLvl3 = true;
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
@@ -895,27 +904,4 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 		}
 		itemNode = itemNode.next_sibling("item");
 	}
-}
-
-void Scene::FadeIn()
-{
-	//fadeTimer.Start();
-	//fadingIn = true;
-	//fadingOut = false;
-}
-
-void Scene::FadeOut()
-{
-	//fadeTimer.Start();
-	//fadingOut = true;
-	//fadingIn = false;
-}
-
-void Scene::ResetFadeStates()
-{
-	//first_fadeIn = false;
-	//first_fadeOut = false;
-	//fadingIn = false;
-	//fadingOut = false;
-	//opacity = 255;
 }
