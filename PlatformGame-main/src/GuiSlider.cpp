@@ -91,15 +91,17 @@ SDL_Rect GuiSlider::GetThumbBounds()
 void GuiSlider::SetInteractionStatus(GuiControlState status)
 {
     state = status;
-    thumb->state = status;
+    //thumb->state = status;
 }
 
 void GuiSlider::SelectThumb()
 {
     thumbSelected = true;
+    SetInteractionStatus(GuiControlState::PRESSED);
 }
 
 void GuiSlider::DeselectThumb()
 {
     thumbSelected = false;
+    SetInteractionStatus(GuiControlState::NORMAL);
 }

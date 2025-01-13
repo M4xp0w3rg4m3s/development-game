@@ -7,12 +7,38 @@
 #include <box2d/box2d.h>
 
 class GuiControlButton;
+class GuiSlider;
 
 class SceneSettings : public Module 
 {
-private:
-
 public:
 	SceneSettings();
 	~SceneSettings();
+
+	// Called before render is available
+	bool Awake();
+
+	// Called before the first frame
+	bool Start();
+
+	// Called before all Updates
+	bool PreUpdate();
+
+	// Called each loop iteration
+	bool Update(float dt);
+
+	// Called before all Updates
+	bool PostUpdate();
+
+	// Called before quitting
+	bool CleanUp();
+
+private:
+	GuiSlider* generalSlider;
+	GuiSlider* musicSlider;
+	GuiSlider* sfxSlider;
+
+	GuiControlButton* fullscreen;
+
+	b2Vec2 sizeWindow = { 0,0 };
 };

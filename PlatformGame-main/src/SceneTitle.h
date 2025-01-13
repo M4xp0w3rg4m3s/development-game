@@ -81,5 +81,4 @@ private:
 	bool fadingIn = false;
 	bool fadingOut = false;
 
-	GuiSlider* testSlider;
 };
