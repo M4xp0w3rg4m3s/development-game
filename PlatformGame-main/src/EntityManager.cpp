@@ -176,6 +176,13 @@ bool EntityManager::Update(float dt)
 	for(const auto entity : entities)
 	{
 		if (entity->active == false) continue;
+		if (playerInDeadTime) {
+			Player* playerEntity = static_cast<Player*>(entity);
+			if (entity->type == EntityType::PLAYER) {
+				ret = entity->Update(dt);
+			}
+			else continue;
+		}
 		ret = entity->Update(dt);
 	}
 	return ret;

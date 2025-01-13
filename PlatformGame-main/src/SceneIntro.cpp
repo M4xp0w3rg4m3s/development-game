@@ -64,6 +64,7 @@ bool SceneIntro::Update(float dt)
 		}
 	}
 	else {
+		Engine::GetInstance().render->DrawTexture(intro2, 0, 0);
 		if (!first_fadeOut) {
 			FadeOut();
 			first_fadeOut = true;
@@ -72,7 +73,6 @@ bool SceneIntro::Update(float dt)
 			FadeIn();
 			last_fadeIn = true;
 		}
-		Engine::GetInstance().render->DrawTexture(intro2, 0, 0);
 	}
 
 	if (fadingIn) {

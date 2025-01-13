@@ -20,6 +20,10 @@ public:
 	double ReadInternalTimerSec() const;
 	std::string ReadInternalTimerFormat() const;
 
+	void FadeIn();
+	void FadeOut();
+	void ResetFadeStates();
+
 private:
 	float internalDt = 0;
 
@@ -50,8 +54,26 @@ private:
 	SDL_Texture* lifeHudTexture = nullptr;
 	SDL_Texture* ignisHudTexture = nullptr;
 
+	SDL_Texture* dieScreen = nullptr;
+
 	bool keysMenuOn = false;
 	bool lifeHud = false;
 
 	double internalTimer = 0;
+
+	//----- Fade -----//
+	Timer sceneTimer;
+	int sceneTime = 5 * 1000;
+
+	bool first_fadeIn = false;
+	bool first_fadeOut = false;
+	bool last_fadeIn = false;
+	bool last_fadeOut = false;
+
+	Timer fadeTimer;
+	double fadetime = 1 * 1000;
+	SDL_Rect fadeRect{ 0, 0, 854, 480 };
+	Uint8 opacity = 0;
+	bool fadingIn = false;
+	bool fadingOut = false;
 };

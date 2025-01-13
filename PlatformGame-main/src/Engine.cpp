@@ -380,10 +380,6 @@ bool Engine::DoUpdate()
     {
         for (const auto& module : moduleListIntro) {
             result = module.get()->Update(dt);
-            if (module->AdvanceLoopState)
-            {
-                currentLoopState = LoopState::TITLE;
-            }
             if (!result) {
                 break;
             }
@@ -393,10 +389,6 @@ bool Engine::DoUpdate()
     {
         for (const auto& module : moduleListTitle) {
             result = module.get()->Update(dt); 
-            if (module->AdvanceLoopState)
-            {
-                currentLoopState = LoopState::SETTINGS;
-            }
             if (!result) {
                 break;
             }
@@ -407,10 +399,6 @@ bool Engine::DoUpdate()
     {
         for (const auto& module : moduleListSettings) {
             result = module.get()->Update(dt);
-            if (module->AdvanceLoopState)
-            {
-                currentLoopState = LoopState::GAME;
-            }
             if (!result) {
                 break;
             }
@@ -421,10 +409,6 @@ bool Engine::DoUpdate()
     {
         for (const auto& module : moduleListGame) {
             result = module.get()->Update(dt);
-            if (module->AdvanceLoopState)
-            {
-                currentLoopState = LoopState::TITLE;
-            }
             if (!result) {
                 break;
             }
@@ -517,6 +501,10 @@ void Engine::ChangeLoopState(LoopState state)
 
 void Engine::AwakeCurrentLoopState()
 {
+    auto isInCleanOnce = [&](const std::shared_ptr<Module>& module) {
+        return std::find(moduleListCleanOnce.begin(), moduleListCleanOnce.end(), module) != moduleListCleanOnce.end();
+        };
+
     if (currentLoopState == LoopState::INTRO)
     {
         bool result = true;
@@ -532,10 +520,12 @@ void Engine::AwakeCurrentLoopState()
     {
         bool result = true;
         for (const auto& module : moduleListTitle) {
-            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-            if (result) result = module.get()->Awake();
-            if (!result) {
-                break;
+            if (!isInCleanOnce(module)) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
             }
         }
     }
@@ -544,10 +534,12 @@ void Engine::AwakeCurrentLoopState()
     {
         bool result = true;
         for (const auto& module : moduleListSettings) {
-            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-            if (result) result = module.get()->Awake();
-            if (!result) {
-                break;
+            if (!isInCleanOnce(module)) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
             }
         }
     }
@@ -556,10 +548,12 @@ void Engine::AwakeCurrentLoopState()
     {
         bool result = true;
         for (const auto& module : moduleListGame) {
-            result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
-            if (result) result = module.get()->Awake();
-            if (!result) {
-                break;
+            if (!isInCleanOnce(module)) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
             }
         }
     }
@@ -568,6 +562,11 @@ void Engine::AwakeCurrentLoopState()
 bool Engine::StartCurrentLoopState()
 {
     bool result = true;
+
+    auto isInCleanOnce = [&](const std::shared_ptr<Module>& module) {
+        return std::find(moduleListCleanOnce.begin(), moduleListCleanOnce.end(), module) != moduleListCleanOnce.end();
+        };
+
     if (currentLoopState == LoopState::INTRO)
     {
         for (const auto& module : moduleListIntro) {
@@ -581,31 +580,35 @@ bool Engine::StartCurrentLoopState()
     if (currentLoopState == LoopState::TITLE)
     {
         for (const auto& module : moduleListTitle) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
+            if (!isInCleanOnce(module)) {
+                result = module.get()->Start();
+                if (!result) {
+                    break;
+                }
             }
         }
         TitleStarted = true;
     }
-
     if (currentLoopState == LoopState::SETTINGS)
     {
         for (const auto& module : moduleListSettings) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
+            if (!isInCleanOnce(module)) {
+                result = module.get()->Start();
+                if (!result) {
+                    break;
+                }
             }
         }
         SettingsStarted = true;
     }
-
     if (currentLoopState == LoopState::GAME)
     {
         for (const auto& module : moduleListGame) {
-            result = module.get()->Start();
-            if (!result) {
-                break;
+            if (!isInCleanOnce(module)) {
+                result = module.get()->Start();
+                if (!result) {
+                    break;
+                }
             }
         }
         GameStarted = true;

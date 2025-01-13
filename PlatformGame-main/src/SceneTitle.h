@@ -37,8 +37,6 @@ public:
 
 	void ButtonInteraction();
 
-	void UpdateFadeIn();
-	void UpdateFadeOut();
 	void FadeIn();
 	void FadeOut();
 	void ResetFadeStates();
@@ -65,22 +63,18 @@ private:
 	bool creditsPressed = false;
 	bool exitPressed = false;
 
+	//----------Fade----------//
 	Timer imageTimer;
 	int image1Time = 5 * 1000;
-	int image2Time = 4 * 1000;
 	Timer sceneTimer;
 	int sceneTime = 10 * 1000;
 
 	bool first_fadeIn = false;
-	bool second_fadeIn = false;
 	bool first_fadeOut = false;
-	bool second_fadeOut = false;
 	bool last_fadeIn = false;
 
-	//----------Fade----------//
-
 	Timer fadeTimer;
-	double fadeTime = 1 * 1000;
+	double fadetime = 1 * 1000;
 	SDL_Rect fadeRect{ 0, 0, 854, 480 };
 	Uint8 opacity = 255;
 	bool fadingIn = false;
