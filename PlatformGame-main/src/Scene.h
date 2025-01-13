@@ -60,6 +60,10 @@ public:
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
 
+	void FadeIn();
+	void FadeOut();
+	void ResetFadeStates();
+
 	bool debug = false;
 private:
 	int enemyIndex1 = 0;

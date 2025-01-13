@@ -31,7 +31,7 @@ bool Octopus::Start()
 	width = parameters.attribute("w").as_int();
 	enemyId = parameters.attribute("id").as_string();
 
-	texH = height*2, texW = width*2;
+	texH = 17, texW = 48;
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), width / 2, bodyType::DYNAMIC);
 
@@ -56,10 +56,10 @@ bool Octopus::Start()
 	animator->SetNumberAnimations(1);
 
 	// IDLE
-	animator->AddKeyFrame(0, { 0, 5 * texH,texW,texH });
-	animator->AddKeyFrame(0, { 1 * texW, 5 * texH,texW,texH });
-	animator->AddKeyFrame(0, { 2 * texW, 5 * texH,texW,texH });
-	animator->AddKeyFrame(0, { 3 * texW, 5 * texH,texW,texH });
+	animator->AddKeyFrame(0, { 0, 0, texW, texH });
+	animator->AddKeyFrame(0, { 1 * texW, 0, texW,texH });
+	animator->AddKeyFrame(0, { 2 * texW, 0, texW,texH });
+	animator->AddKeyFrame(0, { 3 * texW, 0, texW,texH });
 	animator->SetAnimationDelay(0, 100);
 
 	animator->SetAnimation(0);
@@ -102,11 +102,11 @@ bool Octopus::Update(float dt)
 	animator->Update();
 	if (pbody->body->GetLinearVelocity().x < 0) {
 		animator->LookLeft();
-		animator->Draw((int)position.getX(), (int)position.getY(), 28, -16);
+		animator->Draw((int)position.getX(), (int)position.getY(), 8, 0);
 	}
 	else {
 		animator->LookRight();
-		animator->Draw((int)position.getX(), (int)position.getY(), -4, -16);
+		animator->Draw((int)position.getX(), (int)position.getY(), -8, 0);
 	}
 	
 	return true;

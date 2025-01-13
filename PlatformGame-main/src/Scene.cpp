@@ -896,3 +896,26 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 		itemNode = itemNode.next_sibling("item");
 	}
 }
+
+void Scene::FadeIn()
+{
+	//fadeTimer.Start();
+	//fadingIn = true;
+	//fadingOut = false;
+}
+
+void Scene::FadeOut()
+{
+	//fadeTimer.Start();
+	//fadingOut = true;
+	//fadingIn = false;
+}
+
+void Scene::ResetFadeStates()
+{
+	//first_fadeIn = false;
+	//first_fadeOut = false;
+	//fadingIn = false;
+	//fadingOut = false;
+	//opacity = 255;
+}
