@@ -62,7 +62,9 @@ bool SceneTitle::Awake()
 bool SceneTitle::Start()
 {
 	//intro music
-	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");Background_Title_Scene
+
+	Bg = Engine::GetInstance().textures.get()->Load("Assets/Textures/Background_Title_Scene.png");
 
 	credits1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/intro_1.png");
 	credits2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/intro_2.png");
@@ -78,6 +80,8 @@ bool SceneTitle::PreUpdate()
 bool SceneTitle::Update(float dt)
 {
 	bool ret = true;
+
+	Engine::GetInstance().render->DrawTexture(Bg, 0, 0);
 
 	// Toggle debug mode
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
