@@ -7,6 +7,7 @@
 #include <box2d/box2d.h>
 
 class GuiControlButton;
+class GuiSlider;
 
 class SceneTitle : public Module
 {
@@ -79,4 +80,6 @@ private:
 	Uint8 opacity = 255;
 	bool fadingIn = false;
 	bool fadingOut = false;
+
+	GuiSlider* testSlider;
 };

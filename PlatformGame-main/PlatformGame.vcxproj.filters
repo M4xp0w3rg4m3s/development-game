@@ -106,7 +106,9 @@
     <ClCompile Include="src\Boss.cpp">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
     </ClCompile>
-    <ClCompile Include="src\GuiControlSlider.cpp" />
+    <ClCompile Include="src\GuiSlider.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -217,7 +219,7 @@
     <ClInclude Include="src\Boss.h">
       <Filter>Game\Enemies\Type %28Enemies%29</Filter>
     </ClInclude>
-    <ClInclude Include="src\GuiControlSlider.h">
+    <ClInclude Include="src\GuiSlider.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
