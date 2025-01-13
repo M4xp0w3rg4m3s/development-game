@@ -33,4 +33,8 @@ public:
 
 private:
 	int audioShurikenHitId = -1;
+
+	bool isHit = false;
+
+	const float VELOCITY_THRESHOLD = 0.1f;
 };
