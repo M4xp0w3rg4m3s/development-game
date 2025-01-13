@@ -3,6 +3,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_mixer.h"
+#include <algorithm>
 
 Audio::Audio() : Module()
 {
@@ -168,4 +169,51 @@ bool Audio::PlayFx(int id, int repeat)
 	}
 
 	return ret;
+}
+
+
+void Audio::ChangeGeneralVolume(float volume)
+{
+	general_volume = std::max(0.0f, std::min(volume, 1.0f)); 
+	SetMasterVolume(general_volume);
+
+	ChangeSfxVolume(sfx_volume);
+	ChangeMusicVolume(music_volume);
+}
+
+float Audio::GetGeneralVolume()
+{
+	return general_volume;
+}
+
+void Audio::ChangeSfxVolume(float volume)
+{
+	sfx_volume = std::max(0.0f, std::min(volume, 1.0f));
+
+	Mix_Volume(-1, static_cast<int>(general_volume * sfx_volume * MIX_MAX_VOLUME));
+}
+
+float Audio::GetSfxVolume()
+{
+	return sfx_volume;
+}
+
+void Audio::ChangeMusicVolume(float volume)
+{
+	music_volume = std::max(0.0f, std::min(volume, 1.0f));
+	Mix_VolumeMusic(static_cast<int>(music_volume * music_volume * MIX_MAX_VOLUME));
+}
+
+float Audio::GetMusicVolume()
+{
+	return music_volume;
+}
+
+void Audio::SetMasterVolume(float general_volume) {
+	// Clamp the volume to [0.0f, 1.0f]
+	general_volume = std::max(0.0f, std::min(general_volume, 1.0f));
+
+	// Set music and sound effects volume
+	Mix_VolumeMusic(static_cast<int>(general_volume * MIX_MAX_VOLUME));
+	Mix_Volume(-1, static_cast<int>(general_volume * MIX_MAX_VOLUME));
 }
