@@ -4,6 +4,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Render.h"
+#include "Scene.h"
 #include "Window.h"
 #include "Log.h"
 #include <string>
@@ -100,7 +101,9 @@ bool SceneTitle::Update(float dt)
 	}
 	else if (continuePressed)
 	{
-		// Continue functionality can be implemented here
+		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
+		Engine::GetInstance().scene->LoadState();
 	}
 	else if (settingsPressed)
 	{

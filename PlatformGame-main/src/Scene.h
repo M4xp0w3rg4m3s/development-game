@@ -61,6 +61,11 @@ public:
 	void CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList);
 	void CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList);
 
+	bool gameStarted = false;
+	bool goingToLvl1 = false;
+	bool goingToLvl2 = false;
+	bool goingToLvl3 = false;
+
 	bool debug = false;
 private:
 	int enemyIndex1 = 0;

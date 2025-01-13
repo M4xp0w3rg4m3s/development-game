@@ -88,6 +88,11 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (!gameStarted) {
+		goingToLvl1 = true;
+		gameStarted = true;
+	}
+
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
 	}
@@ -502,6 +507,13 @@ void Scene::LoadState()
 		}
 	}
 	if (current_level == 2) {
+		if (!Lvl2_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
+			for (const auto& enemy : enemyListLevel2) {
+				enemy->Start();
+			}
+			Lvl2_Enemies_created = true;
+		}
 		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_2").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
 		{
 			Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float());
@@ -528,12 +540,12 @@ void Scene::LoadState()
 		for (const auto& enemy : enemyListLevel3) {
 			enemy->Disable();
 		}
-		if (!Lvl2_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-			for (const auto& enemy : enemyListLevel2) {
-				enemy->Start();
+		if (!Lvl2_Items_created) {
+			CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
+			for (const auto& item : itemListLevel2) {
+				item->Start();
 			}
-			Lvl2_Enemies_created = true;
+			Lvl2_Items_created = true;
 		}
 		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_2").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 		{
@@ -556,14 +568,14 @@ void Scene::LoadState()
 			for (const auto& item : itemListLevel3) {
 				item->Disable();
 			}
-			if (!Lvl2_Items_created) {
-				CreateItems(configParameters.child("entities").child("items_lvl_2").child("item"), itemListLevel2);
-				for (const auto& item : itemListLevel2) {
-					item->Start();
-				}
-				Lvl2_Items_created = true;
-			}
 		}
+	}
+	if (!Lvl3_Enemies_created) {
+		CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
+		for (const auto& enemy : enemyListLevel3) {
+			enemy->Start();
+		}
+		Lvl3_Enemies_created = true;
 	}
 	if (current_level == 3) {
 		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_3").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
@@ -592,12 +604,12 @@ void Scene::LoadState()
 		for (const auto& enemy : enemyListLevel2) {
 			enemy->Disable();
 		}
-		if (!Lvl3_Enemies_created) {
-			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-			for (const auto& enemy : enemyListLevel3) {
-				enemy->Start();
+		if (!Lvl3_Items_created) {
+			CreateItems(configParameters.child("entities").child("items_lvl_3").child("item"), itemListLevel3);
+			for (const auto& item : itemListLevel3) {
+				item->Start();
 			}
-			Lvl3_Enemies_created = true;
+			Lvl3_Items_created = true;
 		}
 		for (pugi::xml_node itemNode = sceneNode.child("entities").child("items_lvl_3").child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 		{
@@ -741,6 +753,8 @@ void Scene::AdvanceLevel()
 {
 	if (current_level == 1) {
 
+		goingToLvl2 = true;
+
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 
@@ -787,7 +801,9 @@ void Scene::AdvanceLevel()
 			item->Enable();
 		}
 	}
-	if (current_level == 2) {
+	if (current_level == 2 && !goingToLvl2) {
+
+		goingToLvl3 = true;
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);

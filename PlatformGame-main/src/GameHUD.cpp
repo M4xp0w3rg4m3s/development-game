@@ -30,6 +30,8 @@ bool GameHUD::Start()
 	shurikenCDTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/cooldown_shuriken.png");
 	attackCDTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/cooldown_attack.png");
 	dieScreen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Die-screen.png");
+	lvl2Screen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
+	lvl3Screen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
 
 	ignisAnimator = new Sprite(ignisTexture);
 	ignisAnimator->SetNumberAnimations(1);
@@ -77,7 +79,52 @@ bool GameHUD::Start()
 
 bool GameHUD::Update(float dt)
 {
-	if (!Engine::GetInstance().scene->GetPlayer()->InsideDeadTime()) {
+	if (Engine::GetInstance().scene->goingToLvl1 && !begin_fadeOut) {
+		FadeOut();
+		begin_fadeOut = true;
+	}
+	if (fadeTimer.ReadMSec() > fadetime && Engine::GetInstance().scene->goingToLvl1 && begin_fadeOut) {
+		Engine::GetInstance().scene->goingToLvl1 = false;
+		ResetFadeStates();
+	}
+
+	if (advanceTimer.ReadMSec() > fadetime && advanceTimer.ReadMSec() < advanceTime - fadetime &&
+		(Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) && advance_fadeIn1 && !advance_fadeOut2) {
+		if (Engine::GetInstance().scene->goingToLvl2) {
+			Engine::GetInstance().render->DrawTexture(lvl2Screen, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
+		}
+		else if (Engine::GetInstance().scene->goingToLvl3){
+			Engine::GetInstance().render->DrawTexture(lvl3Screen, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
+		}
+	}
+	if ((Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) && !advance_fadeIn1) {
+		FadeIn();
+		advanceTimer.Start();
+		advance_fadeIn1 = true;
+	}
+	if (advanceTimer.ReadMSec() > fadetime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
+		!advance_fadeOut1 && advance_fadeIn1) {
+		FadeOut();
+		advance_fadeOut1 = true;
+	}
+	if (advanceTimer.ReadMSec() > advanceTime - (2 * fadetime) && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
+		!advance_fadeIn2 && advance_fadeIn1 && advance_fadeOut1) {
+		FadeIn();
+		advance_fadeIn2 = true;
+	}
+	if (advanceTimer.ReadMSec() > advanceTime - fadetime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
+		!advance_fadeOut2 && advance_fadeIn1 && advance_fadeOut1 && advance_fadeIn2) {
+		FadeOut();
+		advance_fadeOut2 = true;
+	}
+	if (advanceTimer.ReadMSec() > advanceTime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3)) {
+		Engine::GetInstance().scene->goingToLvl2 = false;
+		Engine::GetInstance().scene->goingToLvl3 = false;
+		ResetFadeStates();
+	}
+
+
+	if (!Engine::GetInstance().scene->GetPlayer()->InsideDeadTime() && !Engine::GetInstance().scene->goingToLvl1 && !Engine::GetInstance().scene->goingToLvl2 && !Engine::GetInstance().scene->goingToLvl3) {
 		internalDt = dt;
 
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
@@ -136,7 +183,7 @@ bool GameHUD::Update(float dt)
 		Engine::GetInstance().render->DrawText(ReadInternalTimerFormat().c_str(), 854 / 2 - 5 * (int)(ReadInternalTimerFormat().size()), 10, 10 * (int)(ReadInternalTimerFormat().size()), 18);
 		ResetFadeStates();
 	}
-	else {
+	else if (Engine::GetInstance().scene->GetPlayer()->InsideDeadTime()){
 		fadeRect.x = -Engine::GetInstance().render->camera.x;
 		fadeRect.y = Engine::GetInstance().render->camera.y;
 
@@ -294,6 +341,7 @@ std::string GameHUD::ReadInternalTimerFormat() const
 
 void GameHUD::FadeIn()
 {
+	opacity = 0;
 	fadeTimer.Start();
 	fadingIn = true;
 	fadingOut = false;
@@ -301,6 +349,7 @@ void GameHUD::FadeIn()
 
 void GameHUD::FadeOut()
 {
+	opacity = 255;
 	fadeTimer.Start();
 	fadingOut = true;
 	fadingIn = false;
@@ -308,6 +357,12 @@ void GameHUD::FadeOut()
 
 void GameHUD::ResetFadeStates()
 {
+	begin_fadeOut = false;
+	advance_fadeIn1 = false;
+	advance_fadeOut1 = false;
+	advance_fadeIn2 = false;
+	advance_fadeOut2 = false;
+
 	first_fadeIn = false;
 	first_fadeOut = false;
 	last_fadeIn = false;
