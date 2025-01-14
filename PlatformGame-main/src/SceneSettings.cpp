@@ -35,6 +35,10 @@ bool SceneSettings::Awake()
 	musicSlider = (GuiSlider*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::SLIDER, 11, "", { (int)sizeWindow.x / 2 - 200 / 2,(int)(sizeWindow.y / 3 * 1.5 - 10),200,20 }, this, { 0,0,0,0 });
 	sfxSlider = (GuiSlider*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::SLIDER, 12, "", { (int)sizeWindow.x / 2 - 200 / 2,(int)sizeWindow.y / 3 * 2 - 10,200,20 }, this, { 0,0,0,0 });
 
+	generalSlider->SetValue(Engine::GetInstance().audio->GetGeneralVolume());
+	musicSlider->SetValue(Engine::GetInstance().audio->GetMusicVolume());
+	sfxSlider->SetValue(Engine::GetInstance().audio->GetSfxVolume());
+
 	int exitWidth = 100, exitHeight = 25;
 	SDL_Rect btExitPos = {0,0, exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);

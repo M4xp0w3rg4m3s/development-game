@@ -53,9 +53,24 @@ bool Audio::Awake()
 
 bool Audio::Start()
 {
-	ChangeGeneralVolume(0.5);
-	ChangeSfxVolume(0.5);
-	ChangeMusicVolume(0.5);
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	pugi::xml_node audioNode = loadFile.child("config").child("audio");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return false;
+	}
+
+	general_volume = audioNode.child("general_volume").attribute("value").as_float();
+	music_volume = audioNode.child("music_volume").attribute("value").as_float();
+	sfx_volume = audioNode.child("sfx_volume").attribute("value").as_float();
+
+	ChangeGeneralVolume(general_volume);
+	ChangeMusicVolume(music_volume);
+	ChangeSfxVolume(sfx_volume);
 
 	return true;
 }
@@ -204,6 +219,19 @@ void Audio::ChangeSfxVolume(float volume)
 {
 	sfx_volume = std::max(0.0f, std::min(volume, 1.0f));
 
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	pugi::xml_node audioNode = loadFile.child("config").child("audio");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+
+	audioNode.child("sfx_volume").attribute("value").set_value(sfx_volume);
+
 	Mix_Volume(-1, static_cast<int>(general_volume * sfx_volume * MIX_MAX_VOLUME));
 }
 
@@ -215,6 +243,20 @@ float Audio::GetSfxVolume()
 void Audio::ChangeMusicVolume(float volume)
 {
 	music_volume = std::max(0.0f, std::min(volume, 1.0f));
+
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	pugi::xml_node audioNode = loadFile.child("config").child("audio");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+
+	audioNode.child("music_volume").attribute("value").set_value(music_volume);
+
 	Mix_VolumeMusic(static_cast<int>(general_volume * music_volume * MIX_MAX_VOLUME));
 }
 
@@ -226,6 +268,19 @@ float Audio::GetMusicVolume()
 void Audio::SetMasterVolume(float general_volume) {
 	// Clamp the volume to [0.0f, 1.0f]
 	general_volume = std::max(0.0f, std::min(general_volume, 1.0f));
+
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	pugi::xml_node audioNode = loadFile.child("config").child("audio");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+
+	audioNode.child("general_volume").attribute("value").set_value(general_volume);
 
 	// Set music and sound effects volume
 	Mix_VolumeMusic(static_cast<int>(general_volume * MIX_MAX_VOLUME));
