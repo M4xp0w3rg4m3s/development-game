@@ -5,6 +5,7 @@
 #include "SDL2/SDL_render.h"
 #include "Timer.h"
 #include <box2d/box2d.h>
+#include "Parallax.h"
 
 class GuiControlButton;
 class GuiSlider;
@@ -71,6 +72,8 @@ private:
 	bool exitPressed = false;
 
 	bool drawBg = true;
+
+	Parallax* parallax = nullptr;
 
 	//----------Fade----------//
 	Timer imageTimer;
