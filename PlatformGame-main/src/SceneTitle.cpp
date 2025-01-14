@@ -65,6 +65,9 @@ bool SceneTitle::Start()
 
 	credits1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/intro_1.png");
 	credits2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/intro_2.png");
+	lvl1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level1.png");
+	lvl2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
+	lvl3 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
 
 	return true;
 }
@@ -94,13 +97,12 @@ bool SceneTitle::Update(float dt)
 	if (playPressed)
 	{
 		Engine::GetInstance().guiManager->DeleteButtons();
-		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
+		HandlePlay();
 	}
 	else if (continuePressed)
 	{
 		Engine::GetInstance().guiManager->DeleteButtons();
-		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
-		Engine::GetInstance().scene->LoadState();
+		HandleContinue();
 	}
 	else if (settingsPressed)
 	{
@@ -176,10 +178,14 @@ void SceneTitle::ButtonInteraction()
 	if (playButton->state == GuiControlState::PRESSED)
 	{
 		playPressed = true;
+		lvlImageTimer.Start();
+		FadeOut();
 	}
 	else if (continueButton->state == GuiControlState::PRESSED)
 	{
 		continuePressed = true;
+		lvlImageTimer.Start();
+		FadeOut();
 	}
 	else if (settingsButton->state == GuiControlState::PRESSED)
 	{
@@ -264,9 +270,66 @@ void SceneTitle::HandleCredits()
 
 void SceneTitle::ResetFadeStates()
 {
+	lvlImage_fadeOut = false;
 	first_fadeIn = false;
 	first_fadeOut = false;
 	fadingIn = false;
 	fadingOut = false;
+	last_fadeIn = false;
 	opacity = 255;
+}
+
+void SceneTitle::HandlePlay()
+{
+	if (lvlImageTimer.ReadMSec() < lvlImageTime)
+	{
+		Engine::GetInstance().render->DrawTexture(lvl1, 0, 0);
+		if (lvlImageTimer.ReadMSec() >= (lvlImageTime - fadetime) && !lvlImage_fadeOut) {
+			FadeIn();
+			lvlImage_fadeOut = true;
+		}
+	}
+	else if (lvlImageTimer.ReadMSec() > lvlImageTime)
+	{
+		playPressed = false;
+		ResetFadeStates();
+		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
+	}
+}
+
+void SceneTitle::HandleContinue()
+{
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
+	int level = sceneNode.child("level").attribute("currentlevel").as_int();
+
+	if (lvlImageTimer.ReadMSec() < lvlImageTime)
+	{
+		if (level == 1) {
+			Engine::GetInstance().render->DrawTexture(lvl1, 0, 0);
+		}
+		else if (level == 2) {
+			Engine::GetInstance().render->DrawTexture(lvl2, 0, 0);
+		}
+		else if (level == 2) {
+			Engine::GetInstance().render->DrawTexture(lvl3, 0, 0);
+		}
+		if (lvlImageTimer.ReadMSec() >= (lvlImageTime - fadetime) && !lvlImage_fadeOut) {
+			FadeIn();
+			lvlImage_fadeOut = true;
+		}
+	}
+	else if (lvlImageTimer.ReadMSec() > lvlImageTime)
+	{
+		playPressed = false;
+		ResetFadeStates();
+		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
+		Engine::GetInstance().scene->LoadState();
+	}
 }

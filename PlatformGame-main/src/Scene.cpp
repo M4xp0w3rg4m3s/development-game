@@ -848,6 +848,7 @@ void Scene::AdvanceLevel()
 			item->Enable();
 		}
 	}
+	SaveState();
 }
 
 void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyList)

@@ -41,6 +41,8 @@ public:
 	void FadeOut();
 	void ResetFadeStates();
 
+	void HandlePlay();
+	void HandleContinue();
 	void HandleCredits();
 
 	bool debug = false;
@@ -54,6 +56,9 @@ private:
 
 	SDL_Texture* credits1 = nullptr;
 	SDL_Texture* credits2 = nullptr;
+	SDL_Texture* lvl1 = nullptr;
+	SDL_Texture* lvl2 = nullptr;
+	SDL_Texture* lvl3 = nullptr;
 
 	b2Vec2 sizeWindow = { 0,0 };
 
@@ -68,10 +73,13 @@ private:
 	int image1Time = 5 * 1000;
 	Timer sceneTimer;
 	int sceneTime = 10 * 1000;
-
 	bool first_fadeIn = false;
 	bool first_fadeOut = false;
 	bool last_fadeIn = false;
+
+	Timer lvlImageTimer;
+	int lvlImageTime = 3 * 1000;
+	bool lvlImage_fadeOut = false;
 
 	Timer fadeTimer;
 	double fadetime = 1 * 1000;
