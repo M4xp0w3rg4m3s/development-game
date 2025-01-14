@@ -22,32 +22,34 @@ GuiSlider::~GuiSlider()
 
 bool GuiSlider::Update(float dt)
 {
-    thumb->Update(dt);
-
-    if (thumbSelected)
+    if (state != GuiControlState::DISABLED)
     {
-        Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX() - Engine::GetInstance().render->camera.x, Engine::GetInstance().input->GetMousePosition().getY() };
-        float clampedX = std::max((float)bounds.x, std::min(mousePos.getX() - thumb->bounds.w / 2, (float)(bounds.x + bounds.w - thumb->bounds.w)));
+        thumb->Update(dt);
 
-        if (thumb->bounds.x != clampedX)
+        if (thumbSelected)
         {
-            thumb->bounds.x = clampedX;
-            float percent = (clampedX - bounds.x) / (bounds.w - thumb->bounds.w);
-            value = minVal + percent * (maxVal - minVal);
-            NotifyObserver();
+            Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX() - Engine::GetInstance().render->camera.x, Engine::GetInstance().input->GetMousePosition().getY() };
+            float clampedX = std::max((float)bounds.x, std::min(mousePos.getX() - thumb->bounds.w / 2, (float)(bounds.x + bounds.w - thumb->bounds.w)));
+
+            if (thumb->bounds.x != clampedX)
+            {
+                thumb->bounds.x = clampedX;
+                float percent = (clampedX - bounds.x) / (bounds.w - thumb->bounds.w);
+                value = minVal + percent * (maxVal - minVal);
+                NotifyObserver();
+            }
+
+            if (thumb->state != GuiControlState::PRESSED)
+                DeselectThumb();
+        }
+        else if (thumb->state == GuiControlState::PRESSED)
+        {
+            SelectThumb();
         }
 
-        if (thumb->state != GuiControlState::PRESSED)
-            DeselectThumb();
+        Draw(Engine::GetInstance().render.get());
     }
-    else if (thumb->state == GuiControlState::PRESSED)
-    {
-        SelectThumb();
-    }
-
-    Draw(Engine::GetInstance().render.get());
-
-    return true;
+    return false;
 }
 
 void GuiSlider::Draw(Render* render)

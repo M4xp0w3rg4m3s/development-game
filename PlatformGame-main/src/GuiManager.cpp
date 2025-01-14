@@ -56,10 +56,31 @@ bool GuiManager::DeleteButtons()
 {
 	for (const auto& control : guiControlsList)
 	{
-		delete control;
+		if (control != nullptr)
+		{
+			delete control;
+		}
 	}
 	guiControlsList.clear();
 
+	return true;
+}
+
+bool GuiManager::DisableButtons()
+{
+	for (const auto& control : guiControlsList)
+	{
+		control->state = GuiControlState::DISABLED;
+	}
+	return true;
+}
+
+bool GuiManager::EnableButtons()
+{
+	for (const auto& control : guiControlsList)
+	{
+		control->state = GuiControlState::NORMAL;
+	}
 	return true;
 }
 
@@ -77,7 +98,10 @@ bool GuiManager::CleanUp()
 {
 	for (const auto& control : guiControlsList)
 	{
-		delete control;
+		if (control != nullptr)
+		{
+			delete control;
+		}
 	}
 
 	return true;
