@@ -72,6 +72,8 @@ bool SceneTitle::Start()
 	lvl2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
 	lvl3 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
 
+	drawBg = true;
+
 	return true;
 }
 
@@ -84,7 +86,10 @@ bool SceneTitle::Update(float dt)
 {
 	bool ret = true;
 
-	Engine::GetInstance().render->DrawTexture(Bg, 0, 0);
+	if (drawBg)
+	{
+		Engine::GetInstance().render->DrawTexture(Bg, 0, 0);
+	}
 
 	// Toggle debug mode
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
@@ -102,18 +107,21 @@ bool SceneTitle::Update(float dt)
 	if (playPressed)
 	{
 		playPressed = false;
+		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		HandlePlay();
 	}
 	else if (continuePressed) // clicking first time  + f3 = bug
 	{
 		continuePressed = false;
+		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		HandleContinue();
 	}
 	else if (settingsPressed)
 	{
 		settingsPressed = false;
+		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
 	}
@@ -176,6 +184,10 @@ bool SceneTitle::CleanUp()
 	if (credits2 != nullptr)
 	{
 		Engine::GetInstance().textures.get()->UnLoad(credits2);
+	}
+	if (Bg != nullptr)
+	{
+		Engine::GetInstance().textures.get()->UnLoad(Bg);
 	}
 	Engine::GetInstance().guiManager->DeleteButtons();
 	return true;

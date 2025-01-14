@@ -70,6 +70,8 @@ private:
 	bool creditsPressed = false;
 	bool exitPressed = false;
 
+	bool drawBg = true;
+
 	//----------Fade----------//
 	Timer imageTimer;
 	int image1Time = 5 * 1000;
