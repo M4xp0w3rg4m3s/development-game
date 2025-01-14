@@ -44,7 +44,7 @@ bool GuiManager::DeleteButton(int id)
 {
 	for (const auto& control : guiControlsList)
 	{
-		if (id == control->id)
+		if (id == control->id && control != nullptr)
 		{
 			delete control;
 		}

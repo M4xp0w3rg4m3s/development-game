@@ -16,7 +16,7 @@
 
 SceneTitle::SceneTitle() : Module()
 {
-	name = "sceneIntro";
+	name = "sceneTitle";
 }
 
 SceneTitle::~SceneTitle()
@@ -25,7 +25,7 @@ SceneTitle::~SceneTitle()
 
 bool SceneTitle::Awake()
 {
-	LOG("Loading Scene");
+	LOG("Loading TitleScene");
 	bool ret = true;
 
 	int x = 0, y = 0;
@@ -98,22 +98,26 @@ bool SceneTitle::Update(float dt)
 
 	if (playPressed)
 	{
+		playPressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
 	}
-	else if (continuePressed)
+	else if (continuePressed) // clicking first time  + f3 = bug
 	{
+		continuePressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::GAME);
 		Engine::GetInstance().scene->LoadState();
 	}
 	else if (settingsPressed)
 	{
-		// Settings functionality can be implemented here
+		settingsPressed = false;
+		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
 	}
 	else if (creditsPressed)
 	{
-		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().guiManager->DisableButtons();
 		HandleCredits();
 	}
 	else if (exitPressed)
@@ -171,7 +175,7 @@ bool SceneTitle::CleanUp()
 	{
 		Engine::GetInstance().textures.get()->UnLoad(credits2);
 	}
-
+	Engine::GetInstance().guiManager->DeleteButtons();
 	return true;
 }
 
@@ -243,27 +247,7 @@ void SceneTitle::HandleCredits()
 		creditsPressed = false;
 		ResetFadeStates();
 
-		// Big Button
-		int playWidth = 120, playHeight = 50;
-		SDL_Rect btPlayPos = { sizeWindow.x / 2 - playWidth / 2, (sizeWindow.y / 10) * 4.25 - playHeight / 2 , playWidth,playHeight };
-		playButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "  Play  ", btPlayPos, this);
-
-		// Small Buttons
-		int continueWidth = 100, continueHeight = 25;
-		SDL_Rect btContinuePos = { sizeWindow.x / 2 - continueWidth / 2, (sizeWindow.y / 10) * 5.5 - continueHeight / 2 , continueWidth,continueHeight };
-		continueButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "  Continue  ", btContinuePos, this);
-
-		int settingsWidth = 100, settingsHeight = 25;
-		SDL_Rect btSettingsPos = { sizeWindow.x / 2 - settingsWidth / 2, (sizeWindow.y / 10) * 6.5 - settingsHeight / 2 , settingsWidth,settingsHeight };
-		settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "  Settings  ", btSettingsPos, this);
-
-		int creditsWidth = 100, creditsHeight = 25;
-		SDL_Rect btCreditsPos = { sizeWindow.x / 2 - creditsWidth / 2, (sizeWindow.y / 10) * 7.5 - creditsHeight / 2 , creditsWidth,creditsHeight };
-		creditsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "   Credits   ", btCreditsPos, this);
-
-		int exitWidth = 100, exitHeight = 25;
-		SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8.5 - exitHeight / 2 , exitWidth,exitHeight };
-		exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
+		Engine::GetInstance().guiManager->EnableButtons();
 	}
 }
 

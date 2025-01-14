@@ -130,6 +130,7 @@ public:
 	std::shared_ptr<GameHUD> gameHud;
 
 	LoopState currentLoopState = LoopState::INTRO;
+	LoopState previousLoopState = LoopState::INTRO;
 
 private: 
 	bool IntroStarted = false;

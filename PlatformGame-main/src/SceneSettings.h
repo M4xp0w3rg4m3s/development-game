@@ -38,7 +38,11 @@ private:
 	GuiSlider* musicSlider;
 	GuiSlider* sfxSlider;
 
+	GuiControlButton* exitButton;
+
 	GuiControlButton* fullscreen;
 
 	b2Vec2 sizeWindow = { 0,0 };
+
+	bool exitButtonPressed = false;
 };
