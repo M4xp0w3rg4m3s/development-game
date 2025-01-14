@@ -56,6 +56,16 @@ bool SceneTitle::Awake()
 	SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8.5 - exitHeight / 2 , exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 
+	parallax = Engine::GetInstance().parallax.get();
+
+	parallax->textureName1 = "Assets/Textures/Title_para/1.png";
+	parallax->textureName2 = "Assets/Textures/Title_para/2.png";
+	parallax->textureName3 = "Assets/Textures/Title_para/3.png";
+	parallax->textureName4 = "Assets/Textures/Title_para/4.png";
+	parallax->textureName5 = "Assets/Textures/Title_para/4.png";
+
+	parallax->ChangeTextures();
+
 	return ret;
 }
 
@@ -88,7 +98,17 @@ bool SceneTitle::Update(float dt)
 
 	if (drawBg)
 	{
-		Engine::GetInstance().render->DrawTexture(Bg, 0, 0);
+		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
+		auto& camera = Engine::GetInstance().render->camera;
+		static int lastMouseX = mousePosition.getX();
+		int deltaX = mousePosition.getX() - lastMouseX;
+		camera.x -= deltaX;
+		lastMouseX = mousePosition.getX();
+		parallax->Update(dt);
+	}
+	else {
+		Engine::GetInstance().render->camera.x = 0;
+		Engine::GetInstance().render->camera.y = 0;
 	}
 
 	// Toggle debug mode
@@ -125,6 +145,7 @@ bool SceneTitle::Update(float dt)
 	}
 	else if (creditsPressed)
 	{
+		drawBg = false;
 		Engine::GetInstance().guiManager->DisableButtons();
 		HandleCredits();
 	}
@@ -272,6 +293,7 @@ void SceneTitle::HandleCredits()
 	}
 	else
 	{
+		drawBg = true;
 		creditsPressed = false;
 		ResetFadeStates();
 
@@ -328,7 +350,7 @@ void SceneTitle::HandleContinue()
 		else if (level == 2) {
 			Engine::GetInstance().render->DrawTexture(lvl2, 0, 0);
 		}
-		else if (level == 2) {
+		else if (level == 3) {
 			Engine::GetInstance().render->DrawTexture(lvl3, 0, 0);
 		}
 		if (lvlImageTimer.ReadMSec() >= (lvlImageTime - fadetime) && !lvlImage_fadeOut) {

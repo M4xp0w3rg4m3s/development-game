@@ -30,7 +30,7 @@ bool GuiSlider::Update(float dt)
 
         if (thumbSelected)
         {
-            Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX() /*- Engine::GetInstance().render->camera.x*/, Engine::GetInstance().input->GetMousePosition().getY() };
+            Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX(), Engine::GetInstance().input->GetMousePosition().getY() };
             float clampedX = mousePos.getX() - thumb->bounds.w / 2;
 
             // Manually clamp clampedX within slider bounds
@@ -68,7 +68,11 @@ bool GuiSlider::Update(float dt)
 
 void GuiSlider::Draw(Render* render)
 {
-    render->DrawRectangle(bounds, 107, 124, 132, 106, true, true);
+    int adjustedX = bounds.x - Engine::GetInstance().render->camera.x;
+    int adjustedY = bounds.y - Engine::GetInstance().render->camera.y;
+    SDL_Rect adjustedBounds = { adjustedX, adjustedY, bounds.w, bounds.h };
+
+    render->DrawRectangle(adjustedBounds, 107, 124, 132, 106, true, true);
 
     switch (state)
     {
@@ -86,6 +90,7 @@ void GuiSlider::Draw(Render* render)
         break;
     }
 }
+
 
 void GuiSlider::SetValue(float valueToSet)
 {
