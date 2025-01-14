@@ -58,6 +58,8 @@ bool Scene::Awake()
 	//Get the player texture name from the config file and assigns the value
 	player->textureName = configParameters.child("player").attribute("texturePath").as_string();
 
+	current_level = 1;
+
 	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
 	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
@@ -565,14 +567,14 @@ void Scene::LoadState()
 			}
 		}
 	}
-	if (!Lvl3_Enemies_created) {
-		CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-		for (const auto& enemy : enemyListLevel3) {
-			enemy->Start();
-		}
-		Lvl3_Enemies_created = true;
-	}
 	if (current_level == 3) {
+		if (!Lvl3_Enemies_created) {
+			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
+			for (const auto& enemy : enemyListLevel3) {
+				enemy->Start();
+			}
+			Lvl3_Enemies_created = true;
+		}
 		for (pugi::xml_node enemyNode = sceneNode.child("entities").child("enemies_lvl_3").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
 		{
 			Vector2D enemyPos = Vector2D(enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float());

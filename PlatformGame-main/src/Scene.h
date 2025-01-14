@@ -93,7 +93,7 @@ private:
 	std::vector<Item*> itemListLevel2;
 	std::vector<Item*> itemListLevel3;
 
-	int current_level = 1;
+	int current_level = 0;
 
 	int numEnemies1 = 13;
 	int numEnemies2 = 11;
