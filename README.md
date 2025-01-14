@@ -1,8 +1,8 @@
-# Development Game
+# Echo of Ages
 
 ## 📜 **Game Description**
 
-Deep within a forgotten cave, an adventurer sleeps, cursed to awaken once every century when a monstrous force revives. Each time, he rises with a singular purpose: to hunt down and destroy the creature threatening the world. Over the course of a year, he journeys across the globe—through forests, mountains, rivers and snow—battling fierce foes and uncovering ancient secrets. With each passing day, the weight of his quest grows, knowing that only by defeating the monster can he bring peace, but at a cost he may not fully understand.
+Deep within a forgotten cave, an adventurer sleeps, cursed to awaken once every century when a monstrous force revives. Each time, he rises with a singular purpose: to hunt down and destroy the mythical crystal golem threatening the world. Over the course of a year, he journeys across the globe—through forests, mountains, rivers and snow—battling fierce foes and uncovering ancient secrets. With each passing day, the weight of his quest grows, knowing that only by defeating the monster can he bring peace, but at a cost he may not fully understand.
 
 ---
 
