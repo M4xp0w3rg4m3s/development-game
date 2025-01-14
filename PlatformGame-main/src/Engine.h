@@ -60,6 +60,7 @@ public:
 	float GetDeltaTime() const;
 
 	void ChangeLoopState(LoopState state);
+	void ChangeLoopStateWithoutStart(LoopState state);
 	void AwakeCurrentLoopState();
 	bool StartCurrentLoopState();
 

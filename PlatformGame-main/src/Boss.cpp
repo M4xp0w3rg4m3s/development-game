@@ -41,11 +41,11 @@ bool Boss::Start()
 	texH = height, texW = width;
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY() + height / 4, width / 5, bodyType::DYNAMIC);
-	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() , (int)position.getY(), 30, 30, bodyType::DYNAMIC);
-	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), 30, 30, bodyType::DYNAMIC);
+	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() , (int)position.getY(), 30*2, 30*2, bodyType::DYNAMIC);
+	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), 30*2, 30*2, bodyType::DYNAMIC);
 
-	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 5) ,(float)PIXEL_TO_METERS(-20) });
-	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 5),(float)PIXEL_TO_METERS(-20) });
+	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 5) ,(float)PIXEL_TO_METERS(-20 *2) });
+	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 5),(float)PIXEL_TO_METERS(-20 *2) });
 
 	pbody->body->SetFixedRotation(true);
 	bodyAttackLeft->body->SetFixedRotation(true);
@@ -189,67 +189,70 @@ bool Boss::Update(float dt)
 		linearVelocity.x = 0;
 	}
 
-	// Behaviour
-	if (attackTimer.ReadSec() > attackTime)
+	if(Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() > 6150)
 	{
-		isAttacking = true;
-	}
-
-	if (lives <= 0)
-	{
-		if (animator->GetAnimation() != 4)
+		// Behaviour
+		if (attackTimer.ReadSec() > attackTime)
 		{
-			animator->SetAnimation(4);
-		}
-		if (animator->isAnimFinished())
-		{
-			Disable();
-		}
-	}
-	else if (isAttacking)
-	{
-		if (animator->GetAnimation() != 2)
-		{
-			animator->SetAnimation(2);
-
-			Attack();
+			isAttacking = true;
 		}
 
-		if (animator->GetCurrentFrame_int() == 13)
+		if (lives <= 0)
 		{
-			if (fallingProjectiles)
+			if (animator->GetAnimation() != 4)
 			{
-				Shoot();
-				fallingProjectiles = false;
+				animator->SetAnimation(4);
+			}
+			if (animator->isAnimFinished())
+			{
+				Disable();
+			}
+		}
+		else if (isAttacking)
+		{
+			if (animator->GetAnimation() != 2)
+			{
+				animator->SetAnimation(2);
+
+				Attack();
 			}
 
-			isAttacking = false;
-			isAttackingLeft = false;
-			isAttackingRight = false;
-
-			float randomAttackTime = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX)) * 2.5f + 0.5f;
-
-			attackTime = randomAttackTime;
-			attackTimer.Start();
-
-		}
-
-	}
-	else
-	{
-		Move();
-		if (linearVelocity.x > 0 || linearVelocity.x < 0)
-		{
-			if (animator->GetAnimation() != 1)
+			if (animator->GetCurrentFrame_int() == 13)
 			{
-				animator->SetAnimation(1);
+				if (fallingProjectiles)
+				{
+					Shoot();
+					fallingProjectiles = false;
+				}
+
+				isAttacking = false;
+				isAttackingLeft = false;
+				isAttackingRight = false;
+
+				float randomAttackTime = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX)) * 2.5f + 0.5f;
+
+				attackTime = randomAttackTime;
+				attackTimer.Start();
+
 			}
+
 		}
 		else
 		{
-			if (animator->GetAnimation() != 0)
+			Move();
+			if (linearVelocity.x > 0 || linearVelocity.x < 0)
 			{
-				animator->SetAnimation(0);
+				if (animator->GetAnimation() != 1)
+				{
+					animator->SetAnimation(1);
+				}
+			}
+			else
+			{
+				if (animator->GetAnimation() != 0)
+				{
+					animator->SetAnimation(0);
+				}
 			}
 		}
 	}
@@ -327,15 +330,15 @@ void Boss::Attack()
 	{
 		if (direction.x > 0)
 		{
-			pbody->body->ApplyForceToCenter({ 300,-750 },true);
-			bodyAttackLeft->body->ApplyForceToCenter({300,-750 },true);
-			bodyAttackRight->body->ApplyForceToCenter({ 300,-750 },true);
+			pbody->body->ApplyForceToCenter({ 300 * 1.25,-750 *1.25 },true);
+			bodyAttackLeft->body->ApplyForceToCenter({300 * 1.25,-750 * 1.25 },true);
+			bodyAttackRight->body->ApplyForceToCenter({ 300 * 1.25,-750 * 1.25 },true);
 		}
 		else if (direction.x < 0)
 		{
-			pbody->body->ApplyForceToCenter({ -300,-750 }, true);
-			bodyAttackLeft->body->ApplyForceToCenter({ -300,-750 }, true);
-			bodyAttackRight->body->ApplyForceToCenter({ -300,-750 }, true);
+			pbody->body->ApplyForceToCenter({ -300 * 1.25,-750 * 1.25 }, true);
+			bodyAttackLeft->body->ApplyForceToCenter({ -300 * 1.25,-750 * 1.25 }, true);
+			bodyAttackRight->body->ApplyForceToCenter({ -300 * 1.25,-750 * 1.25 }, true);
 		}
 	}
 }
@@ -346,23 +349,23 @@ void Boss::Shoot()
 
 	b2Vec2 projectilePos = {
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX(),
-		35
+		40
 	};
 	b2Vec2 projectilePos1 = {
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() + (int)(32 * 1.5),
-		35
+		40
 	};
 	b2Vec2 projectilePos2 = {
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() + (32 * 3),
-		35
+		40
 	};
 	b2Vec2 projectilePos3 = {
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - (int)(32 * 1.5),
-		35
+		40
 	};
 	b2Vec2 projectilePos4 = {
 		Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - (32 * 3),
-		35
+		40
 	};
 
 	// Create and initialize the projectiles with its position and direction in world space

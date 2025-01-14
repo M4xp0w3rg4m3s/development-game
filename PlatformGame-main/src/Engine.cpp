@@ -500,6 +500,12 @@ void Engine::ChangeLoopState(LoopState state)
     StartCurrentLoopState();
 }
 
+void Engine::ChangeLoopStateWithoutStart(LoopState state)
+{
+    previousLoopState = currentLoopState;
+    currentLoopState = state;
+}
+
 void Engine::AwakeCurrentLoopState()
 {
     auto isInCleanOnce = [&](const std::shared_ptr<Module>& module) {

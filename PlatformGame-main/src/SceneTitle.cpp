@@ -106,14 +106,12 @@ bool SceneTitle::Update(float dt)
 
 	if (playPressed)
 	{
-		playPressed = false;
 		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		HandlePlay();
 	}
 	else if (continuePressed) // clicking first time  + f3 = bug
 	{
-		continuePressed = false;
 		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		HandleContinue();

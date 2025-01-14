@@ -95,8 +95,7 @@ bool Scene::Update(float dt)
 		gameStarted = true;
 	}
 
-	// Settings (generates double everything TO FIX)
-	/*if (optionsBt->state == GuiControlState::PRESSED)
+	if (optionsBt->state == GuiControlState::PRESSED)
 	{
 		settingsPressed = true;
 	}
@@ -105,7 +104,7 @@ bool Scene::Update(float dt)
 		settingsPressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
-	}*/
+	}
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);

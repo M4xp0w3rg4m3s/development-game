@@ -81,7 +81,15 @@ bool SceneSettings::Update(float dt)
 	{
 		exitButtonPressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
-		Engine::GetInstance().ChangeLoopState(Engine::GetInstance().previousLoopState);
+		if (Engine::GetInstance().previousLoopState == LoopState::GAME)
+		{
+			Engine::GetInstance().ChangeLoopStateWithoutStart(Engine::GetInstance().previousLoopState);
+		}
+		else
+		{
+			Engine::GetInstance().ChangeLoopState(Engine::GetInstance().previousLoopState);
+		}
+		
 	}
 	
 	return ret;
