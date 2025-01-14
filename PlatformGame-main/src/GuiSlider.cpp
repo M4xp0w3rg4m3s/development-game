@@ -30,7 +30,7 @@ bool GuiSlider::Update(float dt)
 
         if (thumbSelected)
         {
-            Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX() - Engine::GetInstance().render->camera.x, Engine::GetInstance().input->GetMousePosition().getY() };
+            Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX() /*- Engine::GetInstance().render->camera.x*/, Engine::GetInstance().input->GetMousePosition().getY() };
             float clampedX = mousePos.getX() - thumb->bounds.w / 2;
 
             // Manually clamp clampedX within slider bounds
