@@ -64,6 +64,7 @@ public:
 	bool goingToLvl1 = false;
 	bool goingToLvl2 = false;
 	bool goingToLvl3 = false;
+	bool fading = false;
 
 	bool debug = false;
 private:
@@ -101,4 +102,6 @@ private:
 
 	GuiControlButton* guiBt = nullptr;
 	
+	Timer timeFading;
+	int totalFadeTime = 1000;
 };

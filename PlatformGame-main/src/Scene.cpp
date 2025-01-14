@@ -244,8 +244,18 @@ bool Scene::Update(float dt)
 		player->ResetPlayer(current_level);
 	}
 
-	if (current_level == 1 && player->position.getX() >= 6520 || current_level == 2 && player->position.getX() >= 4250) {
+	if (current_level == 1 && player->position.getX() >= 6520 && !fading) {
+		timeFading.Start();
+		goingToLvl2 = true;
+		fading = true;
+	} else if (current_level == 2 && player->position.getX() >= 4250 && !fading) {
+		timeFading.Start();
+		goingToLvl3 = true;
+		fading = true;
+	}
+	if (timeFading.ReadMSec() >= totalFadeTime && fading) {
 		AdvanceLevel();
+		fading = false;
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
@@ -748,8 +758,6 @@ void Scene::AdvanceLevel()
 {
 	if (current_level == 1) {
 
-		goingToLvl2 = true;
-
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 
@@ -797,8 +805,6 @@ void Scene::AdvanceLevel()
 		}
 	}
 	if (current_level == 2 && !goingToLvl2) {
-
-		goingToLvl3 = true;
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
