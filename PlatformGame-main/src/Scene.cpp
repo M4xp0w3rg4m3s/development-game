@@ -11,7 +11,6 @@
 #include "Player.h"
 #include "Map.h"
 #include "Item.h"
-#include "Parallax.h"
 #include "Enemy.h"
 #include <string>
 
@@ -56,6 +55,14 @@ bool Scene::Awake()
 	parallax->textureName3 = configParameters.child("layers").child("three").attribute("texturePath").as_string();
 	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
+
+	parallaxTwoPoints = Engine::GetInstance().parallaxTwoPoints.get();
+
+	parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
 
 	//Get the map name from the config file and assigns the value
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
@@ -122,7 +129,8 @@ bool Scene::Update(float dt)
 	}
 
 	if (current_level == 1) {
-		Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
+		parallaxTwoPoints->SetRange(0, 1024);
+		//Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
