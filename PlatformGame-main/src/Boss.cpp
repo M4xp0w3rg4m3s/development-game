@@ -202,6 +202,7 @@ bool Boss::Update(float dt)
 			if (animator->GetAnimation() != 4)
 			{
 				animator->SetAnimation(4);
+				animator->SetLoop(false);
 			}
 			if (animator->isAnimFinished())
 			{
