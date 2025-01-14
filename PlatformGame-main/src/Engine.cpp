@@ -18,6 +18,7 @@
 #include "Map.h"
 #include "Physics.h"
 #include "Parallax.h"
+#include "ParallaxTwoPoints.h"
 
 #include "GuiManager.h"
 #include "GameHUD.h"
@@ -47,6 +48,7 @@ Engine::Engine() {
     sceneSettings = std::make_shared<SceneSettings>();
     map = std::make_shared<Map>();
     parallax = std::make_shared<Parallax>();
+    parallaxTwoPoints = std::make_shared<ParallaxTwoPoints>();
     entityManager = std::make_shared<EntityManager>();
     guiManager = std::make_shared<GuiManager>();
     gameHud = std::make_shared<GameHUD>();
@@ -93,6 +95,7 @@ Engine::Engine() {
     // GAME
     AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(parallax), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(parallaxTwoPoints), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(scene), LoopState::GAME);
 
     // Add the map module

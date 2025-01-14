@@ -23,6 +23,7 @@ class EntityManager;
 class Map;
 class Physics;
 class Parallax;
+class ParallaxTwoPoints;
 class GuiManager;
 class GameHUD;
 
@@ -127,6 +128,7 @@ public:
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<Parallax> parallax;
+	std::shared_ptr<ParallaxTwoPoints> parallaxTwoPoints;
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<GameHUD> gameHud;
 

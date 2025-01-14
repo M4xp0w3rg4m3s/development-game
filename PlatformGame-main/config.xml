@@ -45,6 +45,13 @@
 			<four texturePath="Assets/Maps/background_parallax/winter_BG/layer4.png" />
 			<five texturePath="Assets/Maps/background_parallax/winter_BG/layer5.png" />
 		</layers3>
+		<layersCave>
+			<one texturePath="Assets/Maps/background_parallax/cave_BG/layer1.png" />
+			<two texturePath="Assets/Maps/background_parallax/cave_BG/layer2.png" />
+			<three texturePath="Assets/Maps/background_parallax/cave_BG/layer3.png" />
+			<four texturePath="Assets/Maps/background_parallax/cave_BG/layer4a.png" />
+			<five texturePath="Assets/Maps/background_parallax/cave_BG/layer4b.png" />
+		</layersCave>
 		<map3 path="Assets/Maps/" name="Level3Map.tmx" />
 		<entities>
 			<enemies_lvl_1>

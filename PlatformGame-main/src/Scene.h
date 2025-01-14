@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "Player.h"
 #include "Parallax.h"
+#include "ParallaxTwoPoints.h"
 #include <box2d/box2d.h>
 #include "GuiControlButton.h"
 
@@ -87,6 +88,7 @@ private:
 
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;
+	ParallaxTwoPoints* parallaxTwoPoints = nullptr;
 	Enemy* boss = nullptr;
 	
 	std::vector<Enemy*> enemyListLevel1;
