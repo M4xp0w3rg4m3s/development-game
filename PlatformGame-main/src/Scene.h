@@ -84,8 +84,6 @@ private:
 	bool Lvl2_Items_created = false;
 	bool Lvl3_Items_created = false;
 
-	SDL_Texture* caveBg = nullptr;
-
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;
 	ParallaxTwoPoints* parallaxTwoPoints = nullptr;

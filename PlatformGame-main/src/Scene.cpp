@@ -80,8 +80,6 @@ bool Scene::Start()
 {
 	Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
 
-	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
-
 	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
 	return true;
@@ -121,7 +119,24 @@ bool Scene::Update(float dt)
 
 	if (current_level == 1) {
 		parallaxTwoPoints->SetRange(0, 1024);
-		//Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
+	}
+	if (current_level == 2) {
+		parallaxTwoPoints->SetRange(-1, -1);
+	}
+	if (current_level == 3) {
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
@@ -378,8 +393,6 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
-
-	SDL_DestroyTexture(caveBg);
 
 	return true;
 }
