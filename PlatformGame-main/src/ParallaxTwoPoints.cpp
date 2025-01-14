@@ -52,9 +52,17 @@ bool ParallaxTwoPoints::Update(float dt) {
             if (drawX + sizeW >= Xa && drawX <= Xb) {
                 SDL_Rect clippedRect = rect;
 
-                // Adjust the clipped rectangle to render only the visible portion before Xb
-                if (drawX + sizeW > Xb) {
-                    clippedRect.w = (int)(Xb - drawX); // Clip width to end at Xb
+                // Adjust for clipping on the left side (Xa)
+                if (drawX < Xa) {
+                    int clipAmount = (int)(Xa - drawX); // Amount to clip from the left
+                    clippedRect.x = clipAmount;        // Move source rect's x position
+                    clippedRect.w -= clipAmount;       // Reduce the width of the source rect
+                    drawX = Xa;                        // Start drawing from Xa
+                }
+
+                // Adjust for clipping on the right side (Xb)
+                if (drawX + clippedRect.w > Xb) {
+                    clippedRect.w = (int)(Xb - drawX); // Reduce the width to end at Xb
                 }
 
                 // Draw the texture using the clipped rectangle
