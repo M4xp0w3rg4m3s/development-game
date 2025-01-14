@@ -25,6 +25,7 @@ public:
 
 	bool DeleteButtons();
 
+	bool DisableButton(int id);
 	bool DisableButtons();
 	bool EnableButtons();
 

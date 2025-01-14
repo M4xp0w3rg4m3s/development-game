@@ -75,6 +75,18 @@ bool GuiManager::DisableButtons()
 	return true;
 }
 
+bool GuiManager::DisableButton(int id)
+{
+	for (const auto& control : guiControlsList)
+	{
+		if (id == control->id && control != nullptr)
+		{
+			control->state = GuiControlState::DISABLED;
+		}
+	}
+	return true;
+}
+
 bool GuiManager::EnableButtons()
 {
 	for (const auto& control : guiControlsList)

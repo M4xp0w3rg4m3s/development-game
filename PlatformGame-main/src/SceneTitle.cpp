@@ -67,15 +67,15 @@ bool SceneTitle::Awake()
 
 	parallax->ChangeTextures();
 
+	saved = configParameters.child("saved").attribute("value").as_bool();
+
 	return ret;
 }
 
 bool SceneTitle::Start()
 {
 	//intro music
-	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
-
-	Bg = Engine::GetInstance().textures.get()->Load("Assets/Textures/Background_Title_Scene.png");
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Title_theme.wav");
 
 	credits1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/intro_1.png");
 	credits2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/intro_2.png");
@@ -97,6 +97,10 @@ bool SceneTitle::PreUpdate()
 bool SceneTitle::Update(float dt)
 {
 	bool ret = true;
+
+	if (!saved) {
+		Engine::GetInstance().guiManager->DisableButton(continueButton->id);
+	}
 
 	if (drawBg)
 	{
@@ -207,10 +211,6 @@ bool SceneTitle::CleanUp()
 	if (credits2 != nullptr)
 	{
 		Engine::GetInstance().textures.get()->UnLoad(credits2);
-	}
-	if (Bg != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(Bg);
 	}
 	if (lvl1 != nullptr)
 	{

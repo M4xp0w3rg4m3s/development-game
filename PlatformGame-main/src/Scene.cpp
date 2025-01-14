@@ -689,6 +689,10 @@ void Scene::SaveState()
 
 	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
 
+	//Set as saved to modify continue button
+	pugi::xml_node sceneTitleNode = loadFile.child("config").child("sceneTitle");
+	sceneTitleNode.child("saved").attribute("value").set_value(true);
+
 	//Save info to XML 
 	//Player position
 	sceneNode.child("player").attribute("x").set_value(player->GetPosition().getX());
