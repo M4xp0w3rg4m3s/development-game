@@ -24,6 +24,10 @@ public:
 	bool DeleteButton(int id);
 
 	bool DeleteButtons();
+
+	bool DisableButtons();
+	bool EnableButtons();
+
 public:
 
 	std::list<GuiControl*> guiControlsList;

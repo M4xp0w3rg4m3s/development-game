@@ -20,6 +20,10 @@ public:
 	// Called before render is available
 	bool Awake();
 
+	bool Start();
+
+	bool Update(float dt);
+
 	// Called before quitting
 	bool CleanUp();
 
@@ -32,9 +36,21 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(int fx, int repeat = 0);
 
+	void ChangeGeneralVolume(float volume);
+	float GetGeneralVolume();
+	void ChangeSfxVolume(float volume);
+	float GetSfxVolume();
+	void ChangeMusicVolume(float volume);
+	float GetMusicVolume();
+
+	void SetMasterVolume(float general_volume);
 private:
 
 	_Mix_Music* music;
 	std::list<Mix_Chunk*> fx;
 
+protected:
+	float general_volume = 1.0f;
+	float sfx_volume = 1.0f;
+	float music_volume = 1.0f;
 };

@@ -41,6 +41,7 @@ public:
 	Vector2D GetPlayerPosition() const;
 
 	Player* GetPlayer() const;
+	Enemy* GetBoss() const;
 
 	std::string GetTilePosDebug() {
 		return tilePosDebug;
@@ -84,7 +85,8 @@ private:
 
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;
-
+	Enemy* boss = nullptr;
+	
 	std::vector<Enemy*> enemyListLevel1;
 	std::vector<Enemy*> enemyListLevel2;
 	std::vector<Enemy*> enemyListLevel3;
@@ -99,6 +101,6 @@ private:
 	int numEnemies2 = 11;
 	int numEnemies3 = 12;
 
-	GuiControlButton* guiBt = nullptr;
-	
+	GuiControlButton* optionsBt = nullptr;
+	bool settingsPressed = false;
 };

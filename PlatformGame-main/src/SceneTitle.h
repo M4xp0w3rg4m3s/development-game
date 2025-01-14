@@ -7,6 +7,7 @@
 #include <box2d/box2d.h>
 
 class GuiControlButton;
+class GuiSlider;
 
 class SceneTitle : public Module
 {
@@ -54,6 +55,7 @@ private:
 	GuiControlButton* creditsButton = nullptr;
 	GuiControlButton* exitButton = nullptr;
 
+	SDL_Texture* Bg = nullptr;
 	SDL_Texture* credits1 = nullptr;
 	SDL_Texture* credits2 = nullptr;
 	SDL_Texture* lvl1 = nullptr;
@@ -67,6 +69,8 @@ private:
 	bool settingsPressed = false;
 	bool creditsPressed = false;
 	bool exitPressed = false;
+
+	bool drawBg = true;
 
 	//----------Fade----------//
 	Timer imageTimer;
@@ -87,4 +91,5 @@ private:
 	Uint8 opacity = 255;
 	bool fadingIn = false;
 	bool fadingOut = false;
+
 };

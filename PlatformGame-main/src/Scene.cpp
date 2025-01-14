@@ -64,7 +64,7 @@ bool Scene::Awake()
 	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
 	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
-	guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
+	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
 
 	return ret;
 }
@@ -93,6 +93,17 @@ bool Scene::Update(float dt)
 	if (!gameStarted) {
 		goingToLvl1 = true;
 		gameStarted = true;
+	}
+
+	if (optionsBt->state == GuiControlState::PRESSED)
+	{
+		settingsPressed = true;
+	}
+	if (settingsPressed)
+	{
+		settingsPressed = false;
+		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
 	}
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
@@ -381,6 +392,11 @@ Vector2D Scene::GetPlayerPosition() const
 Player* Scene::GetPlayer() const
 {
 	return player;
+}
+
+Enemy* Scene::GetBoss() const
+{
+	return boss;
 }
 
 int Scene::GetCurrentLevel() const
@@ -871,6 +887,7 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 		}
 		else if (name == "boss") {
 			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
+			boss = enemy;
 		}
 
 		if (enemy) {

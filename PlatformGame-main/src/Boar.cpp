@@ -56,7 +56,7 @@ bool Boar::Start()
 	texture = Engine::GetInstance().textures->Load(textureName.c_str());
 
 	animator = new Sprite(texture);
-	animator->SetNumberAnimations(1);
+	animator->SetNumberAnimations(2);
 	
 	// IDLE
 	animator->AddKeyFrame(0, { 0, 0,width,height });
@@ -64,6 +64,22 @@ bool Boar::Start()
 	animator->AddKeyFrame(0, { 2 * width, 0,width,height });
 	animator->AddKeyFrame(0, { 3 * width, 0,width,height });
 	animator->SetAnimationDelay(0, 100);
+
+	// WALK
+	animator->AddKeyFrame(1, { 0, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 1 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 2 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 3 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 4 * width, 1 * height,width,height });
+	animator->AddKeyFrame(1, { 5 * width, 1 * height,width,height });
+	animator->SetAnimationDelay(1, 100);
+
+	// HIT
+	animator->AddKeyFrame(2, { 0, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 1 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
+	animator->SetAnimationDelay(2, 100);
 
 	animator->SetAnimation(0);
 	animator->SetLoop(true);
@@ -73,10 +89,17 @@ bool Boar::Start()
 
 bool Boar::Update(float dt)
 {
+	animator->Update();
+
 	//Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - (float)texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - (float)texH / 2);
+
+	b2Vec2 linearVelocity = { pbody->body->GetLinearVelocity().x, pbody->body->GetLinearVelocity().y };
+	if (fabs(linearVelocity.x) < VELOCITY_THRESHOLD) {
+		linearVelocity.x = 0;
+	}
 
 	if (pathfinding->resetPathAfterEnd) {
 		Vector2D pos = GetPosition();
@@ -97,16 +120,54 @@ bool Boar::Update(float dt)
 		// Draw pathfinding 
 		pathfinding->DrawPath();
 	}
-	
-	animator->Update();
-	if (pbody->body->GetLinearVelocity().x > 0) {
-		animator->LookLeft();
-		animator->Draw((int)position.getX(), (int)position.getY(), 10, -3);
+		
+	if (linearVelocity.x > 0 || linearVelocity.x < 0)
+	{
+		if (animator->GetAnimation() != 1)
+		{
+			animator->SetAnimation(1);
+		}
 	}
-	else {
+	else
+	{
+		if (animator->GetAnimation() != 0)
+		{
+			animator->SetAnimation(0);
+		}
+	}
+	//Draw + Flip
+	int drawScaleX = (linearVelocity.x < 0 || (linearVelocity.x == 0 && !animator->IsLookingRight())) ? -5 : 10;
+
+	if (linearVelocity.x < 0) {
 		animator->LookRight();
-		animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
+		animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -3);
 	}
+	else if (linearVelocity.x > 0) {
+		animator->LookLeft();
+		animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -3);
+	}
+	else
+	{
+		b2Vec2 centerPos = { GetCenterPosition().getX(), GetCenterPosition().getY() };
+
+		b2Vec2 directionToPlayer = {
+			Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getX() - centerPos.x,
+			Engine::GetInstance().scene.get()->GetPlayer()->GetCenterPosition().getY() - centerPos.y
+		};
+
+		
+		if (directionToPlayer.x < 0)
+		{
+			animator->LookRight();
+			animator->Draw((int)position.getX(), (int)position.getY(), -5, -3);
+		}
+		else {
+			animator->LookLeft();
+			animator->Draw((int)position.getX(), (int)position.getY(), 10, -3);
+		}
+		
+	}
+	
 
 	return true;
 }

@@ -63,6 +63,7 @@ public:
 	int GetPlayerIgnis() const;
 	void SetPlayerIgnis(int givenIgnis);
 
+	void SetCanBeAttacked(bool canBeAttacked);
 	double GetAttackTimer() const;
 	int GetAttackTime() const;
 	double GetShurikenTimer() const;
@@ -122,6 +123,8 @@ private:
 
 	bool isAttackingLeft = false;
 	bool isAttackingRight = false;
+
+	bool canBeAttacked = false;
 
 	//Items
 	bool shurikenEnabled = false;

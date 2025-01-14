@@ -40,6 +40,8 @@ public:
 	bool IsAttackingLeft();
 	bool IsAttackingRight();
 
+	bool isAttacking = false;
+	bool isAttackingLeft = false;
 private:
 
 	PhysBody* bodyAttackLeft = nullptr;
@@ -52,8 +54,7 @@ private:
 	Timer attackTimer;
 	float attackTime = 1;
 
-	bool isAttacking = false;
-	bool isAttackingLeft = false;
+	
 	bool isAttackingRight = false;
 	bool fallingProjectiles = false;
 

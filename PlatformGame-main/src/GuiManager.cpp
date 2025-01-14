@@ -3,6 +3,7 @@
 #include "Textures.h"
 
 #include "GuiControlButton.h"
+#include "GuiSlider.h"
 #include "Audio.h"
 
 GuiManager::GuiManager() :Module()
@@ -26,8 +27,12 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	case GuiControlType::BUTTON:
 		guiControl = new GuiControlButton(id, bounds, text);
 		break;
+	case GuiControlType::SLIDER:
+		guiControl = new GuiSlider(id,bounds,text,observer, 0, 200);
+		break;
 	}
-
+	
+	
 	guiControl->observer = observer;
 
 	guiControlsList.push_back(guiControl);
@@ -39,7 +44,7 @@ bool GuiManager::DeleteButton(int id)
 {
 	for (const auto& control : guiControlsList)
 	{
-		if (id == control->id)
+		if (id == control->id && control != nullptr)
 		{
 			delete control;
 		}
@@ -51,10 +56,31 @@ bool GuiManager::DeleteButtons()
 {
 	for (const auto& control : guiControlsList)
 	{
-		delete control;
+		if (control != nullptr)
+		{
+			delete control;
+		}
 	}
 	guiControlsList.clear();
 
+	return true;
+}
+
+bool GuiManager::DisableButtons()
+{
+	for (const auto& control : guiControlsList)
+	{
+		control->state = GuiControlState::DISABLED;
+	}
+	return true;
+}
+
+bool GuiManager::EnableButtons()
+{
+	for (const auto& control : guiControlsList)
+	{
+		control->state = GuiControlState::NORMAL;
+	}
 	return true;
 }
 
@@ -72,7 +98,10 @@ bool GuiManager::CleanUp()
 {
 	for (const auto& control : guiControlsList)
 	{
-		delete control;
+		if (control != nullptr)
+		{
+			delete control;
+		}
 	}
 
 	return true;
