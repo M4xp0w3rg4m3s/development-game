@@ -177,9 +177,12 @@ bool EntityManager::Update(float dt)
 	{
 		if (entity->active == false) continue;
 		if (playerInDeadTime || Engine::GetInstance().scene->goingToLvl1 || Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) {
-			Player* playerEntity = static_cast<Player*>(entity);
-			if (entity->type == EntityType::PLAYER) {
-				ret = entity->Update(dt);
+			if (playerInDeadTime) {
+				Player* playerEntity = static_cast<Player*>(entity);
+				if (entity->type == EntityType::PLAYER) {
+					ret = entity->Update(dt);
+				}
+				else continue;
 			}
 			else continue;
 		}
