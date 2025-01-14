@@ -51,6 +51,20 @@ bool Audio::Awake()
 	return ret;
 }
 
+bool Audio::Start()
+{
+	ChangeGeneralVolume(0.5);
+	ChangeSfxVolume(0.5);
+	ChangeMusicVolume(0.5);
+
+	return true;
+}
+
+bool Audio::Update(float dt)
+{
+	return true;
+}
+
 // Called before quitting
 bool Audio::CleanUp()
 {
@@ -201,7 +215,7 @@ float Audio::GetSfxVolume()
 void Audio::ChangeMusicVolume(float volume)
 {
 	music_volume = std::max(0.0f, std::min(volume, 1.0f));
-	Mix_VolumeMusic(static_cast<int>(music_volume * music_volume * MIX_MAX_VOLUME));
+	Mix_VolumeMusic(static_cast<int>(general_volume * music_volume * MIX_MAX_VOLUME));
 }
 
 float Audio::GetMusicVolume()

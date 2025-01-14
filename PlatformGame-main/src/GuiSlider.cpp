@@ -13,6 +13,8 @@ GuiSlider::GuiSlider(int id, SDL_Rect bounds, const char* text, Module* observer
     Vector2D thumbSize = { 20, 20 };
     SDL_Rect thumbPos = { bounds.x, bounds.y + bounds.h / 2 - thumbSize.getY() / 2, thumbSize.getX(), thumbSize.getY() };
     thumb = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, id + 1, "", thumbPos, observer);
+
+    SetValue(0.5);
 }
 
 GuiSlider::~GuiSlider()
@@ -29,13 +31,24 @@ bool GuiSlider::Update(float dt)
         if (thumbSelected)
         {
             Vector2D mousePos = { Engine::GetInstance().input->GetMousePosition().getX() - Engine::GetInstance().render->camera.x, Engine::GetInstance().input->GetMousePosition().getY() };
-            float clampedX = std::max((float)bounds.x, std::min(mousePos.getX() - thumb->bounds.w / 2, (float)(bounds.x + bounds.w - thumb->bounds.w)));
+            float clampedX = mousePos.getX() - thumb->bounds.w / 2;
+
+            // Manually clamp clampedX within slider bounds
+            if (clampedX < bounds.x) clampedX = bounds.x;
+            if (clampedX > bounds.x + bounds.w - thumb->bounds.w) clampedX = bounds.x + bounds.w - thumb->bounds.w;
 
             if (thumb->bounds.x != clampedX)
             {
                 thumb->bounds.x = clampedX;
+
+                // Calculate percent and manually clamp it between 0 and 1
                 float percent = (clampedX - bounds.x) / (bounds.w - thumb->bounds.w);
-                value = minVal + percent * (maxVal - minVal);
+                if (percent < 0.0f) percent = 0.0f;
+                if (percent > 1.0f) percent = 1.0f;
+
+                // Directly assign percent to value (normalized between 0 and 1)
+                value = percent;
+
                 NotifyObserver();
             }
 
@@ -51,6 +64,7 @@ bool GuiSlider::Update(float dt)
     }
     return false;
 }
+
 
 void GuiSlider::Draw(Render* render)
 {
@@ -75,10 +89,16 @@ void GuiSlider::Draw(Render* render)
 
 void GuiSlider::SetValue(float valueToSet)
 {
-    value = (valueToSet < minVal) ? minVal : (valueToSet > maxVal) ? maxVal : valueToSet;
-    float percent = (value - minVal) / (maxVal - minVal);
-    thumb->bounds.x = bounds.x + percent * (bounds.w - thumb->bounds.w);
+    // Manually clamp valueToSet between 0 and 1
+    if (valueToSet < 0.0f) valueToSet = 0.0f;
+    if (valueToSet > 1.0f) valueToSet = 1.0f;
+
+    value = valueToSet;
+
+    // Update thumb position accordingly
+    thumb->bounds.x = bounds.x + value * (bounds.w - thumb->bounds.w);
 }
+
 
 float GuiSlider::GetValue()
 {

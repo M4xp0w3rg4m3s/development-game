@@ -62,7 +62,7 @@ bool Scene::Awake()
 	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
 	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
-	guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
+	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
 
 	return ret;
 }
@@ -92,6 +92,18 @@ bool Scene::Update(float dt)
 		goingToLvl1 = true;
 		gameStarted = true;
 	}
+
+	// Settings (generates double everything TO FIX)
+	/*if (optionsBt->state == GuiControlState::PRESSED)
+	{
+		settingsPressed = true;
+	}
+	if (settingsPressed)
+	{
+		settingsPressed = false;
+		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
+	}*/
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
 		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);

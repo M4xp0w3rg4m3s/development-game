@@ -28,7 +28,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 		guiControl = new GuiControlButton(id, bounds, text);
 		break;
 	case GuiControlType::SLIDER:
-		guiControl = new GuiSlider(id,bounds,text,observer, 0, 100);
+		guiControl = new GuiSlider(id,bounds,text,observer, 0, 200);
 		break;
 	}
 	

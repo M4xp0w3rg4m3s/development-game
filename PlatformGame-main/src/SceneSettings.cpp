@@ -36,7 +36,7 @@ bool SceneSettings::Awake()
 	sfxSlider = (GuiSlider*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::SLIDER, 12, "", { (int)sizeWindow.x / 2 - 200 / 2,(int)sizeWindow.y / 3 * 2 - 10,200,20 }, this, { 0,0,0,0 });
 
 	int exitWidth = 100, exitHeight = 25;
-	SDL_Rect btExitPos = { sizeWindow.x  - exitWidth,0 /*(sizeWindow.y / 10) * 8.5 - exitHeight / 2*/ , exitWidth,exitHeight };
+	SDL_Rect btExitPos = {0,0, exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 
 	return ret;
@@ -45,7 +45,7 @@ bool SceneSettings::Awake()
 bool SceneSettings::Start()
 {
 	//intro music
-	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 	
 	return true;
 }
@@ -66,11 +66,11 @@ bool SceneSettings::Update(float dt)
 	}
 	else if (musicSlider->state == GuiControlState::PRESSED)
 	{
-		Engine::GetInstance().audio->ChangeMusicVolume(generalSlider->GetValue());
+		Engine::GetInstance().audio->ChangeMusicVolume(musicSlider->GetValue());
 	}
 	else if (sfxSlider->state == GuiControlState::PRESSED)
 	{
-		Engine::GetInstance().audio->ChangeSfxVolume(generalSlider->GetValue());
+		Engine::GetInstance().audio->ChangeSfxVolume(sfxSlider->GetValue());
 	}
 	else if (exitButton->state == GuiControlState::PRESSED)
 	{

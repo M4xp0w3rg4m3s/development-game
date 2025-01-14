@@ -101,6 +101,6 @@ private:
 	int numEnemies2 = 11;
 	int numEnemies3 = 12;
 
-	GuiControlButton* guiBt = nullptr;
-	
+	GuiControlButton* optionsBt = nullptr;
+	bool settingsPressed = false;
 };

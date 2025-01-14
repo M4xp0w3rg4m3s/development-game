@@ -62,7 +62,7 @@ bool SceneTitle::Awake()
 bool SceneTitle::Start()
 {
 	//intro music
-	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");Background_Title_Scene
+	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
 	Bg = Engine::GetInstance().textures.get()->Load("Assets/Textures/Background_Title_Scene.png");
 
