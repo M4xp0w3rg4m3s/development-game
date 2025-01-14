@@ -302,7 +302,7 @@ bool Boss::Update(float dt)
 
 bool Boss::CleanUp()
 {
-	//Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().textures.get()->UnLoad(texture);
 
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);

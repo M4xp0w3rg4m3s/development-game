@@ -31,6 +31,6 @@ public:
 public:
 
 	std::list<GuiControl*> guiControlsList;
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 
 };

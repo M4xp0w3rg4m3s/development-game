@@ -34,6 +34,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Vector2D& vec);
 
 private:
-    float x;
-    float y;
+    float x = 0;
+    float y = 0;
 };

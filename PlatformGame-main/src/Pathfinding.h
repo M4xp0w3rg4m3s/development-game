@@ -45,7 +45,7 @@ private:
     int Find(std::vector<Vector2D> vector, Vector2D elem);
 
 public:
-    EnemyType currentType;
+    EnemyType currentType = EnemyType::FLOOR;
 
     Map* map;
     MapLayer* layerNav;

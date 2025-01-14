@@ -100,9 +100,12 @@ bool GuiManager::CleanUp()
 	{
 		if (control != nullptr)
 		{
+			control->CleanUp();
 			delete control;
 		}
 	}
+
+	Engine::GetInstance().textures->UnLoad(texture);
 
 	return true;
 }

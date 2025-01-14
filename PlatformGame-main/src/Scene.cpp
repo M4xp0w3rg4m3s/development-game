@@ -32,6 +32,15 @@ Scene::Scene() : Module()
 // Destructor
 Scene::~Scene()
 {
+	// enemies
+	enemyListLevel1.clear();
+	enemyListLevel2.clear();
+	enemyListLevel3.clear();
+
+	// items
+	itemListLevel1.clear();
+	itemListLevel2.clear();
+	itemListLevel3.clear();
 }
 
 // Called before render is available
@@ -106,7 +115,7 @@ bool Scene::Update(float dt)
 	}
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
-		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
+		Engine::GetInstance().render.get()->camera.x = (int)(-((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2));
 	}
 	else {
 		Engine::GetInstance().render.get()->camera.x = 0;
@@ -371,7 +380,16 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	SDL_DestroyTexture(caveBg);
+	Engine::GetInstance().textures->UnLoad(caveBg);
+
+	if (optionsBt != nullptr)
+	{
+		Engine::GetInstance().guiManager->DeleteButton(1);
+	}
+	
+	
+
+	
 
 	return true;
 }

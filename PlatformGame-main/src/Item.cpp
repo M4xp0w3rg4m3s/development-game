@@ -117,6 +117,11 @@ bool Item::CleanUp()
 	Engine::GetInstance().textures->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 
+	if (animator != nullptr)
+	{
+		animator->Release();
+	}
+	
 	return true;
 }
 

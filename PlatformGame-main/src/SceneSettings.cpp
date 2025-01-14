@@ -64,11 +64,11 @@ bool SceneSettings::Update(float dt)
 	bool ret = true;
 
 	//---Text---//
-	Engine::GetInstance().render->DrawText("OPTIONS", sizeWindow.x / 2 - 100, 25, 200, 75);
+	Engine::GetInstance().render->DrawText("OPTIONS", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
 
-	Engine::GetInstance().render->DrawText("General", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 1 - 10, 75, 20);
-	Engine::GetInstance().render->DrawText(" Music ", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 1.5 - 10, 75, 20);
-	Engine::GetInstance().render->DrawText("   Sfx   ", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 2 - 10, 75, 20);
+	Engine::GetInstance().render->DrawText("General", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 1 - 10), 75, 20);
+	Engine::GetInstance().render->DrawText(" Music ", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 1.5 - 10), 75, 20);
+	Engine::GetInstance().render->DrawText("   Sfx   ", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 2 - 10), 75, 20);
 
 	//---Slider Display value---//
 
@@ -83,7 +83,7 @@ bool SceneSettings::Update(float dt)
 		snprintf(paddedStringGeneral, sizeof(paddedStringGeneral), " %s ", generalVolumeValueCharPtr);
 		generalVolumeValueCharPtr = paddedStringGeneral;
 	}
-	Engine::GetInstance().render->DrawText(generalVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 1 - 10, 25, 20);
+	Engine::GetInstance().render->DrawText(generalVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)sizeWindow.y / 3 * 1 - 10, 25, 20);
 
 	// Music
 	int musicVolumeValue = (int)(musicSlider->GetValue() * 100);
@@ -96,7 +96,7 @@ bool SceneSettings::Update(float dt)
 		snprintf(paddedStringMusic, sizeof(paddedStringMusic), " %s ", musicVolumeValueCharPtr);
 		musicVolumeValueCharPtr = paddedStringMusic;
 	}
-	Engine::GetInstance().render->DrawText(musicVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 1.5 - 10, 25, 20);
+	Engine::GetInstance().render->DrawText(musicVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)(sizeWindow.y / 3 * 1.5 - 10), 25, 20);
 
 	// Sfx
 	int sfxVolumeValue = (int)(sfxSlider->GetValue() * 100);
@@ -109,7 +109,7 @@ bool SceneSettings::Update(float dt)
 		snprintf(paddedStringSfx, sizeof(paddedStringSfx), " %s ", sfxVolumeValueCharPtr);
 		sfxVolumeValueCharPtr = paddedStringSfx;
 	}
-	Engine::GetInstance().render->DrawText(sfxVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 2 - 10, 25, 20);
+	Engine::GetInstance().render->DrawText(sfxVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)sizeWindow.y / 3 * 2 - 10, 25, 20);
 
 	if (generalSlider->state == GuiControlState::PRESSED)
 	{

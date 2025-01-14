@@ -21,7 +21,17 @@ Pathfinding::Pathfinding() {
 }
 
 Pathfinding::~Pathfinding() {
-    delete layerNav;
+    Engine::GetInstance().textures->UnLoad(pathTex);
+    Engine::GetInstance().textures->UnLoad(tileX);
+
+    if (layerNav != nullptr)
+    {
+        delete layerNav;
+    }
+    if (map != nullptr)
+    {
+        //delete map;
+    }
 }
 
 // L11: BFS Pathfinding methods

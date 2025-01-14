@@ -63,8 +63,8 @@ public:
 
 	int width = 0;
 	int height = 0;
-	b2Body* body;
-	Entity* listener;
+	b2Body* body = nullptr;
+	Entity* listener = nullptr;
 	ColliderType ctype;
 };
 
@@ -107,10 +107,10 @@ public:
 private:
 
 	// Debug mode
-	bool debug;
+	bool debug = false;
 
 	// Box2D World
-	b2World* world;
+	b2World* world = nullptr;
 
 	// List of bodies for deleting them later
 	std::list<PhysBody*> bodiesToDelete;

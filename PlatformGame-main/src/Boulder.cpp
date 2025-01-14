@@ -67,7 +67,7 @@ bool Boulder::Update(float dt)
 bool Boulder::CleanUp()
 {
 
+	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
-	//Engine::GetInstance().textures.get()->UnLoad(texture);
 	return true;
 }
