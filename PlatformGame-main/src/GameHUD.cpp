@@ -97,36 +97,27 @@ bool GameHUD::Update(float dt)
 			Engine::GetInstance().render->DrawTexture(lvl3Screen, -Engine::GetInstance().render->camera.x, Engine::GetInstance().render->camera.y);
 		}
 	}
-	if ((Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) && !advance_fadeIn1 && Engine::GetInstance().scene->fading) {
-		if (!fadingIn) {
-			FadeIn();
-		}
-		fadeTimer.Start();
+	if ((Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) && !advance_fadeIn1) {
+		FadeIn();
 		advanceTimer.Start();
 		advance_fadeIn1 = true;
 	}
-	else if (advanceTimer.ReadMSec() > fadetime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
-		!advance_fadeOut1 && advance_fadeIn1 && !Engine::GetInstance().scene->fading) {
-		if (!fadingOut) {
-			FadeOut();
-		}
+	if (advanceTimer.ReadMSec() > fadetime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
+		!advance_fadeOut1 && advance_fadeIn1) {
+		FadeOut();
 		advance_fadeOut1 = true;
 	}
-	else if (advanceTimer.ReadMSec() > advanceTime - (2 * fadetime) && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
-		!advance_fadeIn2 && advance_fadeIn1 && advance_fadeOut1 && !Engine::GetInstance().scene->fading) {
-		if (!fadingIn) {
-			FadeIn();
-		}
+	if (advanceTimer.ReadMSec() > advanceTime - (2 * fadetime) && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
+		!advance_fadeIn2 && advance_fadeIn1 && advance_fadeOut1) {
+		FadeIn();
 		advance_fadeIn2 = true;
 	}
-	else if (advanceTimer.ReadMSec() > advanceTime - fadetime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
-		!advance_fadeOut2 && advance_fadeIn1 && advance_fadeOut1 && advance_fadeIn2 && !Engine::GetInstance().scene->fading) {
-		if (!fadingOut) {
-			FadeOut();
-		}
+	if (advanceTimer.ReadMSec() > advanceTime - fadetime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) &&
+		!advance_fadeOut2 && advance_fadeIn1 && advance_fadeOut1 && advance_fadeIn2) {
+		FadeOut();
 		advance_fadeOut2 = true;
 	}
-	else if (advanceTimer.ReadMSec() > advanceTime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3) && !Engine::GetInstance().scene->fading) {
+	if (advanceTimer.ReadMSec() > advanceTime && (Engine::GetInstance().scene->goingToLvl2 || Engine::GetInstance().scene->goingToLvl3)) {
 		Engine::GetInstance().scene->goingToLvl2 = false;
 		Engine::GetInstance().scene->goingToLvl3 = false;
 		ResetFadeStates();
