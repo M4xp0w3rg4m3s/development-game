@@ -44,3 +44,14 @@ bool Parallax::Update(float dt) {
     previousCamX = cameraX;
     return true;
 }
+
+bool Parallax::CleanUp()
+{
+    LOG("CleanUp Parallax");
+    for (const auto layer : layers)
+    {
+        Engine::GetInstance().textures.get()->UnLoad(layer.texture);
+    }
+
+    return true;
+}

@@ -63,8 +63,7 @@ bool Scene::Awake()
 	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
 	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
-	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
-	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
+	CreateButtons();
 
 	return ret;
 }
@@ -924,4 +923,10 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 		}
 		itemNode = itemNode.next_sibling("item");
 	}
+}
+
+void Scene::CreateButtons()
+{
+	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
+	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
 }

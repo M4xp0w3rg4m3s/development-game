@@ -59,6 +59,53 @@ bool SceneSettings::Update(float dt)
 {
 	bool ret = true;
 
+	//---Text---//
+	Engine::GetInstance().render->DrawText("OPTIONS", sizeWindow.x / 2 - 100, 25, 200, 75);
+
+	Engine::GetInstance().render->DrawText("General", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 1 - 10, 75, 20);
+	Engine::GetInstance().render->DrawText(" Music ", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 1.5 - 10, 75, 20);
+	Engine::GetInstance().render->DrawText("   Sfx   ", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 2 - 10, 75, 20);
+
+	//---Slider Display value---//
+
+	// General
+	int generalVolumeValue = (int)(generalSlider->GetValue() * 100);
+	std::string generalVolumeValueString = std::to_string(generalVolumeValue);
+	const char* generalVolumeValueCharPtr = generalVolumeValueString.c_str();
+	size_t lengthGeneralValue = strlen(generalVolumeValueCharPtr);
+	if (lengthGeneralValue == 1)
+	{
+		char paddedStringGeneral[100];
+		snprintf(paddedStringGeneral, sizeof(paddedStringGeneral), " %s ", generalVolumeValueCharPtr);
+		generalVolumeValueCharPtr = paddedStringGeneral;
+	}
+	Engine::GetInstance().render->DrawText(generalVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 1 - 10, 25, 20);
+
+	// Music
+	int musicVolumeValue = (int)(musicSlider->GetValue() * 100);
+	std::string musicVolumeValueString = std::to_string(musicVolumeValue);
+	const char* musicVolumeValueCharPtr = musicVolumeValueString.c_str();
+	size_t lengthMusicValue = strlen(musicVolumeValueCharPtr);
+	if (lengthMusicValue == 1)
+	{
+		char paddedStringMusic[100];
+		snprintf(paddedStringMusic, sizeof(paddedStringMusic), " %s ", musicVolumeValueCharPtr);
+		musicVolumeValueCharPtr = paddedStringMusic;
+	}
+	Engine::GetInstance().render->DrawText(musicVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 1.5 - 10, 25, 20);
+
+	// Sfx
+	int sfxVolumeValue = (int)(sfxSlider->GetValue() * 100);
+	std::string sfxVolumeValueString = std::to_string(sfxVolumeValue);
+	const char* sfxVolumeValueCharPtr = sfxVolumeValueString.c_str();
+	size_t lengthSfxValue = strlen(sfxVolumeValueCharPtr);
+	if (lengthSfxValue == 1)
+	{
+		char paddedStringSfx[100];
+		snprintf(paddedStringSfx, sizeof(paddedStringSfx), " %s ", sfxVolumeValueCharPtr);
+		sfxVolumeValueCharPtr = paddedStringSfx;
+	}
+	Engine::GetInstance().render->DrawText(sfxVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 2 - 10, 25, 20);
 
 	if (generalSlider->state == GuiControlState::PRESSED)
 	{
@@ -83,6 +130,7 @@ bool SceneSettings::Update(float dt)
 		Engine::GetInstance().guiManager->DeleteButtons();
 		if (Engine::GetInstance().previousLoopState == LoopState::GAME)
 		{
+			Engine::GetInstance().scene->CreateButtons();
 			Engine::GetInstance().ChangeLoopStateWithoutStart(Engine::GetInstance().previousLoopState);
 		}
 		else

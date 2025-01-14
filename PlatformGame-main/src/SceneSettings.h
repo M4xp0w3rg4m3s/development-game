@@ -34,13 +34,13 @@ public:
 	bool CleanUp();
 
 private:
-	GuiSlider* generalSlider;
-	GuiSlider* musicSlider;
-	GuiSlider* sfxSlider;
+	GuiSlider* generalSlider = nullptr;
+	GuiSlider* musicSlider = nullptr;
+	GuiSlider* sfxSlider = nullptr;
 
-	GuiControlButton* exitButton;
+	GuiControlButton* exitButton = nullptr;
 
-	GuiControlButton* fullscreen;
+	GuiControlButton* fullscreen = nullptr;
 
 	b2Vec2 sizeWindow = { 0,0 };
 

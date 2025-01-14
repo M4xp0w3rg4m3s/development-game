@@ -187,6 +187,18 @@ bool SceneTitle::CleanUp()
 	{
 		Engine::GetInstance().textures.get()->UnLoad(Bg);
 	}
+	if (lvl1 != nullptr)
+	{
+		Engine::GetInstance().textures.get()->UnLoad(lvl1);
+	}
+	if (lvl2 != nullptr)
+	{
+		Engine::GetInstance().textures.get()->UnLoad(lvl2);
+	}
+	if (lvl3 != nullptr)
+	{
+		Engine::GetInstance().textures.get()->UnLoad(lvl3);
+	}
 	Engine::GetInstance().guiManager->DeleteButtons();
 	return true;
 }

@@ -16,8 +16,11 @@ struct Layer {
 class Parallax : public Module {
 public:
 	Parallax();
+	~Parallax() {}
 	bool Start();
 	bool Update(float dt);
+	bool CleanUp();
+
 	bool ChangeTextures();
 
 	std::vector<Layer> layers;
