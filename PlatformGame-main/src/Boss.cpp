@@ -44,8 +44,8 @@ bool Boss::Start()
 	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() , (int)position.getY(), 30*2, 30*2, bodyType::DYNAMIC);
 	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), 30*2, 30*2, bodyType::DYNAMIC);
 
-	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 5) ,(float)PIXEL_TO_METERS(-20 *2) });
-	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 5),(float)PIXEL_TO_METERS(-20 *2) });
+	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 4) ,(float)PIXEL_TO_METERS(-20 *2) });
+	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 4),(float)PIXEL_TO_METERS(-20 *2) });
 
 	pbody->body->SetFixedRotation(true);
 	bodyAttackLeft->body->SetFixedRotation(true);
@@ -83,9 +83,6 @@ bool Boss::Start()
 	bodyAttackLeftMass.mass = 0.0f;
 	bodyAttackLeftMass.center = pbody->body->GetLocalCenter();
 	bodyAttackLeft->body->SetMassData(&bodyAttackLeftMass);
-
-	/*bodyAttackLeft->body->ResetMassData();
-	bodyAttackRight->body->ResetMassData();*/
 
 	pbody->listener = this;
 	bodyAttackLeft->listener = this;
@@ -136,6 +133,7 @@ bool Boss::Start()
 	animator->AddKeyFrame(2, { 2 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 5 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 6 * width, 2 * height,width,height });
@@ -259,7 +257,7 @@ bool Boss::Update(float dt)
 	}
 
 	//Draw + Flip
-	int drawScaleX = (linearVelocity.x < 0 || (linearVelocity.x == 0 && !animator->IsLookingRight())) ? 26 : -26;
+	int drawScaleX = (linearVelocity.x < 0 || (linearVelocity.x == 0 && !animator->IsLookingRight())) ? 50 : -50;
 
 	if (linearVelocity.x < 0) {
 		animator->LookLeft();
@@ -287,7 +285,7 @@ bool Boss::Update(float dt)
 			}
 		}
 	}
-	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -26);
+	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -55);
 
 	// Track attack direction
 	if (isAttacking) {

@@ -62,6 +62,7 @@ private:
 	SDL_Texture* lvl1 = nullptr;
 	SDL_Texture* lvl2 = nullptr;
 	SDL_Texture* lvl3 = nullptr;
+	SDL_Texture* title = nullptr;
 
 	b2Vec2 sizeWindow = { 0,0 };
 

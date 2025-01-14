@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "Log.h"
 #include <string>
+#include <box2d/box2d.h>
 
 #include "GuiControl.h"
 #include "GuiManager.h"
@@ -81,6 +82,7 @@ bool SceneTitle::Start()
 	lvl1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level1.png");
 	lvl2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
 	lvl3 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
+	title = Engine::GetInstance().textures.get()->Load("Assets/Textures/Title.png");
 
 	drawBg = true;
 
@@ -105,6 +107,8 @@ bool SceneTitle::Update(float dt)
 		camera.x -= deltaX;
 		lastMouseX = mousePosition.getX();
 		parallax->Update(dt);
+
+		Engine::GetInstance().render->DrawTexture(title, sizeWindow.x / 2 - 44 - Engine::GetInstance().render->camera.x, 100);
 	}
 	else {
 		Engine::GetInstance().render->camera.x = 0;
