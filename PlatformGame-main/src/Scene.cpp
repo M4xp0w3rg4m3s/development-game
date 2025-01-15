@@ -297,6 +297,10 @@ bool Scene::Update(float dt)
 	if (current_level == 1 && player->position.getX() >= 6520 || current_level == 2 && player->position.getX() >= 4250) {
 		AdvanceLevel();
 	}
+	if (current_level == 3 && player->position.getX() >= 5760 && !bossMusicPlayed) {
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Boss_theme.wav");
+		bossMusicPlayed = true;
+	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
@@ -434,9 +438,9 @@ Player* Scene::GetPlayer() const
 	return player;
 }
 
-Enemy* Scene::GetBoss() const
+Boss* Scene::GetBoss() const
 {
-	return boss;
+	return static_cast<Boss*>(boss);
 }
 
 int Scene::GetCurrentLevel() const
@@ -955,8 +959,11 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
 		}
 		else if (name == "boss") {
-			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
-			boss = enemy;
+			Boss* bossEntity = dynamic_cast<Boss*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS));
+			if (bossEntity != nullptr) {
+				boss = bossEntity;
+				enemy = bossEntity;
+			}
 		}
 
 		if (enemy) {

@@ -105,7 +105,6 @@ bool SceneTitle::Update(float dt)
 	}
 	if(initTimer.ReadMSec() > initTime)
 	{
-
 		if (drawBg)
 		{
 			auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
