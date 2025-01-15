@@ -9,6 +9,8 @@
 
 Projectile::Projectile(b2Vec2 position, b2Vec2 direction) : Entity(EntityType::PROJECTILE)
 {
+	name = "projectile";
+
 	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Projectiles.png");
 	animator = new Sprite(texture);
 

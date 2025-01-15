@@ -188,6 +188,11 @@ bool EntityManager::Update(float dt)
 			else continue;
 		}
 
+		if (entity->name == "boss" || entity->name == "projectile")
+		{
+			entity->visible = true;
+		}
+
 		int windowWidth = 0, windowHeight = 0;
 		Engine::GetInstance().window->GetWindowSize(windowWidth, windowHeight);
 		if (entity->position.getX() >= -Engine::GetInstance().render->camera.x && entity->position.getX() <= -Engine::GetInstance().render->camera.x + windowWidth)
@@ -196,7 +201,10 @@ bool EntityManager::Update(float dt)
 		}
 		else
 		{
-			entity->visible = false;
+			if (entity->name != "boss" && entity->name != "projectile")
+			{
+				entity->visible = false;
+			}
 		}
 
 		if (entity->visible)
