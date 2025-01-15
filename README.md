@@ -1,74 +1,85 @@
-# Development Game
+# ✨ Echo of Ages
 
-## 📜 **Game Description**
-
-Deep within a forgotten cave, an adventurer sleeps, cursed to awaken once every century when a monstrous force revives. Each time, he rises with a singular purpose: to hunt down and destroy the creature threatening the world. Over the course of a year, he journeys across the globe—through forests, mountains, rivers and snow—battling fierce foes and uncovering ancient secrets. With each passing day, the weight of his quest grows, knowing that only by defeating the monster can he bring peace, but at a cost he may not fully understand.
+> *"Awaken with the centuries. Fight for eternity."*
 
 ---
 
-## 🎮 **Controls**
+## 📜 Game Overview
 
-### **Movement & Actions:**
-- **A**: Move Left  
-- **D**: Move Right  
-- **W**: Move Up (only in God Mode)  
-- **S**: Move Down (only in God Mode)  
-- **SPACE**: Jump  
-- **Q**: Attack (Press twice to perform a combo)  
-- **E**: Shoot a Projectile 
-
-### **Menu & Game Functions:**
-- **ESC**: Exit Game  
-- **H**: Toggle Help Menu (shows control keys)  
-- **F1**: Go to Level 1  
-- **F2**: Go to Level 2  
-- **F3**: Start Game  
-- **F5**: Save Game  
-- **F6**: Load Game  
-- **F9**: Debug Mode (Visualize colliders & logic)  
-- **F10**: God Mode (Fly around, invulnerable)  
-- **F11**: Toggle FPS Cap (set to 30 FPS or 60FPS)  
-
-### **Mouse & Shift:**
-- **Mouse Left Click**: Change enemy position  
-- **Shift**: Change selected enemy  
+In the heart of a forgotten cave lies a slumbering adventurer, cursed to awaken once every century when an ancient evil rises. Each time, he embarks on a perilous journey to hunt and destroy the mythical Crystal Golem that threatens the world. His path winds through dense forests, treacherous mountains, roaring rivers, and frozen wastelands. As days pass, the burden of his quest deepens—for victory may come at a cost beyond comprehension.
 
 ---
 
-## 🌟 **Game Features**
+## 🎮 Controls
 
-### **World & Environment:**
-- **Parallax Background**  
-- **Tilemap created using Tiled**  
-- **Animated Tiles**  
-- **Movable Objects**  
-- **Checkpoints**
+### 🏃 Movement & Actions
+- **A** → Move Left  
+- **D** → Move Right  
+- **W** → Move Up (*God Mode Only*)  
+- **S** → Move Down (*God Mode Only*)  
+- **SPACE** → Jump  
+- **Q** → Attack (*Double-tap for Combo*)  
+- **E** → Shoot Projectile  
 
-### **Physics & Mechanics:**
-- **Box2D Physics Engine**  
-- **Platform Colliders**  
-- **Killing Colliders**  
-- **Player Physics**  
-- **Player Animations** (Jumping, Attacking, Dying)  
+### 🔍 Menu & Game Functions
+- **ESC** → Exit Game  
+- **H** → Toggle Help Menu  
+- **F1** → Jump to Level 1  
+- **F2** → Jump to Level 2  
+- **F3** → Jump to Level 3  
+- **F5** → Save Game  
+- **F6** → Load Game  
+- **F9** → Debug Mode (*Visualize Colliders & Logic*)  
+- **F10** → God Mode (*Fly & Invulnerability*)  
+- **F11** → Toggle FPS Cap (*30/60 FPS*)  
+- **Backspace** → Start Game  
 
-### **Combat:**
-- **Player Attack Combo**  
-- **Projectile Attacks**  
-- **Enemies:**
+### 🖱️ Mouse & Shift Functions
+- **Left Click** → Move Enemy Position  
+- **Shift** → Change Selected Enemy  
+
+---
+
+## 🌟 Key Features
+
+### 🌍 Immersive World & Environment
+- Dynamic **Parallax Backgrounds**  
+- **Tilemap** crafted with *Tiled*  
+- **Animated Tiles** breathing life into the world  
+- **Movable Objects** and interactive items  
+- **Checkpoints** for strategic progression  
+- Intuitive **Gameplay HUD**  
+- Engaging **Intro**, **Title**, **Pause**, and **End Screens**  
+- Atmospheric **Music** and **SFX**  
+
+### ⚖️ Physics & Mechanics
+- Powered by **Box2D Physics Engine**  
+- Detailed **Platform** and **Killing Colliders**  
+- Smooth **Player Animations** (*Jumping, Attacking, Dying*)  
+
+### ⚔️ Combat System
+- **Combo Attacks** with fluid combat mechanics  
+- **Projectile Attacks** for ranged strategy  
+- Diverse **Enemies** with AI Pathfinding:  
   - Boar  
   - Hedgehog  
   - Bee  
   - Octopus  
-- **Enemy Pathfinding**  
+  - **Epic Boss Battles**  
 
-### **Progress & Debugging:**
-- **Load/Save System**  
-- **Debug Mode** (Visualize colliders & logic)  
-- **God Mode** (Fly, invulnerable)  
-- **Framerate Cap (30 FPS)**  
-- **Fullscreen Toggle**  
+### 📊 Progression & Debug Tools
+- **Load/Save System** for seamless gameplay  
+- **Debug Mode** for development insight  
+- **God Mode** for unrestricted exploration  
+- Adjustable **Framerate Cap** (30/60 FPS)  
+- **Fullscreen Toggle** and performance **Optimization**  
 
 ---
 
-## ⚙️ **Development Notes**
-- This game is still in active development, and more levels and features are planned.
+## ⚙️ Development Notes
+
+*Echo of Ages* was created as an educational project to explore game development concepts, mechanics, and immersive storytelling. Feedback and contributions are always welcome!
+
+---
+
+> *"Time is a loop and so is the fight. Will you break the cycle?"*
