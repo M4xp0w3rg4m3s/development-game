@@ -73,7 +73,7 @@ bool SceneTitle::Awake()
 bool SceneTitle::Start()
 {
 	//intro music
-	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
 	Bg = Engine::GetInstance().textures.get()->Load("Assets/Textures/Background_Title_Scene.png");
 
@@ -108,7 +108,7 @@ bool SceneTitle::Update(float dt)
 		lastMouseX = (int)mousePosition.getX();
 		parallax->Update(dt);
 
-		Engine::GetInstance().render->DrawTexture(title, (int)(sizeWindow.x / 2 - titleWidth/2 - Engine::GetInstance().render->camera.x), 100);
+		Engine::GetInstance().render->DrawTexture(title, (int)(sizeWindow.x / 2 - titleWidth/2 - Engine::GetInstance().render->camera.x), 50);
 	}
 	else {
 		Engine::GetInstance().render->camera.x = 0;

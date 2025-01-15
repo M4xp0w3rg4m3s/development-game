@@ -8,6 +8,7 @@
 
 class GuiControlButton;
 class GuiSlider;
+class GuiToggle;
 
 class SceneSettings : public Module 
 {
@@ -40,9 +41,14 @@ private:
 
 	GuiControlButton* exitButton = nullptr;
 
-	GuiControlButton* fullscreen = nullptr;
+	GuiToggle* fullscreen = nullptr;
 
 	b2Vec2 sizeWindow = { 0,0 };
 
 	bool exitButtonPressed = false;
+
+	bool once = false;
+	bool fullscreen_bool = true;
+	bool pressed_once = false;
+	bool FirstTime = true;
 };

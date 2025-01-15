@@ -13,6 +13,7 @@
 #include "GuiManager.h"
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
+#include "GuiToggle.h"
 
 SceneSettings::SceneSettings() : Module()
 {
@@ -42,6 +43,8 @@ bool SceneSettings::Awake()
 	int exitWidth = 100, exitHeight = 25;
 	SDL_Rect btExitPos = {0,0, exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
+
+	fullscreen = (GuiToggle*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::TOGGLE, 6, "  Fullscreen  ", { (int)sizeWindow.x / 2 - 100 / 2, (int)(sizeWindow.y / 3 * 2.5), 100, 20 }, this);
 
 	return ret;
 }
@@ -111,6 +114,46 @@ bool SceneSettings::Update(float dt)
 	}
 	Engine::GetInstance().render->DrawText(sfxVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)sizeWindow.y / 3 * 2 - 10, 25, 20);
 
+	if (fullscreen->state == GuiControlState::NORMAL && pressed_once) {
+		if(!FirstTime)
+		{
+			Uint32 flags = SDL_GetWindowFlags(Engine::GetInstance().window->window);
+
+			if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, 0);
+			}
+			else {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			}
+		}
+		else
+		{
+			FirstTime = false;
+		}
+		pressed_once = false;
+		once = false;
+	}
+	else if (fullscreen->state == GuiControlState::PRESSED && !once)
+	{
+		if (!FirstTime)
+		{
+			Uint32 flags = SDL_GetWindowFlags(Engine::GetInstance().window->window);
+
+			if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, 0);
+			}
+			else {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			}
+		}
+		else
+		{
+			FirstTime = false;
+		}
+		pressed_once = true;
+		once = true;
+	}
+	
 	if (generalSlider->state == GuiControlState::PRESSED)
 	{
 		Engine::GetInstance().audio->ChangeGeneralVolume(generalSlider->GetValue());

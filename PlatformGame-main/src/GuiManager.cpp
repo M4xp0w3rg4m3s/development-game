@@ -4,6 +4,7 @@
 
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
+#include "GuiToggle.h"
 #include "Audio.h"
 
 GuiManager::GuiManager() :Module()
@@ -30,9 +31,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	case GuiControlType::SLIDER:
 		guiControl = new GuiSlider(id,bounds,text,observer, 0, 200);
 		break;
+	case GuiControlType::TOGGLE:
+		guiControl = new GuiToggle(id, bounds, text);
+		break;
 	}
-	
-	
+
 	guiControl->observer = observer;
 
 	guiControlsList.push_back(guiControl);
