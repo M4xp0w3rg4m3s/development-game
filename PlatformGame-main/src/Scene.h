@@ -70,9 +70,9 @@ public:
 	bool goingToLvl2 = false;
 	bool goingToLvl3 = false;
 
-	bool pause = false;
 	bool bossMusicPlayed = false;
 
+	bool pausePressed = false;
 	bool debug = false;
 private:
 	int enemyIndex1 = 0;
@@ -108,5 +108,4 @@ private:
 	int numEnemies3 = 12;
 
 	GuiControlButton* optionsBt = nullptr;
-	bool settingsPressed = false;
 };

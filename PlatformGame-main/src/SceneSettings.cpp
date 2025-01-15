@@ -63,9 +63,6 @@ bool SceneSettings::Awake()
 
 bool SceneSettings::Start()
 {
-	//intro music
-	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
-	
 	return true;
 }
 

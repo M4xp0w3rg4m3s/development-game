@@ -64,6 +64,8 @@ bool ScenePause::Awake()
 
 	parallax->ChangeTextures();
 
+	drawBg = true;
+
 	return ret;
 }
 

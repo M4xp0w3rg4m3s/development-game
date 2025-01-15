@@ -108,23 +108,13 @@ bool Scene::Update(float dt)
 		gameStarted = true;
 	}
 
-	if (optionsBt->state == GuiControlState::PRESSED)
+	if (optionsBt->state == GuiControlState::PRESSED || Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 	{
-		settingsPressed = true;
+		pausePressed = true;
 	}
-	if (settingsPressed)
+	if (pausePressed)
 	{
-		settingsPressed = false;
-		Engine::GetInstance().guiManager->DeleteButtons();
-		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
-	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-	{
-		pause = true;
-	}
-	if (pause)
-	{
-		pause = false;
+		pausePressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::PAUSE);
 	}
@@ -140,6 +130,7 @@ bool Scene::Update(float dt)
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
 
 		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
@@ -499,7 +490,7 @@ void Scene::LoadState()
 		player->ResetPlayer(current_level);
 	}
 	else if (sceneNode.child("level").attribute("currentlevel").as_int() == 3 && current_level != 3) {
-		//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
 		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
@@ -885,7 +876,7 @@ void Scene::AdvanceLevel()
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
-		//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
 
 		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
