@@ -287,7 +287,7 @@ bool Boss::Update(float dt)
 			}
 		}
 	}
-	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -55);
+	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -54);
 
 	// Track attack direction
 	if (isAttacking) {
