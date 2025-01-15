@@ -294,22 +294,28 @@ bool GameHUD::Update(float dt)
 
 bool GameHUD::CleanUp()
 {
-	LOG("Cleanup Game HUD");/*
+	LOG("Cleanup Game HUD");
 	Engine::GetInstance().textures->UnLoad(keysMenuTexture);
 	Engine::GetInstance().textures->UnLoad(lifeHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisTexture);
 	Engine::GetInstance().textures->UnLoad(heartTexture);
 	Engine::GetInstance().textures->UnLoad(shurikenCDTexture);
-	Engine::GetInstance().textures->UnLoad(attackCDTexture);*/
+	Engine::GetInstance().textures->UnLoad(attackCDTexture);
+	Engine::GetInstance().textures->UnLoad(dieScreen);
+	Engine::GetInstance().textures->UnLoad(lvl2Screen);
+	Engine::GetInstance().textures->UnLoad(lvl3Screen);
+
 	ignisAnimator->Release();
 	heartAnimator->Release();
 	shurikenCDAnimator->Release();
 	attackCDAnimator->Release();
+
 	delete ignisAnimator;
 	delete heartAnimator;
 	delete shurikenCDAnimator;
 	delete attackCDAnimator;
+
 	return true;
 }
 

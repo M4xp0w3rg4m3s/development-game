@@ -457,7 +457,16 @@ bool Player::Update(float dt)
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
-	//Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().textures.get()->UnLoad(texture);
+	
+	animator->Release();
+	delete animator;
+
+	if (enemyAttacked != nullptr)
+	{
+		delete enemyAttacked;
+	}
+
 	return true;
 }
 

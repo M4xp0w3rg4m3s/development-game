@@ -37,24 +37,24 @@ bool SceneTitle::Awake()
 
 	// Big Button
 	int playWidth = 120, playHeight = 50;
-	SDL_Rect btPlayPos = { sizeWindow.x / 2 - playWidth/2, (sizeWindow.y / 10) * 4.25 - playHeight/2 , playWidth,playHeight};
+	SDL_Rect btPlayPos = { (int)(sizeWindow.x / 2 - playWidth / 2), (int)((sizeWindow.y / 10) * 4.25 - playHeight / 2) , playWidth,playHeight };
 	playButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "  Play  ", btPlayPos, this);
 
 	// Small Buttons
 	int continueWidth = 100, continueHeight = 25;
-	SDL_Rect btContinuePos = { sizeWindow.x / 2 - continueWidth / 2, (sizeWindow.y / 10) * 5.5 - continueHeight / 2 , continueWidth,continueHeight };
+	SDL_Rect btContinuePos = { (int)(sizeWindow.x / 2 - continueWidth / 2), (int)((sizeWindow.y / 10) * 5.5 - continueHeight / 2) , continueWidth,continueHeight };
 	continueButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "  Continue  ", btContinuePos, this);
 
 	int settingsWidth = 100, settingsHeight = 25;
-	SDL_Rect btSettingsPos = { sizeWindow.x / 2 - settingsWidth / 2, (sizeWindow.y / 10) * 6.5 - settingsHeight / 2 , settingsWidth,settingsHeight };
+	SDL_Rect btSettingsPos = { (int)(sizeWindow.x / 2 - settingsWidth / 2),(int)((sizeWindow.y / 10) * 6.5 - settingsHeight / 2), settingsWidth,settingsHeight };
 	settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "  Settings  ", btSettingsPos, this);
 
 	int creditsWidth = 100, creditsHeight = 25;
-	SDL_Rect btCreditsPos = { sizeWindow.x / 2 - creditsWidth / 2, (sizeWindow.y / 10) * 7.5 - creditsHeight / 2 , creditsWidth,creditsHeight };
+	SDL_Rect btCreditsPos = { (int)(sizeWindow.x / 2 - creditsWidth / 2), (int)((sizeWindow.y / 10) * 7.5 - creditsHeight / 2) , creditsWidth,creditsHeight };
 	creditsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "   Credits   ", btCreditsPos, this);
 
 	int exitWidth = 100, exitHeight = 25;
-	SDL_Rect btExitPos = { sizeWindow.x / 2 - exitWidth / 2, (sizeWindow.y / 10) * 8.5 - exitHeight / 2 , exitWidth,exitHeight };
+	SDL_Rect btExitPos = { (int)(sizeWindow.x / 2 - exitWidth / 2), (int)((sizeWindow.y / 10) * 8.5 - exitHeight / 2) , exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 
 	parallax = Engine::GetInstance().parallax.get();
@@ -106,13 +106,13 @@ bool SceneTitle::Update(float dt)
 	{
 		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
 		auto& camera = Engine::GetInstance().render->camera;
-		static int lastMouseX = mousePosition.getX();
-		int deltaX = mousePosition.getX() - lastMouseX;
+		static int lastMouseX = (int)mousePosition.getX();
+		int deltaX = (int)mousePosition.getX() - lastMouseX;
 		camera.x -= deltaX;
-		lastMouseX = mousePosition.getX();
+		lastMouseX = (int)mousePosition.getX();
 		parallax->Update(dt);
 
-		Engine::GetInstance().render->DrawTexture(title, sizeWindow.x / 2 - titleWidth / 2 - Engine::GetInstance().render->camera.x, 50);
+		Engine::GetInstance().render->DrawTexture(title, (int)(sizeWindow.x / 2 - titleWidth/2 - Engine::GetInstance().render->camera.x), 50);
 	}
 	else {
 		Engine::GetInstance().render->camera.x = 0;
@@ -138,7 +138,7 @@ bool SceneTitle::Update(float dt)
 		Engine::GetInstance().guiManager->DeleteButtons();
 		HandlePlay();
 	}
-	else if (continuePressed) // clicking first time  + f3 = bug
+	else if (continuePressed) 
 	{
 		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
@@ -162,6 +162,7 @@ bool SceneTitle::Update(float dt)
 		ret = false;
 	}
 
+	//------Fade------//
 	if (fadingIn)
 	{
 		double elapsedTime = fadeTimer.ReadMSec();
@@ -224,7 +225,13 @@ bool SceneTitle::CleanUp()
 	{
 		Engine::GetInstance().textures.get()->UnLoad(lvl3);
 	}
+	if (title != nullptr)
+	{
+		Engine::GetInstance().textures.get()->UnLoad(title);
+	}
+
 	Engine::GetInstance().guiManager->DeleteButtons();
+
 	return true;
 }
 

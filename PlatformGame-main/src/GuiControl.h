@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "Render.h"
 #include "Module.h"
+#include "Engine.h"
+#include "Textures.h"
 #include <vector>
 
 #include "Vector2D.h"
@@ -51,6 +53,14 @@ public:
 		return true;
 	}
 
+	void CleanUp() 
+	{
+		if (observer != nullptr)
+		{
+			delete observer;
+		}
+	}
+	
 	void SetTexture(SDL_Texture* tex)
 	{
 		texture = tex;

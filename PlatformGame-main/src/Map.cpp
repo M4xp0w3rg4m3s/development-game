@@ -126,6 +126,15 @@ bool Map::CleanUp()
     }
     objects.clear();
 
+    for (const auto& checkpoint : checkpoints)
+    {
+        if (checkpoint != nullptr)
+        {
+            delete checkpoint;
+        }
+    }
+    checkpoints.clear();
+
     return true;
 }
 

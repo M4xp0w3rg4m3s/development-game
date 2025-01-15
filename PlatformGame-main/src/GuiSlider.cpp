@@ -11,7 +11,7 @@ GuiSlider::GuiSlider(int id, SDL_Rect bounds, const char* text, Module* observer
     SetObserver(observer);
 
     Vector2D thumbSize = { 20, 20 };
-    SDL_Rect thumbPos = { bounds.x, bounds.y + bounds.h / 2 - thumbSize.getY() / 2, thumbSize.getX(), thumbSize.getY() };
+    SDL_Rect thumbPos = { bounds.x, (int)(bounds.y + bounds.h / 2 - thumbSize.getY() / 2), (int)thumbSize.getX(), (int)thumbSize.getY() };
     thumb = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, id + 1, "", thumbPos, observer);
 
     SetValue(0.5);
@@ -34,12 +34,12 @@ bool GuiSlider::Update(float dt)
             float clampedX = mousePos.getX() - thumb->bounds.w / 2;
 
             // Manually clamp clampedX within slider bounds
-            if (clampedX < bounds.x) clampedX = bounds.x;
-            if (clampedX > bounds.x + bounds.w - thumb->bounds.w) clampedX = bounds.x + bounds.w - thumb->bounds.w;
+            if (clampedX < bounds.x) clampedX = (float)bounds.x;
+            if (clampedX > bounds.x + bounds.w - thumb->bounds.w) clampedX = (float)(bounds.x + bounds.w - thumb->bounds.w);
 
             if (thumb->bounds.x != clampedX)
             {
-                thumb->bounds.x = clampedX;
+                thumb->bounds.x = (int)clampedX;
 
                 // Calculate percent and manually clamp it between 0 and 1
                 float percent = (clampedX - bounds.x) / (bounds.w - thumb->bounds.w);
@@ -101,7 +101,7 @@ void GuiSlider::SetValue(float valueToSet)
     value = valueToSet;
 
     // Update thumb position accordingly
-    thumb->bounds.x = bounds.x + value * (bounds.w - thumb->bounds.w);
+    thumb->bounds.x = (int)(bounds.x + value * (bounds.w - thumb->bounds.w));
 }
 
 
