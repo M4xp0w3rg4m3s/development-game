@@ -65,4 +65,6 @@ private:
 	bool fallingProjectiles = false;
 
 	const float VELOCITY_THRESHOLD = 0.1f;
+
+	int crystalSpawnFx = -1;
 };

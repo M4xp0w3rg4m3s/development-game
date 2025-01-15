@@ -80,6 +80,10 @@ bool Scene::Awake()
 	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
 	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
+	checkpointFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/checkpoint.ogg");
+	golemSpawnFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Boss_earthquake.ogg");
+	golemRoarFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Boss_monster.ogg");
+
 	CreateButtons();
 
 	return ret;
@@ -293,6 +297,8 @@ bool Scene::Update(float dt)
 	}
 	if (current_level == 3 && player->position.getX() >= 5760 && !bossMusicPlayed) {
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Boss_theme.wav");
+		Engine::GetInstance().audio->PlayFx(golemSpawnFx);
+		Engine::GetInstance().audio->PlayFx(golemRoarFx);
 		bossMusicPlayed = true;
 	}
 
@@ -359,18 +365,21 @@ bool Scene::Update(float dt)
 			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 1 && !checkpoint->activated) {
 				checkpoint->activated = true;
 				SaveState();
+				Engine::GetInstance().audio->PlayFx(checkpointFx);
 			}
 		}
 		else if (current_level == 2) {
 			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 2 && !checkpoint->activated) {
 				checkpoint->activated = true;
 				SaveState();
+				Engine::GetInstance().audio->PlayFx(checkpointFx);
 			}
 		}
 		else if (current_level == 3) {
 			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 3 && !checkpoint->activated) {
 				checkpoint->activated = true;
 				SaveState();
+				Engine::GetInstance().audio->PlayFx(checkpointFx);
 			}
 		}
 	}

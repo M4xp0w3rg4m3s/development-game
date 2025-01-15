@@ -3,6 +3,7 @@
 #include "Physics.h"
 #include "Render.h"
 #include "Scene.h"
+#include "Audio.h"
 #include "Engine.h"
 #include "Textures.h"
 #include "EntityManager.h"
@@ -29,7 +30,7 @@ Projectile::~Projectile()
 bool Projectile::Awake()
 {
 	//Initialize Projectile parameters
-
+	crystalBreakFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Ice_break.ogg");
 	return true;
 }
 
@@ -173,6 +174,9 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 
 	default:
 		break;
+	}
+	if (animator->GetAnimation() == 3) {
+		Engine::GetInstance().audio->PlayFx(crystalBreakFx);
 	}
 }
 

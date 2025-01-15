@@ -108,4 +108,8 @@ private:
 	int numEnemies3 = 12;
 
 	GuiControlButton* optionsBt = nullptr;
+
+	int checkpointFx = -1;
+	int golemSpawnFx = -1;
+	int golemRoarFx = -1;
 };

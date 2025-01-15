@@ -172,6 +172,8 @@ bool Boss::Start()
 
 	hitTimer.Start();
 
+	crystalSpawnFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Ice_spawn.ogg");
+
 	return true;
 }
 
@@ -222,6 +224,7 @@ bool Boss::Update(float dt)
 				if (fallingProjectiles)
 				{
 					Shoot();
+					Engine::GetInstance().audio->PlayFx(crystalSpawnFx);
 					fallingProjectiles = false;
 				}
 

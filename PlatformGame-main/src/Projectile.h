@@ -51,4 +51,6 @@ private:
 
 	Timer projectileDeadTimer;
 	int projectileDeadTime = 1;
+
+	int crystalBreakFx = -1;
 };
