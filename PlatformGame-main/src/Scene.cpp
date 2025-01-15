@@ -48,7 +48,7 @@ bool Scene::Awake()
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 
 	parallaxTwoPoints = Engine::GetInstance().parallaxTwoPoints.get();
-
+	parallaxTwoPoints->SetRange(0, 1024);
 	parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
 	parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
 	parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
@@ -117,28 +117,6 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render.get()->camera.x = 0;
 	}
 
-	if (current_level == 1) {
-		parallaxTwoPoints->SetRange(0, 1024);
-		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
-		parallaxTwoPoints->ChangeTextures();
-	}
-	if (current_level == 2) {
-		parallaxTwoPoints->SetRange(-1, -1);
-	}
-	if (current_level == 3) {
-		parallaxTwoPoints->SetRange(3590, 7700);
-		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
-		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
-		parallaxTwoPoints->ChangeTextures();
-	}
-
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
@@ -150,6 +128,14 @@ bool Scene::Update(float dt)
 		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 
 		current_level = 3;
 
@@ -201,6 +187,8 @@ bool Scene::Update(float dt)
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
 
+		parallaxTwoPoints->SetRange(-1, -1);
+
 		current_level = 2;
 
 		player->ResetPlayer(current_level);
@@ -250,6 +238,14 @@ bool Scene::Update(float dt)
 		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(0, 1024);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 
 		current_level = 1;
 
@@ -449,6 +445,7 @@ void Scene::LoadState()
 		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+		parallaxTwoPoints->SetRange(-1, -1);
 		current_level = 2;
 		player->ResetPlayer(current_level);
 
@@ -463,6 +460,13 @@ void Scene::LoadState()
 		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+		parallaxTwoPoints->SetRange(0, 1024);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 		current_level = 1;
 		player->ResetPlayer(current_level);
 	}
@@ -475,6 +479,13 @@ void Scene::LoadState()
 		parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
 		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 		parallax->ChangeTextures();
 		current_level = 3;
 		player->ResetPlayer(current_level);
@@ -802,6 +813,8 @@ void Scene::AdvanceLevel()
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
 
+		parallaxTwoPoints->SetRange(-1, -1);
+
 		current_level = 2;
 
 		player->ResetPlayer(current_level);
@@ -851,6 +864,14 @@ void Scene::AdvanceLevel()
 		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 
 		current_level = 3;
 
