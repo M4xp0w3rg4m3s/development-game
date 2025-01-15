@@ -490,14 +490,8 @@ bool Player::CleanUp()
 	animator->Release();
 	delete animator;
 
-	if (enemyAttacked != nullptr)
-	{
-		delete enemyAttacked;
-	}
-	if (bossAttacked != nullptr)
-	{
-		delete bossAttacked;
-	}
+	enemyAttacked = nullptr;
+	bossAttacked = nullptr;
 
 	return true;
 }
