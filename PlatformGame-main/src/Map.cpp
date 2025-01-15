@@ -42,52 +42,6 @@ bool Map::Start() {
     return true;
 }
 
-//bool Map::Update(float dt)
-//{
-//    bool ret = true;
-//
-//    if (mapLoaded) {
-//
-//        for (const auto anim : tileAnimator) {
-//            anim.second->Update();
-//        }
-//
-//        for (const auto& mapLayer : mapData.layers) {
-//            //Check if the property Draw exist get the value, if it's true draw the lawyer
-//            if (mapLayer->properties.GetProperty("Draw") != nullptr && mapLayer->properties.GetProperty("Draw")->value == true) {
-//                for (int i = 0; i < mapData.width; i++) {
-//                    for (int j = 0; j < mapData.height; j++) {
-//
-//                        //Get the gid from tile
-//                        int gid = mapLayer->Get(i, j);
-//                        //Check if the gid is different from 0 - some tiles are empty
-//                        if (gid != 0) {
-//                            TileSet* tileSet = GetTilesetFromTileId(gid);
-//                            if (tileSet != nullptr) {
-//                                if (tileAnimator.find(gid) != tileAnimator.end()) {
-//                                    gid = tileAnimator.at(gid)->GetCurrentFrame().extraData;
-//                                }
-//                                //Get the Rect from the tileSetTexture;
-//                                SDL_Rect tileRect = tileSet->GetRect(gid);
-//                                //Get the screen coordinates from the tile coordinates
-//                                Vector2D mapCoord = MapToWorld(i, j);
-//
-//                                int x = 0, y = 0;
-//                                Engine::GetInstance().window->GetWindowSize(x, y);
-//                                //Draw the texture
-//                                if (Engine::GetInstance().render->camera.x >= mapCoord.getX() && mapCoord.getX() <= Engine::GetInstance().render->camera.x + x)
-//                                {
-//                                    Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)(mapCoord.getX()), (int)(mapCoord.getY()), &tileRect);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    return ret;
-//}
 bool Map::Update(float dt)
 {
     bool ret = true;

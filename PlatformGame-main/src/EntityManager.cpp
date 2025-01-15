@@ -8,6 +8,7 @@
 #include "Boulder.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "Window.h"
 
 #include "Boar.h"
 #include "Hedgehog.h"
@@ -186,7 +187,22 @@ bool EntityManager::Update(float dt)
 			}
 			else continue;
 		}
-		ret = entity->Update(dt);
+
+		int windowWidth = 0, windowHeight = 0;
+		Engine::GetInstance().window->GetWindowSize(windowWidth, windowHeight);
+		if (entity->position.getX() >= -Engine::GetInstance().render->camera.x && entity->position.getX() <= -Engine::GetInstance().render->camera.x + windowWidth)
+		{
+			entity->visible = true;
+		}
+		else
+		{
+			entity->visible = false;
+		}
+
+		if (entity->visible)
+		{
+			ret = entity->Update(dt);
+		}
 	}
 	return ret;
 }
