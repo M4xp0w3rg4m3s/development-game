@@ -69,6 +69,8 @@ public:
 	bool goingToLvl2 = false;
 	bool goingToLvl3 = false;
 
+	bool pause = false;
+
 	bool debug = false;
 private:
 	int enemyIndex1 = 0;

@@ -118,6 +118,16 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
 	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	{
+		pause = true;
+	}
+	if (pause)
+	{
+		pause = false;
+		Engine::GetInstance().guiManager->DeleteButtons();
+		Engine::GetInstance().ChangeLoopState(LoopState::PAUSE);
+	}
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
 		Engine::GetInstance().render.get()->camera.x = (int)(-((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2));
@@ -383,8 +393,8 @@ bool Scene::PostUpdate()
 	bool ret = true;
 
 	// Detects if the player wants to exit the game with ESC key
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
+	
+		
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 		LoadState();
 

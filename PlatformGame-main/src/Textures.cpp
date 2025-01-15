@@ -45,8 +45,9 @@ bool Textures::CleanUp()
 	LOG("Freeing textures and Image library");
 	for (const auto& texture : textures) {
 		LOG("Freeing texture");
-		if(texture!= NULL && texture != nullptr)
+		if (texture != NULL && texture != nullptr && texture) {
 			SDL_DestroyTexture(texture);
+		}
 	}
 	textures.clear();
 

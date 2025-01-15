@@ -19,6 +19,7 @@ class Scene;
 class SceneIntro;
 class SceneTitle;
 class SceneSettings;
+class ScenePause;
 class EntityManager;
 class Map;
 class Physics;
@@ -32,7 +33,8 @@ enum class LoopState {
 	INTRO,
 	TITLE,
 	SETTINGS,
-	GAME
+	GAME,
+	PAUSE
 };
 
 class Engine
@@ -98,6 +100,7 @@ private:
 	std::list<std::shared_ptr<Module>> moduleListTitle;
 	std::list<std::shared_ptr<Module>> moduleListSettings;
 	std::list<std::shared_ptr<Module>> moduleListGame;
+	std::list<std::shared_ptr<Module>> moduleListPause;
 
 	std::list<std::shared_ptr<Module>> moduleListCleanOnce;
 
@@ -124,6 +127,7 @@ public:
 	std::shared_ptr<SceneIntro> sceneIntro;
 	std::shared_ptr<SceneTitle> sceneTitle;
 	std::shared_ptr<SceneSettings> sceneSettings;
+	std::shared_ptr<ScenePause> scenePause;
 	std::shared_ptr<EntityManager> entityManager;
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
@@ -140,6 +144,7 @@ private:
 	bool TitleStarted = false;
 	bool SettingsStarted = false;
 	bool GameStarted = false;
+	bool PauseStarted = false;
 
 	// Delta time
 	float dt; 

@@ -53,7 +53,7 @@ bool Map::Update(float dt)
 
         for (const auto& mapLayer : mapData.layers) {
             //Check if the property Draw exist get the value, if it's true draw the lawyer
-            if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
+            if (mapLayer->properties.GetProperty("Draw") != nullptr && mapLayer->properties.GetProperty("Draw")->value == true) {
                 for (int i = 0; i < mapData.width; i++) {
                     for (int j = 0; j < mapData.height; j++) {
 
@@ -360,7 +360,7 @@ MapLayer* Map::GetNavigationLayer() {
 Properties::Property* Properties::GetProperty(const char* name)
 {
     for (const auto& property : propertyList) {
-        if (property->name == name) {
+        if (property != nullptr && property->name == name) {
             return property;
         }
     }
