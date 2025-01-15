@@ -77,6 +77,9 @@ private:
 
 	Parallax* parallax = nullptr;
 
+	Timer initTimer;
+	int initTime = 1 * 100;
+
 	//----------Fade----------//
 	Timer imageTimer;
 	int image1Time = 5 * 1000;

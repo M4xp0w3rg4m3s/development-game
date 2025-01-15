@@ -14,6 +14,7 @@
 #include "GuiManager.h"
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
+#include "Parallax.h"
 
 ScenePause::ScenePause() : Module()
 {
@@ -46,22 +47,29 @@ bool ScenePause::Awake()
 	settingsButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "  Settings  ", btSettingsPos, this);
 
 	int backToTitleWidth = 100, backToTitleHeight = 25;
-	SDL_Rect btbackToTitlePos = { (int)(sizeWindow.x / 2 - backToTitleWidth / 2), (int)((sizeWindow.y / 10) * 6.5 - backToTitleHeight / 2) , backToTitleHeight,backToTitleHeight };
-	backToTitleButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "   Menu   ", btbackToTitlePos, this);
+	SDL_Rect btbackToTitlePos = { (int)(sizeWindow.x / 2 - backToTitleWidth / 2), (int)((sizeWindow.y / 10) * 6.5 - backToTitleHeight / 2) , backToTitleWidth,backToTitleHeight };
+	backToTitleButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "    Menu    ", btbackToTitlePos, this);
 
 	int exitWidth = 100, exitHeight = 25;
 	SDL_Rect btExitPos = { (int)(sizeWindow.x / 2 - exitWidth / 2), (int)((sizeWindow.y / 10) * 7.5 - exitHeight / 2) , exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
+
+	parallax = Engine::GetInstance().parallax.get();
+
+	parallax->textureName1 = "Assets/Textures/Pause_para/1.png";
+	parallax->textureName2 = "Assets/Textures/Pause_para/2.png";
+	parallax->textureName3 = "Assets/Textures/Pause_para/3.png";
+	parallax->textureName4 = "Assets/Textures/Pause_para/4.png";
+	parallax->textureName5 = "Assets/Textures/Pause_para/4.png";
+
+	parallax->ChangeTextures();
 
 	return ret;
 }
 
 bool ScenePause::Start()
 {
-	lvl1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level1.png");
-	lvl2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
-	lvl3 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
-
+	
 	return true;
 }
 
@@ -76,7 +84,19 @@ bool ScenePause::Update(float dt)
 
 	if (drawBg)
 	{
-		// Draw Background
+		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
+		auto& camera = Engine::GetInstance().render->camera;
+		static int lastMouseX = (int)mousePosition.getX();
+		int deltaX = (int)mousePosition.getX() - lastMouseX;
+		camera.x -= deltaX;
+		lastMouseX = (int)mousePosition.getX();
+		parallax->Update(dt);
+
+		Engine::GetInstance().render->DrawText("  PAUSED  ", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
+	}
+	else {
+		Engine::GetInstance().render->camera.x = 0;
+		Engine::GetInstance().render->camera.y = 0;
 	}
 
 	// Handle button interactions if no button is currently pressed
@@ -88,8 +108,10 @@ bool ScenePause::Update(float dt)
 	if (resumePressed)
 	{
 		drawBg = false;
+		resumePressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
-		HandleContinue();
+		Engine::GetInstance().scene->CreateButtons();
+		Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
 	}
 	else if (settingsPressed)
 	{
@@ -146,18 +168,7 @@ bool ScenePause::PostUpdate()
 bool ScenePause::CleanUp()
 {
 	Engine::GetInstance().guiManager->DeleteButtons();
-	if (lvl1 != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(lvl1);
-	}
-	if (lvl2 != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(lvl2);
-	}
-	if (lvl3 != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(lvl3);
-	}
+	
 	return true;
 }
 
@@ -210,40 +221,4 @@ void ScenePause::ResetFadeStates()
 	fadingOut = false;
 	last_fadeIn = false;
 	opacity = 255;
-}
-
-void ScenePause::HandleContinue()
-{
-	pugi::xml_document loadFile;
-	pugi::xml_parse_result result = loadFile.load_file("config.xml");
-	if (result == NULL)
-	{
-		LOG("Could not load file. Pugi error: %s", result.description());
-		return;
-	}
-	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
-	int level = sceneNode.child("level").attribute("currentlevel").as_int();
-
-	if (lvlImageTimer.ReadMSec() < lvlImageTime)
-	{
-		if (level == 1) {
-			Engine::GetInstance().render->DrawTexture(lvl1, 0, 0);
-		}
-		else if (level == 2) {
-			Engine::GetInstance().render->DrawTexture(lvl2, 0, 0);
-		}
-		else if (level == 3) {
-			Engine::GetInstance().render->DrawTexture(lvl3, 0, 0);
-		}
-		if (lvlImageTimer.ReadMSec() >= (lvlImageTime - fadetime) && !lvlImage_fadeOut) {
-			FadeIn();
-			lvlImage_fadeOut = true;
-		}
-	}
-	else if (lvlImageTimer.ReadMSec() > lvlImageTime)
-	{
-		resumePressed = false;
-		ResetFadeStates();
-		Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
-	}
 }

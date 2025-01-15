@@ -86,6 +86,8 @@ bool SceneTitle::Start()
 
 	drawBg = true;
 
+	initTimer.Start();
+
 	return true;
 }
 
@@ -101,64 +103,67 @@ bool SceneTitle::Update(float dt)
 	if (!saved) {
 		Engine::GetInstance().guiManager->DisableButton(continueButton->id);
 	}
+	if(initTimer.ReadMSec() > initTime)
+	{
+		if (drawBg)
+		{
+			auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
+			auto& camera = Engine::GetInstance().render->camera;
+			static int lastMouseX = (int)mousePosition.getX();
+			int deltaX = (int)mousePosition.getX() - lastMouseX;
+			camera.x -= deltaX;
+			lastMouseX = (int)mousePosition.getX();
+			parallax->Update(dt);
 
-	if (drawBg)
-	{
-		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
-		auto& camera = Engine::GetInstance().render->camera;
-		static int lastMouseX = (int)mousePosition.getX();
-		int deltaX = (int)mousePosition.getX() - lastMouseX;
-		camera.x -= deltaX;
-		lastMouseX = (int)mousePosition.getX();
+			Engine::GetInstance().render->DrawTexture(title, (int)(sizeWindow.x / 2 - titleWidth / 2 - Engine::GetInstance().render->camera.x), 50);
+		}
+		else {
+			Engine::GetInstance().render->camera.x = 0;
+			Engine::GetInstance().render->camera.y = 0;
+		}
 
-		Engine::GetInstance().render->DrawTexture(title, (int)(sizeWindow.x / 2 - titleWidth/2 - Engine::GetInstance().render->camera.x), 50);
-	}
-	else {
-		Engine::GetInstance().render->camera.x = 0;
-		Engine::GetInstance().render->camera.y = 0;
-	}
+		// Toggle debug mode
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+		{
+			debug = !debug;
+		}
 
-	// Toggle debug mode
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-	{
-		debug = !debug;
-	}
-
-	// Handle button interactions if no button is currently pressed
-	if (!playPressed && !continuePressed && !settingsPressed && !creditsPressed && !exitPressed)
-	{
-		ButtonInteraction();
-	}
+		// Handle button interactions if no button is currently pressed
+		if (!playPressed && !continuePressed && !settingsPressed && !creditsPressed && !exitPressed)
+		{
+			ButtonInteraction();
+		}
 
 
-	if (playPressed)
-	{
-		drawBg = false;
-		Engine::GetInstance().guiManager->DeleteButtons();
-		HandlePlay();
-	}
-	else if (continuePressed) 
-	{
-		drawBg = false;
-		Engine::GetInstance().guiManager->DeleteButtons();
-		HandleContinue();
-	}
-	else if (settingsPressed)
-	{
-		settingsPressed = false;
-		drawBg = false;
-		Engine::GetInstance().guiManager->DeleteButtons();
-		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
-	}
-	else if (creditsPressed)
-	{
-		drawBg = false;
-		Engine::GetInstance().guiManager->DisableButtons();
-		HandleCredits();
-	}
-	else if (exitPressed)
-	{
-		ret = false;
+		if (playPressed)
+		{
+			drawBg = false;
+			Engine::GetInstance().guiManager->DeleteButtons();
+			HandlePlay();
+		}
+		else if (continuePressed)
+		{
+			drawBg = false;
+			Engine::GetInstance().guiManager->DeleteButtons();
+			HandleContinue();
+		}
+		else if (settingsPressed)
+		{
+			settingsPressed = false;
+			drawBg = false;
+			Engine::GetInstance().guiManager->DeleteButtons();
+			Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
+		}
+		else if (creditsPressed)
+		{
+			drawBg = false;
+			Engine::GetInstance().guiManager->DisableButtons();
+			HandleCredits();
+		}
+		else if (exitPressed)
+		{
+			ret = false;
+		}
 	}
 
 	//------Fade------//

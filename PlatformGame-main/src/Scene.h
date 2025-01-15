@@ -70,6 +70,7 @@ public:
 	bool goingToLvl2 = false;
 	bool goingToLvl3 = false;
 
+	bool pause = false;
 	bool bossMusicPlayed = false;
 
 	bool debug = false;

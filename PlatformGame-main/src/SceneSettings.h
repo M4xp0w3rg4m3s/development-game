@@ -9,6 +9,7 @@
 class GuiControlButton;
 class GuiSlider;
 class GuiToggle;
+class Parallax;
 
 class SceneSettings : public Module 
 {
@@ -43,6 +44,8 @@ private:
 
 	GuiToggle* fullscreen = nullptr;
 
+	Parallax* parallax = nullptr;
+
 	b2Vec2 sizeWindow = { 0,0 };
 
 	bool exitButtonPressed = false;
@@ -51,4 +54,6 @@ private:
 	bool fullscreen_bool = true;
 	bool pressed_once = false;
 	bool FirstTime = true;
+
+	bool drawBg = true;
 };

@@ -12,8 +12,8 @@ GuiToggle::GuiToggle(int id, SDL_Rect bounds, const char* text) : GuiControl(Gui
     drawBasic = false;
     inTransition = false;  
 
-    startColor = { 250, 160, 160, 255 }; // Red
-    endColor = { 193, 225, 193, 255 };   // Green
+    startColor = { 113, 0, 14, 255 }; // Red
+    endColor = { 7, 107, 0, 255 };   // Green
     transitionTime = 0.5f;  
     currentTime = 0.0f;   
 }
@@ -32,16 +32,16 @@ bool GuiToggle::Update(float dt)
                 if (state == GuiControlState::PRESSED)
                 {
                     state = GuiControlState::NORMAL;
-                    startColor = { 193, 225, 193, 255 }; // Green
-                    endColor = { 250, 160, 160, 255 };   // Red
+                    startColor = { 7, 107, 0, 255 }; // Green
+                    endColor = { 113, 0, 14, 255 };   // Red
                     currentTime = 0.0f;               
                     inTransition = true;              
                 }
                 else if (state == GuiControlState::NORMAL)
                 {
                     state = GuiControlState::PRESSED;
-                    startColor = { 250, 160, 160, 255 }; // Red
-                    endColor = { 193, 225, 193, 255 };   // Green
+                    startColor = { 113, 0, 14, 255 }; // Red
+                    endColor = { 7, 107, 0, 255 };   // Green
                     currentTime = 0.0f;              
                     inTransition = true;              
                 }
