@@ -9,6 +9,7 @@
 class GuiControlButton;
 class GuiSlider;
 class GuiToggle;
+class Parallax;
 
 class ScenePause : public Module
 {
@@ -29,7 +30,6 @@ public:
 	void FadeOut();
 	void ResetFadeStates();
 
-	void HandleContinue();
 private:
 	GuiControlButton* resumeButton = nullptr;
 	GuiControlButton* settingsButton = nullptr;
@@ -45,9 +45,7 @@ private:
 
 	bool drawBg = true;
 
-	SDL_Texture* lvl1 = nullptr;
-	SDL_Texture* lvl2 = nullptr;
-	SDL_Texture* lvl3 = nullptr;
+	Parallax* parallax = nullptr;
 
 	//----------Fade----------//
 	Timer imageTimer;

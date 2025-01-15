@@ -14,6 +14,7 @@
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
 #include "GuiToggle.h"
+#include "Parallax.h"
 
 SceneSettings::SceneSettings() : Module()
 {
@@ -47,6 +48,16 @@ bool SceneSettings::Awake()
 
 	fullscreen = (GuiToggle*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::TOGGLE, 6, "  Fullscreen  ", { (int)sizeWindow.x / 2 - 100 / 2, (int)(sizeWindow.y / 3 * 2.5), 100, 20 }, this);
 
+	parallax = Engine::GetInstance().parallax.get();
+
+	parallax->textureName1 = "Assets/Textures/Settings_para/1.png";
+	parallax->textureName2 = "Assets/Textures/Settings_para/2.png";
+	parallax->textureName3 = "Assets/Textures/Settings_para/3.png";
+	parallax->textureName4 = "Assets/Textures/Settings_para/4.png";
+	parallax->textureName5 = "Assets/Textures/Settings_para/4.png";
+
+	parallax->ChangeTextures();
+
 	return ret;
 }
 
@@ -66,6 +77,22 @@ bool SceneSettings::PreUpdate()
 bool SceneSettings::Update(float dt)
 {
 	bool ret = true;
+
+	if (drawBg)
+	{
+		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
+		auto& camera = Engine::GetInstance().render->camera;
+		static int lastMouseX = (int)mousePosition.getX();
+		int deltaX = (int)mousePosition.getX() - lastMouseX;
+		camera.x -= deltaX;
+		lastMouseX = (int)mousePosition.getX();
+		parallax->Update(dt);
+
+	}
+	else {
+		Engine::GetInstance().render->camera.x = 0;
+		Engine::GetInstance().render->camera.y = 0;
+	}
 
 	//---Text---//
 	Engine::GetInstance().render->DrawText("OPTIONS", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
@@ -174,6 +201,7 @@ bool SceneSettings::Update(float dt)
 
 	if (exitButtonPressed)
 	{
+		drawBg = false;
 		exitButtonPressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		if (Engine::GetInstance().previousLoopState == LoopState::GAME)

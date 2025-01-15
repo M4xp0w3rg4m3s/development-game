@@ -14,6 +14,7 @@
 #include "GuiManager.h"
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
+#include "Parallax.h"
 
 ScenePause::ScenePause() : Module()
 {
@@ -53,15 +54,22 @@ bool ScenePause::Awake()
 	SDL_Rect btExitPos = { (int)(sizeWindow.x / 2 - exitWidth / 2), (int)((sizeWindow.y / 10) * 7.5 - exitHeight / 2) , exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 
+	parallax = Engine::GetInstance().parallax.get();
+
+	parallax->textureName1 = "Assets/Textures/Pause_para/1.png";
+	parallax->textureName2 = "Assets/Textures/Pause_para/2.png";
+	parallax->textureName3 = "Assets/Textures/Pause_para/3.png";
+	parallax->textureName4 = "Assets/Textures/Pause_para/4.png";
+	parallax->textureName5 = "Assets/Textures/Pause_para/4.png";
+
+	parallax->ChangeTextures();
+
 	return ret;
 }
 
 bool ScenePause::Start()
 {
-	lvl1 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level1.png");
-	lvl2 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
-	lvl3 = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
-
+	
 	return true;
 }
 
@@ -76,8 +84,19 @@ bool ScenePause::Update(float dt)
 
 	if (drawBg)
 	{
-		// Draw Background
-		Engine::GetInstance().render->DrawText("  PAUSE  ", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
+		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
+		auto& camera = Engine::GetInstance().render->camera;
+		static int lastMouseX = (int)mousePosition.getX();
+		int deltaX = (int)mousePosition.getX() - lastMouseX;
+		camera.x -= deltaX;
+		lastMouseX = (int)mousePosition.getX();
+		parallax->Update(dt);
+
+		Engine::GetInstance().render->DrawText("  PAUSED  ", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
+	}
+	else {
+		Engine::GetInstance().render->camera.x = 0;
+		Engine::GetInstance().render->camera.y = 0;
 	}
 
 	// Handle button interactions if no button is currently pressed
@@ -149,18 +168,7 @@ bool ScenePause::PostUpdate()
 bool ScenePause::CleanUp()
 {
 	Engine::GetInstance().guiManager->DeleteButtons();
-	if (lvl1 != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(lvl1);
-	}
-	if (lvl2 != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(lvl2);
-	}
-	if (lvl3 != nullptr)
-	{
-		Engine::GetInstance().textures.get()->UnLoad(lvl3);
-	}
+	
 	return true;
 }
 
