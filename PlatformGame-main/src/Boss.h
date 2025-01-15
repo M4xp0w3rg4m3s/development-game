@@ -49,7 +49,7 @@ private:
 
 	int audioShurikenHitId = -1;
 
-	int lives = 20;
+	int lives = 5;
 
 	Timer attackTimer;
 	float attackTime = 1;

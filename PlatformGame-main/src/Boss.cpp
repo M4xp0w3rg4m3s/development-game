@@ -52,16 +52,16 @@ bool Boss::Start()
 	bodyAttackRight->body->SetFixedRotation(true);
 
 	//Assign collider type
-	pbody->ctype = ColliderType::ENEMY;
+	pbody->ctype = ColliderType::BOSS;
 	bodyAttackLeft->ctype = ColliderType::BOSS_ATTACK_LEFT;
 	bodyAttackRight->ctype = ColliderType::BOSS_ATTACK_RIGHT;
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool())
 	{
-		pbody->body->SetGravityScale(1);
-		bodyAttackLeft->body->SetGravityScale(1);
-		bodyAttackRight->body->SetGravityScale(1);
+		pbody->body->SetGravityScale(100);
+		bodyAttackLeft->body->SetGravityScale(100);
+		bodyAttackRight->body->SetGravityScale(100);
 	}
 
 	pbody->body->GetFixtureList()[0].SetFriction(500.0f);
@@ -248,6 +248,7 @@ bool Boss::Update(float dt)
 			}
 			else
 			{
+				pbody->body->SetLinearVelocity({ 0,5 });
 				if (animator->GetAnimation() != 0)
 				{
 					animator->SetAnimation(0);
@@ -426,15 +427,32 @@ void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 	else if (physA->ctype == ColliderType::BOSS_ATTACK_RIGHT && physB->ctype == ColliderType::PLAYER && isAttackingRight) {
 		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
 	}
-	switch (physB->ctype)
+	if (physA->ctype == ColliderType::BOSS)
 	{
-	case ColliderType::PROJECTILE_PLAYER:
-		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
-		lives--;
-		break;
-	default:
-		break;
+		switch (physB->ctype)
+		{
+		case ColliderType::PROJECTILE_PLAYER:
+			Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
+			lives--;
+			break;
+		case ColliderType::PLAYER_ATTACK_LEFT:
+			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingLeft())
+			{
+				lives--;
+			}
+			break;
+		case ColliderType::PLAYER_ATTACK_RIGHT:
+			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingRight())
+			{
+				lives--;
+			}
+			break;
+		
+		default:
+			break;
+		}
 	}
+	
 }
 
 void Boss::GoToPath()
