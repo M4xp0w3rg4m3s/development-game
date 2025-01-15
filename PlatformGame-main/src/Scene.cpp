@@ -428,9 +428,9 @@ Player* Scene::GetPlayer() const
 	return player;
 }
 
-Enemy* Scene::GetBoss() const
+Boss* Scene::GetBoss() const
 {
-	return boss;
+	return static_cast<Boss*>(boss);
 }
 
 int Scene::GetCurrentLevel() const
@@ -949,8 +949,11 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
 		}
 		else if (name == "boss") {
-			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
-			boss = enemy;
+			Boss* bossEntity = dynamic_cast<Boss*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS));
+			if (bossEntity != nullptr) {
+				boss = bossEntity;
+				enemy = bossEntity;
+			}
 		}
 
 		if (enemy) {

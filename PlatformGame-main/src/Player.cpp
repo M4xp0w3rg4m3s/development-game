@@ -9,6 +9,7 @@
 #include "Physics.h"
 #include "EntityManager.h"
 #include "Projectile.h"
+#include "Boss.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -256,6 +257,23 @@ bool Player::Update(float dt)
 					enemyAttacked = nullptr;
 				}
 			}
+			if (bossAttacked != nullptr)
+			{
+				if (animator->IsLookingLeft() && isAttackingBossLeft)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId); //Enemy hit Audio
+					Boss* boss = static_cast<Boss*>(bossAttacked);
+					boss->GetDamaged();
+					
+				}
+				else if (animator->IsLookingRight() && isAttackingBossRight)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(audioHitEnemyId); //Enemy hit Audio
+					Boss* boss = static_cast<Boss*>(bossAttacked);
+					boss->GetDamaged();
+				}
+			}
+
 		}
 		if (state == PlayerState::WOMBO) {
 			if (animator->isAnimFinished() && animator->GetAnimation() != 5) {
@@ -268,6 +286,8 @@ bool Player::Update(float dt)
 				else if (attackReactionTimer.ReadMSec() > reactionTimeMs) {
 					isAttackingRight = false;
 					isAttackingLeft = false;
+					isAttackingBossRight = false;
+					isAttackingBossLeft = false;
 					animator->SetAnimation(1);
 					state = PlayerState::IDLE;
 				}
@@ -279,6 +299,8 @@ bool Player::Update(float dt)
 				SDL_Delay(100);
 				isAttackingRight = false;
 				isAttackingLeft = false;
+				isAttackingBossRight = false;
+				isAttackingBossLeft = false;
 				state = PlayerState::IDLE;
 			}
 		}
@@ -302,6 +324,8 @@ bool Player::Update(float dt)
 						if (animator->GetAnimation() != 1) {
 							isAttackingRight = false;
 							isAttackingLeft = false;
+							isAttackingBossRight = false;
+							isAttackingBossLeft = false;
 							animator->SetAnimation(1);
 							state = PlayerState::IDLE;
 						}
@@ -310,6 +334,8 @@ bool Player::Update(float dt)
 						if (animator->GetAnimation() != 0) {
 							isAttackingRight = false;
 							isAttackingLeft = false;
+							isAttackingBossRight = false;
+							isAttackingBossLeft = false;
 							animator->SetAnimation(0);
 							state = PlayerState::RUNNING;
 						}
@@ -319,6 +345,8 @@ bool Player::Update(float dt)
 					if (animator->GetAnimation() != 2) {
 						isAttackingRight = false;
 						isAttackingLeft = false;
+						isAttackingBossRight = false;
+						isAttackingBossLeft = false;
 						animator->SetAnimation(2);
 						animator->SetLoop(false);
 						state = PlayerState::JUMPING;
@@ -466,6 +494,10 @@ bool Player::CleanUp()
 	{
 		delete enemyAttacked;
 	}
+	if (bossAttacked != nullptr)
+	{
+		delete bossAttacked;
+	}
 
 	return true;
 }
@@ -484,6 +516,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::ENEMY) {
 		isAttackingRight = true;
 		enemyAttacked = physB->listener;
+	}
+	if (physA->ctype == ColliderType::PLAYER_ATTACK_LEFT && physB->ctype == ColliderType::BOSS) {
+		isAttackingBossLeft = true;
+		bossAttacked = physB->listener;
+	}
+	else if (physA->ctype == ColliderType::PLAYER_ATTACK_RIGHT && physB->ctype == ColliderType::BOSS) {
+		isAttackingBossRight = true;
+		bossAttacked = physB->listener;
 	}
 	if (physA->ctype != ColliderType::PLAYER_ATTACK_LEFT && physA->ctype != ColliderType::PLAYER_ATTACK_RIGHT){
 		switch (physB->ctype)
@@ -762,6 +802,18 @@ bool Player::IsAttackingLeft() const
 bool Player::IsAttackingRight() const
 {
 	return isAttackingRight;
+}
+
+bool Player::IsAttackingBossLeft() const
+{
+	if (animator->GetAnimation() != 4 || animator->GetAnimation() != 5) return false;
+	return isAttackingBossLeft;
+}
+
+bool Player::IsAttackingBossRight() const
+{
+	if (animator->GetAnimation() != 4 || animator->GetAnimation() != 5) return false;
+	return isAttackingBossRight;
 }
 
 void Player::SetAttackingLeft(bool isAttackingLeft_)

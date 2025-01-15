@@ -40,8 +40,12 @@ public:
 	bool IsAttackingLeft();
 	bool IsAttackingRight();
 
+	void GetDamaged();
+
 	bool isAttacking = false;
 	bool isAttackingLeft = false;
+
+	int GetLives() const;
 private:
 
 	PhysBody* bodyAttackLeft = nullptr;
@@ -49,11 +53,13 @@ private:
 
 	int audioShurikenHitId = -1;
 
-	int lives = 5;
+	int lives = 20;
 
 	Timer attackTimer;
 	float attackTime = 1;
 
+	Timer hitTimer;
+	float hitTime = 500;
 	
 	bool isAttackingRight = false;
 	bool fallingProjectiles = false;

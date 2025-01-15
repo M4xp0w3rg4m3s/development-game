@@ -82,9 +82,9 @@ Engine::Engine() {
 
     // INTRO
     AddModule(std::static_pointer_cast<Module>(sceneIntro), LoopState::INTRO);
-    AddModule(std::static_pointer_cast<Module>(parallax), LoopState::INTRO);
 
     // TITLE
+    AddModule(std::static_pointer_cast<Module>(parallax), LoopState::TITLE);
     AddModule(std::static_pointer_cast<Module>(sceneTitle), LoopState::TITLE);
     AddModule(std::static_pointer_cast<Module>(guiManager), LoopState::TITLE);
 

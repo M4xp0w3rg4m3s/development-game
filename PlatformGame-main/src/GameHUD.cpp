@@ -3,6 +3,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
+#include "Boss.h"
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
@@ -126,6 +127,10 @@ bool GameHUD::Update(float dt)
 
 	if (!Engine::GetInstance().scene->GetPlayer()->InsideDeadTime() && !Engine::GetInstance().scene->goingToLvl1 && !Engine::GetInstance().scene->goingToLvl2 && !Engine::GetInstance().scene->goingToLvl3) {
 		internalDt = dt;
+
+		if (Engine::GetInstance().scene->bossMusicPlayed && Engine::GetInstance().scene->GetCurrentLevel() == 3 && Engine::GetInstance().scene->GetPlayerPosition().getX() >= 5760) {
+			Engine::GetInstance().render->DrawRectangle({ -Engine::GetInstance().render->camera.x + 854 / 2 - (10 * Engine::GetInstance().scene->GetBoss()->GetLives())/2, 40, 10 * Engine::GetInstance().scene->GetBoss()->GetLives(), 16}, 100, 0, 0);
+		}
 
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
 			if (!keysMenuOn) keysMenuOn = true;

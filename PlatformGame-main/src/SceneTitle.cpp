@@ -110,7 +110,6 @@ bool SceneTitle::Update(float dt)
 		int deltaX = (int)mousePosition.getX() - lastMouseX;
 		camera.x -= deltaX;
 		lastMouseX = (int)mousePosition.getX();
-		parallax->Update(dt);
 
 		Engine::GetInstance().render->DrawTexture(title, (int)(sizeWindow.x / 2 - titleWidth/2 - Engine::GetInstance().render->camera.x), 50);
 	}

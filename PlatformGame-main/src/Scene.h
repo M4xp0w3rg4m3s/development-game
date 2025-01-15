@@ -9,6 +9,7 @@
 
 class Item;
 class Enemy;
+class Boss;
 
 class Scene : public Module
 {
@@ -42,7 +43,7 @@ public:
 	Vector2D GetPlayerPosition() const;
 
 	Player* GetPlayer() const;
-	Enemy* GetBoss() const;
+	Boss* GetBoss() const;
 
 	std::string GetTilePosDebug() {
 		return tilePosDebug;
@@ -68,6 +69,8 @@ public:
 	bool goingToLvl1 = false;
 	bool goingToLvl2 = false;
 	bool goingToLvl3 = false;
+
+	bool bossMusicPlayed = false;
 
 	bool debug = false;
 private:
@@ -105,6 +108,4 @@ private:
 
 	GuiControlButton* optionsBt = nullptr;
 	bool settingsPressed = false;
-
-	bool bossMusicPlayed = false;
 };

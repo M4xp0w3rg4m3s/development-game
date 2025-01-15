@@ -8,7 +8,6 @@
 #include "Textures.h"
 #include "EntityManager.h"
 #include "Audio.h"
-#include "Engine.h"
 #include "Projectile.h"
 
 #include <ctime>
@@ -170,6 +169,8 @@ bool Boss::Start()
 
 	// Seed the random number generator
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+	hitTimer.Start();
 
 	return true;
 }
@@ -421,38 +422,37 @@ void Boss::Move()
 
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 {
-	if (physA->ctype == ColliderType::BOSS_ATTACK_LEFT && physB->ctype == ColliderType::PLAYER && isAttackingLeft) {
-		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
-	}
-	else if (physA->ctype == ColliderType::BOSS_ATTACK_RIGHT && physB->ctype == ColliderType::PLAYER && isAttackingRight) {
-		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
-	}
 	if (physA->ctype == ColliderType::BOSS)
 	{
 		switch (physB->ctype)
 		{
 		case ColliderType::PROJECTILE_PLAYER:
 			Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
-			lives--;
+			GetDamaged();
 			break;
 		case ColliderType::PLAYER_ATTACK_LEFT:
-			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingLeft())
+			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingBossLeft())
 			{
-				lives--;
+				GetDamaged();
 			}
 			break;
 		case ColliderType::PLAYER_ATTACK_RIGHT:
-			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingRight())
+			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingBossRight())
 			{
-				lives--;
+				GetDamaged();
 			}
 			break;
 		
 		default:
 			break;
 		}
+	}	
+	if (physA->ctype == ColliderType::BOSS_ATTACK_LEFT && physB->ctype == ColliderType::PLAYER && isAttackingLeft) {
+		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
 	}
-	
+	else if (physA->ctype == ColliderType::BOSS_ATTACK_RIGHT && physB->ctype == ColliderType::PLAYER && isAttackingRight) {
+		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
+	}
 }
 
 void Boss::GoToPath()
@@ -522,4 +522,17 @@ bool Boss::IsAttackingLeft()
 bool Boss::IsAttackingRight()
 {
 	return isAttackingRight;
+}
+
+void Boss::GetDamaged()
+{
+	if (hitTimer.ReadMSec() > hitTime) {
+		lives--;
+		hitTimer.Start();
+	}
+}
+
+int Boss::GetLives() const
+{
+	return lives;
 }

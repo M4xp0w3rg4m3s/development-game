@@ -51,6 +51,8 @@ public:
 
 	bool IsAttackingLeft() const;
 	bool IsAttackingRight() const;
+	bool IsAttackingBossLeft() const;
+	bool IsAttackingBossRight() const;
 
 	void SetAttackingLeft(bool isAttackingLeft_);
 	void SetAttackingRight(bool isAttackingRight_);
@@ -120,9 +122,12 @@ private:
 
 	//Enemies
 	Entity* enemyAttacked = nullptr;
+	Entity* bossAttacked = nullptr;
 
 	bool isAttackingLeft = false;
 	bool isAttackingRight = false;
+	bool isAttackingBossLeft = false;
+	bool isAttackingBossRight = false;
 
 	bool canBeAttacked = false;
 
