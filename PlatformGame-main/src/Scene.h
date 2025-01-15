@@ -105,4 +105,6 @@ private:
 
 	GuiControlButton* optionsBt = nullptr;
 	bool settingsPressed = false;
+
+	bool bossMusicPlayed = false;
 };
