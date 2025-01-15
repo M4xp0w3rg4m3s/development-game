@@ -139,7 +139,15 @@ bool SceneTitle::Update(float dt)
 		{
 			drawBg = false;
 			Engine::GetInstance().guiManager->DeleteButtons();
-			HandlePlay();
+			if (Engine::GetInstance().previousLoopState == LoopState::PAUSE)
+			{
+				playPressed = false;
+				Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
+			}
+			else
+			{
+				HandlePlay();
+			}
 		}
 		else if (continuePressed)
 		{

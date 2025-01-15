@@ -546,6 +546,7 @@ float Engine::GetDeltaTime() const
 
 void Engine::ChangeLoopState(LoopState state)
 {
+    beforePreviousLoopState = previousLoopState;
     previousLoopState = currentLoopState;
     currentLoopState = state;
     AwakeCurrentLoopState();
@@ -554,6 +555,7 @@ void Engine::ChangeLoopState(LoopState state)
 
 void Engine::ChangeLoopStateWithoutStart(LoopState state)
 {
+    beforePreviousLoopState = previousLoopState;
     previousLoopState = currentLoopState;
     currentLoopState = state;
 }
