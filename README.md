@@ -65,7 +65,7 @@ In the heart of a forgotten cave lies a slumbering adventurer, cursed to awaken 
   - Hedgehog  
   - Bee  
   - Octopus  
-  - **Epic Boss Battles**  
+  - **Epic Boss Battle**  
 
 ### 📊 Progression & Debug Tools
 - **Load/Save System** for seamless gameplay  
