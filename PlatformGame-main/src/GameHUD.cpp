@@ -352,6 +352,11 @@ std::string GameHUD::ReadInternalTimerFormat() const
 	return stream.str();
 }
 
+void GameHUD::SetInternalTimer(double seconds)
+{
+	internalTimer = seconds;
+}
+
 void GameHUD::FadeIn()
 {
 	opacity = 0;

@@ -30,6 +30,7 @@ public:
 	void FadeOut();
 	void ResetFadeStates();
 
+	Parallax* parallax = nullptr;
 private:
 	GuiControlButton* resumeButton = nullptr;
 	GuiControlButton* settingsButton = nullptr;
@@ -45,7 +46,6 @@ private:
 
 	bool drawBg = true;
 
-	Parallax* parallax = nullptr;
 
 	//----------Fade----------//
 	Timer imageTimer;

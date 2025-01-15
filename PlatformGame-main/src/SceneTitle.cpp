@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Scene.h"
+#include "SceneSettings.h"
 #include "Window.h"
 #include "Log.h"
 #include <string>
@@ -153,6 +154,12 @@ bool SceneTitle::Update(float dt)
 			drawBg = false;
 			Engine::GetInstance().guiManager->DeleteButtons();
 			Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
+			Engine::GetInstance().sceneSettings->parallax->textureName1 = "Assets/Textures/Settings_para/1.png";
+			Engine::GetInstance().sceneSettings->parallax->textureName2 = "Assets/Textures/Settings_para/2.png";
+			Engine::GetInstance().sceneSettings->parallax->textureName3 = "Assets/Textures/Settings_para/3.png";
+			Engine::GetInstance().sceneSettings->parallax->textureName4 = "Assets/Textures/Settings_para/4.png";
+			Engine::GetInstance().sceneSettings->parallax->textureName5 = "Assets/Textures/Settings_para/4.png";
+			Engine::GetInstance().sceneSettings->parallax->ChangeTextures();
 		}
 		else if (creditsPressed)
 		{

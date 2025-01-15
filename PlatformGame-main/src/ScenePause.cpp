@@ -5,6 +5,8 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Scene.h"
+#include "SceneSettings.h"
+#include "SceneTitle.h"
 #include "Window.h"
 #include "Log.h"
 #include <string>
@@ -114,6 +116,29 @@ bool ScenePause::Update(float dt)
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().scene->CreateButtons();
 		Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
+
+		if (Engine::GetInstance().scene->GetCurrentLevel() == 1) {
+			parallax->textureName1 = Engine::GetInstance().scene->configParameters.child("layers").child("one").attribute("texturePath").as_string();
+			parallax->textureName2 = Engine::GetInstance().scene->configParameters.child("layers").child("two").attribute("texturePath").as_string();
+			parallax->textureName3 = Engine::GetInstance().scene->configParameters.child("layers").child("three").attribute("texturePath").as_string();
+			parallax->textureName4 = Engine::GetInstance().scene->configParameters.child("layers").child("four").attribute("texturePath").as_string();
+			parallax->textureName5 = Engine::GetInstance().scene->configParameters.child("layers").child("five").attribute("texturePath").as_string();
+		}
+		else if (Engine::GetInstance().scene->GetCurrentLevel() == 2) {
+			parallax->textureName1 = Engine::GetInstance().scene->configParameters.child("layers2").child("one").attribute("texturePath").as_string();
+			parallax->textureName2 = Engine::GetInstance().scene->configParameters.child("layers2").child("two").attribute("texturePath").as_string();
+			parallax->textureName3 = Engine::GetInstance().scene->configParameters.child("layers2").child("three").attribute("texturePath").as_string();
+			parallax->textureName4 = Engine::GetInstance().scene->configParameters.child("layers2").child("four").attribute("texturePath").as_string();
+			parallax->textureName5 = Engine::GetInstance().scene->configParameters.child("layers2").child("five").attribute("texturePath").as_string();
+		}
+		else if (Engine::GetInstance().scene->GetCurrentLevel() == 3) {
+			parallax->textureName1 = Engine::GetInstance().scene->configParameters.child("layers3").child("one").attribute("texturePath").as_string();
+			parallax->textureName2 = Engine::GetInstance().scene->configParameters.child("layers3").child("two").attribute("texturePath").as_string();
+			parallax->textureName3 = Engine::GetInstance().scene->configParameters.child("layers3").child("three").attribute("texturePath").as_string();
+			parallax->textureName4 = Engine::GetInstance().scene->configParameters.child("layers3").child("four").attribute("texturePath").as_string();
+			parallax->textureName5 = Engine::GetInstance().scene->configParameters.child("layers3").child("five").attribute("texturePath").as_string();
+		}
+		parallax->ChangeTextures();
 	}
 	else if (settingsPressed)
 	{
@@ -121,6 +146,12 @@ bool ScenePause::Update(float dt)
 		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
+		Engine::GetInstance().sceneSettings->parallax->textureName1 = "Assets/Textures/Settings_para/1.png";
+		Engine::GetInstance().sceneSettings->parallax->textureName2 = "Assets/Textures/Settings_para/2.png";
+		Engine::GetInstance().sceneSettings->parallax->textureName3 = "Assets/Textures/Settings_para/3.png";
+		Engine::GetInstance().sceneSettings->parallax->textureName4 = "Assets/Textures/Settings_para/4.png";
+		Engine::GetInstance().sceneSettings->parallax->textureName5 = "Assets/Textures/Settings_para/4.png";
+		Engine::GetInstance().sceneSettings->parallax->ChangeTextures();
 	}
 	else if (backToTitlePressed)
 	{
@@ -128,6 +159,12 @@ bool ScenePause::Update(float dt)
 		drawBg = false;
 		Engine::GetInstance().guiManager->DisableButtons();
 		Engine::GetInstance().ChangeLoopState(LoopState::TITLE);
+		Engine::GetInstance().sceneTitle->parallax->textureName1 = "Assets/Textures/Title_para/1.png";
+		Engine::GetInstance().sceneTitle->parallax->textureName2 = "Assets/Textures/Title_para/2.png";
+		Engine::GetInstance().sceneTitle->parallax->textureName3 = "Assets/Textures/Title_para/3.png";
+		Engine::GetInstance().sceneTitle->parallax->textureName4 = "Assets/Textures/Title_para/4.png";
+		Engine::GetInstance().sceneTitle->parallax->textureName5 = "Assets/Textures/Title_para/4.png";
+		Engine::GetInstance().sceneTitle->parallax->ChangeTextures();
 	}
 	else if (exitPressed)
 	{

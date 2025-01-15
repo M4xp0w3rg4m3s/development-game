@@ -25,6 +25,7 @@
 	<scene>
 		<player x="191" y="392" texturePath="Assets/Textures/Character/chara-spritesheet.png" ignis="0" life ="3"/>
 		<level currentlevel="1" />
+		<timer seconds="0" />
 		<layers>
 			<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
 			<two texturePath="Assets/Maps/background_parallax/normal_BG/layer2.png" />

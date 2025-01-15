@@ -22,6 +22,7 @@
 
 #include "GuiControl.h"
 #include "GuiManager.h"
+#include "GameHUD.h"
 
 Scene::Scene() : Module()
 {
@@ -189,6 +190,7 @@ bool Scene::Update(float dt)
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
 
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
@@ -241,6 +243,7 @@ bool Scene::Update(float dt)
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
 		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
@@ -455,7 +458,7 @@ void Scene::LoadState()
 	//Read XML and restore information
 
 	if (sceneNode.child("level").attribute("currentlevel").as_int() == 2 && current_level != 2) {
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
@@ -704,6 +707,8 @@ void Scene::LoadState()
 			}
 		}
 	}
+
+	Engine::GetInstance().gameHud->SetInternalTimer(sceneNode.child("timer").attribute("seconds").as_int());
 }
 
 void Scene::SaveState()
@@ -731,6 +736,7 @@ void Scene::SaveState()
 	sceneNode.child("player").attribute("life").set_value(player->GetPlayerLives());
 
 	sceneNode.child("level").attribute("currentlevel").set_value(current_level);
+	sceneNode.child("timer").attribute("seconds").set_value(Engine::GetInstance().gameHud->ReadInternalTimerSec());
 
 	//enemies
 	if (current_level == 1) {
@@ -824,6 +830,7 @@ void Scene::AdvanceLevel()
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
 
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();

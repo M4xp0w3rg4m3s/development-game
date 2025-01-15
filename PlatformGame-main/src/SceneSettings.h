@@ -35,6 +35,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	Parallax* parallax = nullptr;
 private:
 	GuiSlider* generalSlider = nullptr;
 	GuiSlider* musicSlider = nullptr;
@@ -44,7 +45,6 @@ private:
 
 	GuiToggle* fullscreen = nullptr;
 
-	Parallax* parallax = nullptr;
 
 	b2Vec2 sizeWindow = { 0,0 };
 

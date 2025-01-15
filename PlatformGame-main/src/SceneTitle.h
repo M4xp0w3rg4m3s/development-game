@@ -49,6 +49,7 @@ public:
 
 	bool debug = false;
 
+	Parallax* parallax = nullptr;
 private:
 	GuiControlButton* playButton = nullptr;
 	GuiControlButton* continueButton = nullptr;
@@ -75,7 +76,6 @@ private:
 	bool drawBg = true;
 	bool saved = true;
 
-	Parallax* parallax = nullptr;
 
 	Timer initTimer;
 	int initTime = 1 * 100;
