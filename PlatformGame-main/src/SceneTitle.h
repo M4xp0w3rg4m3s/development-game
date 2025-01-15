@@ -56,7 +56,6 @@ private:
 	GuiControlButton* creditsButton = nullptr;
 	GuiControlButton* exitButton = nullptr;
 
-	SDL_Texture* Bg = nullptr;
 	SDL_Texture* credits1 = nullptr;
 	SDL_Texture* credits2 = nullptr;
 	SDL_Texture* lvl1 = nullptr;
@@ -74,6 +73,7 @@ private:
 	bool exitPressed = false;
 
 	bool drawBg = true;
+	bool saved = true;
 
 	Parallax* parallax = nullptr;
 

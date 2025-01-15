@@ -19,6 +19,9 @@
 		<resizable value="true" />
 		<fullscreen_window value="true" />
 	</window>
+	<sceneTitle>
+		<saved value="false" />
+	</sceneTitle>
 	<scene>
 		<player x="191" y="392" texturePath="Assets/Textures/Character/chara-spritesheet.png" ignis="0" life ="3"/>
 		<level currentlevel="1" />
