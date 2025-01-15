@@ -163,6 +163,7 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\ScenePause.cpp" />
     <ClCompile Include="src\SceneTitle.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Octopus.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\ScenePause.h" />
     <ClInclude Include="src\SceneTitle.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />

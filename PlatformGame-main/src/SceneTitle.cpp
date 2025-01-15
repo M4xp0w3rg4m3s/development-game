@@ -138,7 +138,7 @@ bool SceneTitle::Update(float dt)
 		Engine::GetInstance().guiManager->DeleteButtons();
 		HandlePlay();
 	}
-	else if (continuePressed) // clicking first time  + f3 = bug
+	else if (continuePressed) 
 	{
 		drawBg = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
@@ -162,6 +162,7 @@ bool SceneTitle::Update(float dt)
 		ret = false;
 	}
 
+	//------Fade------//
 	if (fadingIn)
 	{
 		double elapsedTime = fadeTimer.ReadMSec();

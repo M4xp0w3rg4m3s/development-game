@@ -17,6 +17,7 @@
 
 SceneSettings::SceneSettings() : Module()
 {
+	name = "sceneSettings";
 }
 
 SceneSettings::~SceneSettings()
