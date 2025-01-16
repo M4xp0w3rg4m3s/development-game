@@ -11,7 +11,6 @@
 #include "Player.h"
 #include "Map.h"
 #include "Item.h"
-#include "Parallax.h"
 #include "Enemy.h"
 #include <string>
 
@@ -23,6 +22,7 @@
 
 #include "GuiControl.h"
 #include "GuiManager.h"
+#include "GameHUD.h"
 
 Scene::Scene() : Module()
 {
@@ -32,6 +32,15 @@ Scene::Scene() : Module()
 // Destructor
 Scene::~Scene()
 {
+	// enemies
+	enemyListLevel1.clear();
+	enemyListLevel2.clear();
+	enemyListLevel3.clear();
+
+	// items
+	itemListLevel1.clear();
+	itemListLevel2.clear();
+	itemListLevel3.clear();
 }
 
 // Called before render is available
@@ -48,6 +57,14 @@ bool Scene::Awake()
 	parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 	parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 
+	parallaxTwoPoints = Engine::GetInstance().parallaxTwoPoints.get();
+	parallaxTwoPoints->SetRange(0, 1024);
+	parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+	parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
+
 	//Get the map name from the config file and assigns the value
 	Engine::GetInstance().map.get()->mapName = configParameters.child("map").attribute("name").as_string();
 	Engine::GetInstance().map.get()->mapPath = configParameters.child("map").attribute("path").as_string();
@@ -63,6 +80,10 @@ bool Scene::Awake()
 	CreateEnemies(configParameters.child("entities").child("enemies_lvl_1").child("enemy"), enemyListLevel1);
 	CreateItems(configParameters.child("entities").child("items_lvl_1").child("item"), itemListLevel1);
 
+	checkpointFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/checkpoint.ogg");
+	golemSpawnFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Boss_earthquake.ogg");
+	golemRoarFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Boss_monster.ogg");
+
 	CreateButtons();
 
 	return ret;
@@ -72,8 +93,6 @@ bool Scene::Awake()
 bool Scene::Start()
 {
 	Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx");
-
-	caveBg = Engine::GetInstance().textures.get()->Load("Assets/Maps/background_final1.png");
 
 	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
@@ -94,32 +113,29 @@ bool Scene::Update(float dt)
 		gameStarted = true;
 	}
 
-	if (optionsBt->state == GuiControlState::PRESSED)
+	if (optionsBt->state == GuiControlState::PRESSED || Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 	{
-		settingsPressed = true;
+		pausePressed = true;
 	}
-	if (settingsPressed)
+	if (pausePressed)
 	{
-		settingsPressed = false;
+		pausePressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
-		Engine::GetInstance().ChangeLoopState(LoopState::SETTINGS);
+		Engine::GetInstance().ChangeLoopState(LoopState::PAUSE);
 	}
 
 	if (player->position.getX() > Engine::GetInstance().window.get()->width / 2) {
-		Engine::GetInstance().render.get()->camera.x = -((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2);
+		Engine::GetInstance().render.get()->camera.x = (int)(-((player->position.getX() + player->width / 2) - (Engine::GetInstance().window.get()->width) / 2));
 	}
 	else {
 		Engine::GetInstance().render.get()->camera.x = 0;
-	}
-
-	if (current_level == 1) {
-		Engine::GetInstance().render->DrawTexture(caveBg, 0, 0);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
 
 		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
@@ -127,6 +143,14 @@ bool Scene::Update(float dt)
 		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 
 		current_level = 3;
 
@@ -170,6 +194,7 @@ bool Scene::Update(float dt)
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
 
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
@@ -177,6 +202,8 @@ bool Scene::Update(float dt)
 		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(-1, -1);
 
 		current_level = 2;
 
@@ -220,6 +247,7 @@ bool Scene::Update(float dt)
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
 
 		parallax->textureName1 = configParameters.child("layers").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers").child("two").attribute("texturePath").as_string();
@@ -227,6 +255,14 @@ bool Scene::Update(float dt)
 		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(0, 1024);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 
 		current_level = 1;
 
@@ -258,6 +294,12 @@ bool Scene::Update(float dt)
 
 	if (current_level == 1 && player->position.getX() >= 6520 || current_level == 2 && player->position.getX() >= 4250) {
 		AdvanceLevel();
+	}
+	if (current_level == 3 && player->position.getX() >= 5760 && !bossMusicPlayed) {
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Boss_theme.wav");
+		Engine::GetInstance().audio->PlayFx(golemSpawnFx);
+		Engine::GetInstance().audio->PlayFx(golemRoarFx);
+		bossMusicPlayed = true;
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
@@ -323,18 +365,21 @@ bool Scene::Update(float dt)
 			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 1 && !checkpoint->activated) {
 				checkpoint->activated = true;
 				SaveState();
+				Engine::GetInstance().audio->PlayFx(checkpointFx);
 			}
 		}
 		else if (current_level == 2) {
 			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 2 && !checkpoint->activated) {
 				checkpoint->activated = true;
 				SaveState();
+				Engine::GetInstance().audio->PlayFx(checkpointFx);
 			}
 		}
 		else if (current_level == 3) {
 			if (player->position.getX() > checkpoint->pos.getX() && checkpoint->level == 3 && !checkpoint->activated) {
 				checkpoint->activated = true;
 				SaveState();
+				Engine::GetInstance().audio->PlayFx(checkpointFx);
 			}
 		}
 	}
@@ -355,8 +400,8 @@ bool Scene::PostUpdate()
 	bool ret = true;
 
 	// Detects if the player wants to exit the game with ESC key
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
+	
+		
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 		LoadState();
 
@@ -371,7 +416,10 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	SDL_DestroyTexture(caveBg);
+	if (optionsBt != nullptr)
+	{
+		Engine::GetInstance().guiManager->DeleteButton(1);
+	}
 
 	return true;
 }
@@ -393,9 +441,9 @@ Player* Scene::GetPlayer() const
 	return player;
 }
 
-Enemy* Scene::GetBoss() const
+Boss* Scene::GetBoss() const
 {
-	return boss;
+	return static_cast<Boss*>(boss);
 }
 
 int Scene::GetCurrentLevel() const
@@ -419,7 +467,7 @@ void Scene::LoadState()
 	//Read XML and restore information
 
 	if (sceneNode.child("level").attribute("currentlevel").as_int() == 2 && current_level != 2) {
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
@@ -428,6 +476,7 @@ void Scene::LoadState()
 		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+		parallaxTwoPoints->SetRange(-1, -1);
 		current_level = 2;
 		player->ResetPlayer(current_level);
 
@@ -442,11 +491,18 @@ void Scene::LoadState()
 		parallax->textureName4 = configParameters.child("layers").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+		parallaxTwoPoints->SetRange(0, 1024);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 		current_level = 1;
 		player->ResetPlayer(current_level);
 	}
 	else if (sceneNode.child("level").attribute("currentlevel").as_int() == 3 && current_level != 3) {
-		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
 		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
@@ -454,6 +510,13 @@ void Scene::LoadState()
 		parallax->textureName3 = configParameters.child("layers3").child("three").attribute("texturePath").as_string();
 		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 		parallax->ChangeTextures();
 		current_level = 3;
 		player->ResetPlayer(current_level);
@@ -653,6 +716,8 @@ void Scene::LoadState()
 			}
 		}
 	}
+
+	Engine::GetInstance().gameHud->SetInternalTimer(sceneNode.child("timer").attribute("seconds").as_int());
 }
 
 void Scene::SaveState()
@@ -668,6 +733,10 @@ void Scene::SaveState()
 
 	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
 
+	//Set as saved to modify continue button
+	pugi::xml_node sceneTitleNode = loadFile.child("config").child("sceneTitle");
+	sceneTitleNode.child("saved").attribute("value").set_value(true);
+
 	//Save info to XML 
 	//Player position
 	sceneNode.child("player").attribute("x").set_value(player->GetPosition().getX());
@@ -676,6 +745,7 @@ void Scene::SaveState()
 	sceneNode.child("player").attribute("life").set_value(player->GetPlayerLives());
 
 	sceneNode.child("level").attribute("currentlevel").set_value(current_level);
+	sceneNode.child("timer").attribute("seconds").set_value(Engine::GetInstance().gameHud->ReadInternalTimerSec());
 
 	//enemies
 	if (current_level == 1) {
@@ -769,6 +839,7 @@ void Scene::AdvanceLevel()
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
 
 		parallax->textureName1 = configParameters.child("layers2").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers2").child("two").attribute("texturePath").as_string();
@@ -776,6 +847,8 @@ void Scene::AdvanceLevel()
 		parallax->textureName4 = configParameters.child("layers2").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers2").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(-1, -1);
 
 		current_level = 2;
 
@@ -819,6 +892,7 @@ void Scene::AdvanceLevel()
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
+		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level3.wav");
 
 		parallax->textureName1 = configParameters.child("layers3").child("one").attribute("texturePath").as_string();
 		parallax->textureName2 = configParameters.child("layers3").child("two").attribute("texturePath").as_string();
@@ -826,6 +900,14 @@ void Scene::AdvanceLevel()
 		parallax->textureName4 = configParameters.child("layers3").child("four").attribute("texturePath").as_string();
 		parallax->textureName5 = configParameters.child("layers3").child("five").attribute("texturePath").as_string();
 		parallax->ChangeTextures();
+
+		parallaxTwoPoints->SetRange(3590, 7700);
+		parallaxTwoPoints->textureName1 = configParameters.child("layersCave").child("one").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName2 = configParameters.child("layersCave").child("two").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName3 = configParameters.child("layersCave").child("three").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName4 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->textureName5 = configParameters.child("layersCave").child("four").attribute("texturePath").as_string();
+		parallaxTwoPoints->ChangeTextures();
 
 		current_level = 3;
 
@@ -885,8 +967,11 @@ void Scene::CreateEnemies(pugi::xml_node enemyNode, std::vector<Enemy*>& enemyLi
 			enemy = (Hedgehog*)Engine::GetInstance().entityManager->CreateEntity(EntityType::HEDGEHOG);
 		}
 		else if (name == "boss") {
-			enemy = (Boss*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
-			boss = enemy;
+			Boss* bossEntity = dynamic_cast<Boss*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS));
+			if (bossEntity != nullptr) {
+				boss = bossEntity;
+				enemy = bossEntity;
+			}
 		}
 
 		if (enemy) {
@@ -928,5 +1013,5 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 void Scene::CreateButtons()
 {
 	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
-	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
+	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "  Pause  ", btPos, this);
 }

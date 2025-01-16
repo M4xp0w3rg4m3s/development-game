@@ -7,6 +7,11 @@
 	<render>
 		<vsync value="false" />
 	</render>
+	<audio>
+		<general_volume value="0.5" />
+		<music_volume value="0.5" />
+		<sfx_volume value="0.5" />
+	</audio>
 	<window>
 		<resolution width="854" height="480" scale="1" />
 		<fullscreen value="false" />
@@ -14,9 +19,13 @@
 		<resizable value="true" />
 		<fullscreen_window value="true" />
 	</window>
+	<sceneTitle>
+		<saved value="false" />
+	</sceneTitle>
 	<scene>
 		<player x="191" y="392" texturePath="Assets/Textures/Character/chara-spritesheet.png" ignis="0" life ="3"/>
 		<level currentlevel="1" />
+		<timer seconds="0" />
 		<layers>
 			<one texturePath="Assets/Maps/background_parallax/normal_BG/layer1.png" />
 			<two texturePath="Assets/Maps/background_parallax/normal_BG/layer2.png" />
@@ -40,6 +49,13 @@
 			<four texturePath="Assets/Maps/background_parallax/winter_BG/layer4.png" />
 			<five texturePath="Assets/Maps/background_parallax/winter_BG/layer5.png" />
 		</layers3>
+		<layersCave>
+			<one texturePath="Assets/Maps/background_parallax/cave_BG/layer1.png" />
+			<two texturePath="Assets/Maps/background_parallax/cave_BG/layer2.png" />
+			<three texturePath="Assets/Maps/background_parallax/cave_BG/layer3.png" />
+			<four texturePath="Assets/Maps/background_parallax/cave_BG/layer4a.png" />
+			<five texturePath="Assets/Maps/background_parallax/cave_BG/layer4b.png" />
+		</layersCave>
 		<map3 path="Assets/Maps/" name="Level3Map.tmx" />
 		<entities>
 			<enemies_lvl_1>

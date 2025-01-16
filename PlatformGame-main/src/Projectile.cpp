@@ -3,12 +3,15 @@
 #include "Physics.h"
 #include "Render.h"
 #include "Scene.h"
+#include "Audio.h"
 #include "Engine.h"
 #include "Textures.h"
 #include "EntityManager.h"
 
 Projectile::Projectile(b2Vec2 position, b2Vec2 direction) : Entity(EntityType::PROJECTILE)
 {
+	name = "projectile";
+
 	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Projectiles.png");
 	animator = new Sprite(texture);
 
@@ -29,7 +32,7 @@ Projectile::~Projectile()
 bool Projectile::Awake()
 {
 	//Initialize Projectile parameters
-
+	crystalBreakFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Ice_break.ogg");
 	return true;
 }
 
@@ -112,8 +115,10 @@ bool Projectile::Update(float dt)
 bool Projectile::CleanUp()
 {
 	LOG("Cleanup Projectile");
-	//Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().textures.get()->UnLoad(texture);
 	Engine::GetInstance().physics->DeletePhysBody(body);
+
+	animator->Release();
 
 	return true;
 }
@@ -171,6 +176,9 @@ void Projectile::OnCollision(PhysBody* physA, PhysBody* physB)
 
 	default:
 		break;
+	}
+	if (animator->GetAnimation() == 3) {
+		Engine::GetInstance().audio->PlayFx(crystalBreakFx);
 	}
 }
 

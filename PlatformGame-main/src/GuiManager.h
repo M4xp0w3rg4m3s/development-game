@@ -25,12 +25,13 @@ public:
 
 	bool DeleteButtons();
 
+	bool DisableButton(int id);
 	bool DisableButtons();
 	bool EnableButtons();
 
 public:
 
 	std::list<GuiControl*> guiControlsList;
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 
 };

@@ -4,6 +4,7 @@
 
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
+#include "GuiToggle.h"
 #include "Audio.h"
 
 GuiManager::GuiManager() :Module()
@@ -30,9 +31,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	case GuiControlType::SLIDER:
 		guiControl = new GuiSlider(id,bounds,text,observer, 0, 200);
 		break;
+	case GuiControlType::TOGGLE:
+		guiControl = new GuiToggle(id, bounds, text);
+		break;
 	}
-	
-	
+
 	guiControl->observer = observer;
 
 	guiControlsList.push_back(guiControl);
@@ -75,6 +78,18 @@ bool GuiManager::DisableButtons()
 	return true;
 }
 
+bool GuiManager::DisableButton(int id)
+{
+	for (const auto& control : guiControlsList)
+	{
+		if (id == control->id && control != nullptr)
+		{
+			control->state = GuiControlState::DISABLED;
+		}
+	}
+	return true;
+}
+
 bool GuiManager::EnableButtons()
 {
 	for (const auto& control : guiControlsList)
@@ -100,9 +115,12 @@ bool GuiManager::CleanUp()
 	{
 		if (control != nullptr)
 		{
+			control->CleanUp();
 			delete control;
 		}
 	}
+
+	Engine::GetInstance().textures->UnLoad(texture);
 
 	return true;
 }

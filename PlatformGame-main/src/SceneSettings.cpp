@@ -5,6 +5,8 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Scene.h"
+#include "ScenePause.h"
+#include "SceneTitle.h"
 #include "Window.h"
 #include "Log.h"
 #include <string>
@@ -13,9 +15,12 @@
 #include "GuiManager.h"
 #include "GuiControlButton.h"
 #include "GuiSlider.h"
+#include "GuiToggle.h"
+#include "Parallax.h"
 
 SceneSettings::SceneSettings() : Module()
 {
+	name = "sceneSettings";
 }
 
 SceneSettings::~SceneSettings()
@@ -43,14 +48,25 @@ bool SceneSettings::Awake()
 	SDL_Rect btExitPos = {0,0, exitWidth,exitHeight };
 	exitButton = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "    Exit    ", btExitPos, this);
 
+	fullscreen = (GuiToggle*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::TOGGLE, 6, "  Fullscreen  ", { (int)sizeWindow.x / 2 - 100 / 2, (int)(sizeWindow.y / 3 * 2.5), 100, 20 }, this);
+
+	parallax = Engine::GetInstance().parallax.get();
+
+	parallax->textureName1 = "Assets/Textures/Settings_para/1.png";
+	parallax->textureName2 = "Assets/Textures/Settings_para/2.png";
+	parallax->textureName3 = "Assets/Textures/Settings_para/3.png";
+	parallax->textureName4 = "Assets/Textures/Settings_para/4.png";
+	parallax->textureName5 = "Assets/Textures/Settings_para/4.png";
+
+	parallax->ChangeTextures();
+
+	drawBg = true;
+
 	return ret;
 }
 
 bool SceneSettings::Start()
 {
-	//intro music
-	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
-	
 	return true;
 }
 
@@ -63,12 +79,28 @@ bool SceneSettings::Update(float dt)
 {
 	bool ret = true;
 
-	//---Text---//
-	Engine::GetInstance().render->DrawText("OPTIONS", sizeWindow.x / 2 - 100, 25, 200, 75);
+	if (drawBg)
+	{
+		auto mousePosition = Engine::GetInstance().input.get()->GetMousePosition();
+		auto& camera = Engine::GetInstance().render->camera;
+		static int lastMouseX = (int)mousePosition.getX();
+		int deltaX = (int)mousePosition.getX() - lastMouseX;
+		camera.x -= deltaX;
+		lastMouseX = (int)mousePosition.getX();
+		parallax->Update(dt);
 
-	Engine::GetInstance().render->DrawText("General", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 1 - 10, 75, 20);
-	Engine::GetInstance().render->DrawText(" Music ", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 1.5 - 10, 75, 20);
-	Engine::GetInstance().render->DrawText("   Sfx   ", sizeWindow.x / 2 - 175 - 30, (int)sizeWindow.y / 3 * 2 - 10, 75, 20);
+	}
+	else {
+		Engine::GetInstance().render->camera.x = 0;
+		Engine::GetInstance().render->camera.y = 0;
+	}
+
+	//---Text---//
+	Engine::GetInstance().render->DrawText("SETTINGS", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
+
+	Engine::GetInstance().render->DrawText("General", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 1 - 10), 75, 20);
+	Engine::GetInstance().render->DrawText(" Music ", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 1.5 - 10), 75, 20);
+	Engine::GetInstance().render->DrawText("   Sfx   ", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 2 - 10), 75, 20);
 
 	//---Slider Display value---//
 
@@ -83,7 +115,7 @@ bool SceneSettings::Update(float dt)
 		snprintf(paddedStringGeneral, sizeof(paddedStringGeneral), " %s ", generalVolumeValueCharPtr);
 		generalVolumeValueCharPtr = paddedStringGeneral;
 	}
-	Engine::GetInstance().render->DrawText(generalVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 1 - 10, 25, 20);
+	Engine::GetInstance().render->DrawText(generalVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)sizeWindow.y / 3 * 1 - 10, 25, 20);
 
 	// Music
 	int musicVolumeValue = (int)(musicSlider->GetValue() * 100);
@@ -96,7 +128,7 @@ bool SceneSettings::Update(float dt)
 		snprintf(paddedStringMusic, sizeof(paddedStringMusic), " %s ", musicVolumeValueCharPtr);
 		musicVolumeValueCharPtr = paddedStringMusic;
 	}
-	Engine::GetInstance().render->DrawText(musicVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 1.5 - 10, 25, 20);
+	Engine::GetInstance().render->DrawText(musicVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)(sizeWindow.y / 3 * 1.5 - 10), 25, 20);
 
 	// Sfx
 	int sfxVolumeValue = (int)(sfxSlider->GetValue() * 100);
@@ -109,8 +141,48 @@ bool SceneSettings::Update(float dt)
 		snprintf(paddedStringSfx, sizeof(paddedStringSfx), " %s ", sfxVolumeValueCharPtr);
 		sfxVolumeValueCharPtr = paddedStringSfx;
 	}
-	Engine::GetInstance().render->DrawText(sfxVolumeValueCharPtr, sizeWindow.x / 2 + 100 + 30, (int)sizeWindow.y / 3 * 2 - 10, 25, 20);
+	Engine::GetInstance().render->DrawText(sfxVolumeValueCharPtr, (int)(sizeWindow.x / 2 + 100 + 30), (int)sizeWindow.y / 3 * 2 - 10, 25, 20);
 
+	if (fullscreen->state == GuiControlState::NORMAL && pressed_once) {
+		if(!FirstTime)
+		{
+			Uint32 flags = SDL_GetWindowFlags(Engine::GetInstance().window->window);
+
+			if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, 0);
+			}
+			else {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			}
+		}
+		else
+		{
+			FirstTime = false;
+		}
+		pressed_once = false;
+		once = false;
+	}
+	else if (fullscreen->state == GuiControlState::PRESSED && !once)
+	{
+		if (!FirstTime)
+		{
+			Uint32 flags = SDL_GetWindowFlags(Engine::GetInstance().window->window);
+
+			if (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, 0);
+			}
+			else {
+				SDL_SetWindowFullscreen(Engine::GetInstance().window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			}
+		}
+		else
+		{
+			FirstTime = false;
+		}
+		pressed_once = true;
+		once = true;
+	}
+	
 	if (generalSlider->state == GuiControlState::PRESSED)
 	{
 		Engine::GetInstance().audio->ChangeGeneralVolume(generalSlider->GetValue());
@@ -130,16 +202,29 @@ bool SceneSettings::Update(float dt)
 
 	if (exitButtonPressed)
 	{
+		drawBg = false;
 		exitButtonPressed = false;
 		Engine::GetInstance().guiManager->DeleteButtons();
-		if (Engine::GetInstance().previousLoopState == LoopState::GAME)
+		if (Engine::GetInstance().previousLoopState == LoopState::PAUSE)
 		{
 			Engine::GetInstance().scene->CreateButtons();
-			Engine::GetInstance().ChangeLoopStateWithoutStart(Engine::GetInstance().previousLoopState);
+			Engine::GetInstance().ChangeLoopState(Engine::GetInstance().previousLoopState);
+			Engine::GetInstance().scenePause->parallax->textureName1 = "Assets/Textures/Pause_para/1.png";
+			Engine::GetInstance().scenePause->parallax->textureName2 = "Assets/Textures/Pause_para/2.png";
+			Engine::GetInstance().scenePause->parallax->textureName3 = "Assets/Textures/Pause_para/3.png";
+			Engine::GetInstance().scenePause->parallax->textureName4 = "Assets/Textures/Pause_para/4.png";
+			Engine::GetInstance().scenePause->parallax->textureName5 = "Assets/Textures/Pause_para/4.png";
+			Engine::GetInstance().scenePause->parallax->ChangeTextures();
 		}
-		else
+		else if (Engine::GetInstance().previousLoopState == LoopState::TITLE)
 		{
 			Engine::GetInstance().ChangeLoopState(Engine::GetInstance().previousLoopState);
+			Engine::GetInstance().sceneTitle->parallax->textureName1 = "Assets/Textures/Title_para/1.png";
+			Engine::GetInstance().sceneTitle->parallax->textureName2 = "Assets/Textures/Title_para/2.png";
+			Engine::GetInstance().sceneTitle->parallax->textureName3 = "Assets/Textures/Title_para/3.png";
+			Engine::GetInstance().sceneTitle->parallax->textureName4 = "Assets/Textures/Title_para/4.png";
+			Engine::GetInstance().sceneTitle->parallax->textureName5 = "Assets/Textures/Title_para/4.png";
+			Engine::GetInstance().sceneTitle->parallax->ChangeTextures();
 		}
 		
 	}

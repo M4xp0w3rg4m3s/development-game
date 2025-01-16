@@ -19,6 +19,7 @@ public:
 	void UpdateInternalTimer();
 	double ReadInternalTimerSec() const;
 	std::string ReadInternalTimerFormat() const;
+	void SetInternalTimer(double seconds);
 
 	void FadeIn();
 	void FadeOut();
@@ -53,6 +54,7 @@ private:
 	SDL_Texture* keysMenuTexture = nullptr;
 	SDL_Texture* lifeHudTexture = nullptr;
 	SDL_Texture* ignisHudTexture = nullptr;
+	SDL_Texture* bossLifeHudTexture = nullptr;
 
 	SDL_Texture* dieScreen = nullptr;
 	SDL_Texture* lvl2Screen = nullptr;

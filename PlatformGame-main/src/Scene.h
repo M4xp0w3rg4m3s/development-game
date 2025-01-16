@@ -3,11 +3,13 @@
 #include "Module.h"
 #include "Player.h"
 #include "Parallax.h"
+#include "ParallaxTwoPoints.h"
 #include <box2d/box2d.h>
 #include "GuiControlButton.h"
 
 class Item;
 class Enemy;
+class Boss;
 
 class Scene : public Module
 {
@@ -41,7 +43,7 @@ public:
 	Vector2D GetPlayerPosition() const;
 
 	Player* GetPlayer() const;
-	Enemy* GetBoss() const;
+	Boss* GetBoss() const;
 
 	std::string GetTilePosDebug() {
 		return tilePosDebug;
@@ -68,6 +70,9 @@ public:
 	bool goingToLvl2 = false;
 	bool goingToLvl3 = false;
 
+	bool bossMusicPlayed = false;
+
+	bool pausePressed = false;
 	bool debug = false;
 private:
 	int enemyIndex1 = 0;
@@ -83,10 +88,9 @@ private:
 	bool Lvl2_Items_created = false;
 	bool Lvl3_Items_created = false;
 
-	SDL_Texture* caveBg = nullptr;
-
 	Player* player = nullptr;
 	Parallax* parallax = nullptr;
+	ParallaxTwoPoints* parallaxTwoPoints = nullptr;
 	Enemy* boss = nullptr;
 	
 	std::vector<Enemy*> enemyListLevel1;
@@ -104,5 +108,8 @@ private:
 	int numEnemies3 = 12;
 
 	GuiControlButton* optionsBt = nullptr;
-	bool settingsPressed = false;
+
+	int checkpointFx = -1;
+	int golemSpawnFx = -1;
+	int golemRoarFx = -1;
 };

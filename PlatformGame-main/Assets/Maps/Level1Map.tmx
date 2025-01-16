@@ -86,7 +86,7 @@
  <tileset firstgid="1081" name="MapMetadata" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="4" columns="4">
   <image source="MapMetadata.png" width="133" height="34"/>
  </tileset>
- <layer id="3" name="Tile layer 3" width="220" height="15" locked="1">
+ <layer id="3" name="Tile layer 3" width="220" height="15">
   <properties>
    <property name="Draw" type="bool" value="true"/>
   </properties>
@@ -2443,7 +2443,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="283"/>
+   <tile/>
    <tile/>
    <tile gid="281"/>
    <tile gid="282"/>
@@ -2663,7 +2663,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="310"/>
+   <tile/>
    <tile gid="307"/>
    <tile gid="308"/>
    <tile gid="309"/>
@@ -3393,7 +3393,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="2" name="Tile layer 2" width="220" height="15" locked="1">
+ <layer id="2" name="Tile layer 2" width="220" height="15">
   <properties>
    <property name="Draw" type="bool" value="true"/>
   </properties>
@@ -6700,7 +6700,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="1" name="Tile layer 1" width="220" height="15" locked="1">
+ <layer id="1" name="Tile layer 1" width="220" height="15">
   <properties>
    <property name="Draw" type="bool" value="true"/>
   </properties>
@@ -7295,7 +7295,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="283"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7515,7 +7515,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="93"/>
+   <tile gid="310"/>
    <tile/>
    <tile/>
    <tile gid="92"/>
@@ -7648,7 +7648,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="283"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7868,7 +7868,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="310"/>
    <tile gid="145"/>
    <tile/>
    <tile gid="1"/>
@@ -8562,7 +8562,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="283"/>
    <tile gid="166"/>
    <tile/>
    <tile/>
@@ -8593,7 +8593,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="283"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8647,7 +8647,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="283"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8747,7 +8747,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="283"/>
    <tile gid="117"/>
    <tile/>
    <tile/>
@@ -8782,7 +8782,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="310"/>
    <tile gid="193"/>
    <tile/>
    <tile/>
@@ -8813,7 +8813,7 @@
    <tile/>
    <tile/>
    <tile gid="91"/>
-   <tile gid="145"/>
+   <tile gid="310"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8867,7 +8867,7 @@
    <tile/>
    <tile/>
    <tile gid="145"/>
-   <tile/>
+   <tile gid="310"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8967,7 +8967,7 @@
    <tile/>
    <tile/>
    <tile gid="93"/>
-   <tile/>
+   <tile gid="310"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10007,7 +10007,7 @@
    <tile gid="461"/>
   </data>
  </layer>
- <layer id="10" name="Navigation" width="220" height="15" locked="1">
+ <layer id="10" name="Navigation" width="220" height="15" visible="0" locked="1">
   <properties>
    <property name="Draw" type="bool" value="false"/>
    <property name="Navigation" type="bool" value="true"/>
@@ -13315,7 +13315,7 @@
    <tile gid="1081"/>
   </data>
  </layer>
- <objectgroup id="5" name="Collisions" locked="1">
+ <objectgroup id="5" name="Collisions" visible="0" locked="1">
   <object id="2" x="64" y="416" width="384" height="32"/>
   <object id="16" x="992" y="288" width="416" height="32"/>
   <object id="36" x="448" y="384" width="160" height="32"/>
@@ -13366,7 +13366,7 @@
   <object id="329" x="4992" y="352" width="64" height="32"/>
   <object id="335" x="4864" y="384" width="224" height="64"/>
  </objectgroup>
- <objectgroup id="8" name="Kill" locked="1">
+ <objectgroup id="8" name="Kill" visible="0" locked="1">
   <object id="168" x="1632" y="416" width="192" height="32"/>
   <object id="169" x="2688" y="416" width="384" height="32"/>
   <object id="332" x="5408" y="416" width="384" height="32"/>

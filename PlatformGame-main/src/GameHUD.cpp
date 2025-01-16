@@ -3,6 +3,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
+#include "Boss.h"
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
@@ -32,6 +33,7 @@ bool GameHUD::Start()
 	dieScreen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Die-screen.png");
 	lvl2Screen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level2.png");
 	lvl3Screen = Engine::GetInstance().textures.get()->Load("Assets/Textures/Level3.png");
+	bossLifeHudTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Boss_life.png");
 
 	ignisAnimator = new Sprite(ignisTexture);
 	ignisAnimator->SetNumberAnimations(1);
@@ -126,6 +128,11 @@ bool GameHUD::Update(float dt)
 
 	if (!Engine::GetInstance().scene->GetPlayer()->InsideDeadTime() && !Engine::GetInstance().scene->goingToLvl1 && !Engine::GetInstance().scene->goingToLvl2 && !Engine::GetInstance().scene->goingToLvl3) {
 		internalDt = dt;
+
+		if (Engine::GetInstance().scene->bossMusicPlayed && Engine::GetInstance().scene->GetCurrentLevel() == 3 && Engine::GetInstance().scene->GetPlayerPosition().getX() >= 5760) {
+			Engine::GetInstance().render->DrawTexture(bossLifeHudTexture, -Engine::GetInstance().render->camera.x + 854 / 2 - 349 / 2, 40 - 26);
+			Engine::GetInstance().render->DrawRectangle({ -Engine::GetInstance().render->camera.x + 854 / 2 - (15 * Engine::GetInstance().scene->GetBoss()->GetLives())/2, 40, 15 * Engine::GetInstance().scene->GetBoss()->GetLives(), 16}, 21, 50, 102);
+		}
 
 		if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
 			if (!keysMenuOn) keysMenuOn = true;
@@ -294,22 +301,28 @@ bool GameHUD::Update(float dt)
 
 bool GameHUD::CleanUp()
 {
-	LOG("Cleanup Game HUD");/*
+	LOG("Cleanup Game HUD");
 	Engine::GetInstance().textures->UnLoad(keysMenuTexture);
 	Engine::GetInstance().textures->UnLoad(lifeHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisHudTexture);
 	Engine::GetInstance().textures->UnLoad(ignisTexture);
 	Engine::GetInstance().textures->UnLoad(heartTexture);
 	Engine::GetInstance().textures->UnLoad(shurikenCDTexture);
-	Engine::GetInstance().textures->UnLoad(attackCDTexture);*/
+	Engine::GetInstance().textures->UnLoad(attackCDTexture);
+	Engine::GetInstance().textures->UnLoad(dieScreen);
+	Engine::GetInstance().textures->UnLoad(lvl2Screen);
+	Engine::GetInstance().textures->UnLoad(lvl3Screen);
+
 	ignisAnimator->Release();
 	heartAnimator->Release();
 	shurikenCDAnimator->Release();
 	attackCDAnimator->Release();
+
 	delete ignisAnimator;
 	delete heartAnimator;
 	delete shurikenCDAnimator;
 	delete attackCDAnimator;
+
 	return true;
 }
 
@@ -337,6 +350,11 @@ std::string GameHUD::ReadInternalTimerFormat() const
 	stream << std::setw(2) << std::setfill('0') << minutes << ":" << std::setw(2) << std::setfill('0') << seconds;
 
 	return stream.str();
+}
+
+void GameHUD::SetInternalTimer(double seconds)
+{
+	internalTimer = seconds;
 }
 
 void GameHUD::FadeIn()

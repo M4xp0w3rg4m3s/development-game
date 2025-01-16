@@ -150,6 +150,9 @@
     <ClCompile Include="src\Boss.cpp" />
     <ClCompile Include="src\Boulder.cpp" />
     <ClCompile Include="src\GuiSlider.cpp" />
+    <ClCompile Include="src\GuiToggle.cpp" />
+    <ClCompile Include="src\ParallaxTwoPoints.cpp" />
+    <ClCompile Include="src\SceneEnd.cpp" />
     <ClCompile Include="src\SceneIntro.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Engine.cpp" />
@@ -161,6 +164,7 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Item.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\ScenePause.cpp" />
     <ClCompile Include="src\SceneTitle.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Octopus.cpp" />
@@ -187,6 +191,9 @@
     <ClInclude Include="src\Boss.h" />
     <ClInclude Include="src\Boulder.h" />
     <ClInclude Include="src\GuiSlider.h" />
+    <ClInclude Include="src\GuiToggle.h" />
+    <ClInclude Include="src\ParallaxTwoPoints.h" />
+    <ClInclude Include="src\SceneEnd.h" />
     <ClInclude Include="src\SceneIntro.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Engine.h" />
@@ -200,6 +207,7 @@
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\ScenePause.h" />
     <ClInclude Include="src\SceneTitle.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />

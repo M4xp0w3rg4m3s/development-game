@@ -8,13 +8,13 @@
 #include "Textures.h"
 #include "EntityManager.h"
 #include "Audio.h"
-#include "Engine.h"
 #include "Projectile.h"
 
 #include <ctime>
 
 Boss::Boss() : Enemy(EntityType::BOSS)
 {
+	name = "boss";
 	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 
@@ -44,24 +44,24 @@ bool Boss::Start()
 	bodyAttackLeft = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() , (int)position.getY(), 30*2, 30*2, bodyType::DYNAMIC);
 	bodyAttackRight = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), 30*2, 30*2, bodyType::DYNAMIC);
 
-	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 5) ,(float)PIXEL_TO_METERS(-20 *2) });
-	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 5),(float)PIXEL_TO_METERS(-20 *2) });
+	pbody->CreateWeld(bodyAttackLeft, { (float)PIXEL_TO_METERS(width / 4) ,(float)PIXEL_TO_METERS(-20 *2) });
+	pbody->CreateWeld(bodyAttackRight, { (float)PIXEL_TO_METERS(-width / 4),(float)PIXEL_TO_METERS(-20 *2) });
 
 	pbody->body->SetFixedRotation(true);
 	bodyAttackLeft->body->SetFixedRotation(true);
 	bodyAttackRight->body->SetFixedRotation(true);
 
 	//Assign collider type
-	pbody->ctype = ColliderType::ENEMY;
+	pbody->ctype = ColliderType::BOSS;
 	bodyAttackLeft->ctype = ColliderType::BOSS_ATTACK_LEFT;
 	bodyAttackRight->ctype = ColliderType::BOSS_ATTACK_RIGHT;
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool())
 	{
-		pbody->body->SetGravityScale(1);
-		bodyAttackLeft->body->SetGravityScale(1);
-		bodyAttackRight->body->SetGravityScale(1);
+		pbody->body->SetGravityScale(100);
+		bodyAttackLeft->body->SetGravityScale(100);
+		bodyAttackRight->body->SetGravityScale(100);
 	}
 
 	pbody->body->GetFixtureList()[0].SetFriction(500.0f);
@@ -83,9 +83,6 @@ bool Boss::Start()
 	bodyAttackLeftMass.mass = 0.0f;
 	bodyAttackLeftMass.center = pbody->body->GetLocalCenter();
 	bodyAttackLeft->body->SetMassData(&bodyAttackLeftMass);
-
-	/*bodyAttackLeft->body->ResetMassData();
-	bodyAttackRight->body->ResetMassData();*/
 
 	pbody->listener = this;
 	bodyAttackLeft->listener = this;
@@ -137,6 +134,7 @@ bool Boss::Start()
 	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 3 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
+	animator->AddKeyFrame(2, { 4 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 5 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 6 * width, 2 * height,width,height });
 	animator->AddKeyFrame(2, { 7 * width, 2 * height,width,height });
@@ -173,6 +171,10 @@ bool Boss::Start()
 	// Seed the random number generator
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
+	hitTimer.Start();
+
+	crystalSpawnFx = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/Ice_spawn.ogg");
+
 	return true;
 }
 
@@ -207,6 +209,7 @@ bool Boss::Update(float dt)
 			if (animator->isAnimFinished())
 			{
 				Disable();
+				Engine::GetInstance().ChangeLoopState(LoopState::END);
 			}
 		}
 		else if (isAttacking)
@@ -223,6 +226,7 @@ bool Boss::Update(float dt)
 				if (fallingProjectiles)
 				{
 					Shoot();
+					Engine::GetInstance().audio->PlayFx(crystalSpawnFx);
 					fallingProjectiles = false;
 				}
 
@@ -250,6 +254,7 @@ bool Boss::Update(float dt)
 			}
 			else
 			{
+				pbody->body->SetLinearVelocity({ 0,5 });
 				if (animator->GetAnimation() != 0)
 				{
 					animator->SetAnimation(0);
@@ -259,7 +264,7 @@ bool Boss::Update(float dt)
 	}
 
 	//Draw + Flip
-	int drawScaleX = (linearVelocity.x < 0 || (linearVelocity.x == 0 && !animator->IsLookingRight())) ? 26 : -26;
+	int drawScaleX = (linearVelocity.x < 0 || (linearVelocity.x == 0 && !animator->IsLookingRight())) ? 50 : -50;
 
 	if (linearVelocity.x < 0) {
 		animator->LookLeft();
@@ -287,7 +292,7 @@ bool Boss::Update(float dt)
 			}
 		}
 	}
-	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -26);
+	animator->Draw((int)position.getX(), (int)position.getY(), drawScaleX, -54);
 
 	// Track attack direction
 	if (isAttacking) {
@@ -304,7 +309,7 @@ bool Boss::Update(float dt)
 
 bool Boss::CleanUp()
 {
-	//Engine::GetInstance().textures.get()->UnLoad(texture);
+	Engine::GetInstance().textures.get()->UnLoad(texture);
 
 	Engine::GetInstance().physics->DeletePhysBody(pbody);
 	Engine::GetInstance().physics->DeletePhysBody(bodyAttackLeft);
@@ -422,20 +427,36 @@ void Boss::Move()
 
 void Boss::OnCollision(PhysBody* physA, PhysBody* physB)
 {
+	if (physA->ctype == ColliderType::BOSS)
+	{
+		switch (physB->ctype)
+		{
+		case ColliderType::PROJECTILE_PLAYER:
+			Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
+			GetDamaged();
+			break;
+		case ColliderType::PLAYER_ATTACK_LEFT:
+			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingBossLeft())
+			{
+				GetDamaged();
+			}
+			break;
+		case ColliderType::PLAYER_ATTACK_RIGHT:
+			if (Engine::GetInstance().scene->GetPlayer()->IsAttackingBossRight())
+			{
+				GetDamaged();
+			}
+			break;
+		
+		default:
+			break;
+		}
+	}	
 	if (physA->ctype == ColliderType::BOSS_ATTACK_LEFT && physB->ctype == ColliderType::PLAYER && isAttackingLeft) {
 		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
 	}
 	else if (physA->ctype == ColliderType::BOSS_ATTACK_RIGHT && physB->ctype == ColliderType::PLAYER && isAttackingRight) {
 		Engine::GetInstance().scene->GetPlayer()->SetCanBeAttacked(true);
-	}
-	switch (physB->ctype)
-	{
-	case ColliderType::PROJECTILE_PLAYER:
-		Engine::GetInstance().audio.get()->PlayFx(audioShurikenHitId);
-		lives--;
-		break;
-	default:
-		break;
 	}
 }
 
@@ -506,4 +527,17 @@ bool Boss::IsAttackingLeft()
 bool Boss::IsAttackingRight()
 {
 	return isAttackingRight;
+}
+
+void Boss::GetDamaged()
+{
+	if (hitTimer.ReadMSec() > hitTime) {
+		lives--;
+		hitTimer.Start();
+	}
+}
+
+int Boss::GetLives() const
+{
+	return lives;
 }

@@ -109,6 +109,18 @@
     <ClCompile Include="src\GuiSlider.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
+    <ClCompile Include="src\ParallaxTwoPoints.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScenePause.cpp">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GuiToggle.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneEnd.cpp">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Log.h">
@@ -221,6 +233,18 @@
     </ClInclude>
     <ClInclude Include="src\GuiSlider.h">
       <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ParallaxTwoPoints.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScenePause.h">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GuiToggle.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneEnd.h">
+      <Filter>Game\Scenes\Type %28Scene%29</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

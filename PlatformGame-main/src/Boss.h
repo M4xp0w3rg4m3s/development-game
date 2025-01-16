@@ -40,8 +40,12 @@ public:
 	bool IsAttackingLeft();
 	bool IsAttackingRight();
 
+	void GetDamaged();
+
 	bool isAttacking = false;
 	bool isAttackingLeft = false;
+
+	int GetLives() const;
 private:
 
 	PhysBody* bodyAttackLeft = nullptr;
@@ -54,9 +58,13 @@ private:
 	Timer attackTimer;
 	float attackTime = 1;
 
+	Timer hitTimer;
+	float hitTime = 500;
 	
 	bool isAttackingRight = false;
 	bool fallingProjectiles = false;
 
 	const float VELOCITY_THRESHOLD = 0.1f;
+
+	int crystalSpawnFx = -1;
 };

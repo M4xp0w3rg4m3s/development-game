@@ -9,6 +9,7 @@
 #include "Boulder.h"
 #include "Item.h"
 #include "EntityManager.h"
+#include "Window.h"
 
 #include <math.h>
 
@@ -46,31 +47,37 @@ bool Map::Update(float dt)
     bool ret = true;
 
     if (mapLoaded) {
-
         for (const auto anim : tileAnimator) {
             anim.second->Update();
         }
 
-        for (const auto& mapLayer : mapData.layers) {
-            //Check if the property Draw exist get the value, if it's true draw the lawyer
-            if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
-                for (int i = 0; i < mapData.width; i++) {
-                    for (int j = 0; j < mapData.height; j++) {
+        int camX = -Engine::GetInstance().render->camera.x;
+        int camY = Engine::GetInstance().render->camera.y;
+        int windowWidth = 0, windowHeight = 0;
+        Engine::GetInstance().window->GetWindowSize(windowWidth, windowHeight);
 
-                        //Get the gid from tile
+        int tileWidth = 32;
+        int tileHeight = 32;
+
+        int startX = std::max(0, camX / tileWidth);
+        int startY = std::max(0, camY / tileHeight);
+        int endX = std::min(mapData.width, (camX + windowWidth) / tileWidth + 1);
+        int endY = std::min(mapData.height, (camY + windowHeight) / tileHeight + 1);
+
+        for (const auto& mapLayer : mapData.layers) {
+            if (mapLayer->properties.GetProperty("Draw") != nullptr && mapLayer->properties.GetProperty("Draw")->value == true) {
+                for (int i = startX; i < endX; i++) {
+                    for (int j = startY; j < endY; j++) {
                         int gid = mapLayer->Get(i, j);
-                        //Check if the gid is different from 0 - some tiles are empty
                         if (gid != 0) {
                             TileSet* tileSet = GetTilesetFromTileId(gid);
                             if (tileSet != nullptr) {
                                 if (tileAnimator.find(gid) != tileAnimator.end()) {
                                     gid = tileAnimator.at(gid)->GetCurrentFrame().extraData;
                                 }
-                                //Get the Rect from the tileSetTexture;
                                 SDL_Rect tileRect = tileSet->GetRect(gid);
-                                //Get the screen coordinates from the tile coordinates
                                 Vector2D mapCoord = MapToWorld(i, j);
-                                //Draw the texture
+
                                 Engine::GetInstance().render->DrawTexture(tileSet->texture, (int)(mapCoord.getX()), (int)(mapCoord.getY()), &tileRect);
                             }
                         }
@@ -351,7 +358,7 @@ MapLayer* Map::GetNavigationLayer() {
 Properties::Property* Properties::GetProperty(const char* name)
 {
     for (const auto& property : propertyList) {
-        if (property->name == name) {
+        if (property != nullptr && property->name == name) {
             return property;
         }
     }

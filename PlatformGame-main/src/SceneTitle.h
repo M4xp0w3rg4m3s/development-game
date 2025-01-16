@@ -49,6 +49,7 @@ public:
 
 	bool debug = false;
 
+	Parallax* parallax = nullptr;
 private:
 	GuiControlButton* playButton = nullptr;
 	GuiControlButton* continueButton = nullptr;
@@ -56,12 +57,13 @@ private:
 	GuiControlButton* creditsButton = nullptr;
 	GuiControlButton* exitButton = nullptr;
 
-	SDL_Texture* Bg = nullptr;
 	SDL_Texture* credits1 = nullptr;
 	SDL_Texture* credits2 = nullptr;
 	SDL_Texture* lvl1 = nullptr;
 	SDL_Texture* lvl2 = nullptr;
 	SDL_Texture* lvl3 = nullptr;
+	SDL_Texture* title = nullptr;
+	int titleWidth = 360;
 
 	b2Vec2 sizeWindow = { 0,0 };
 
@@ -72,8 +74,11 @@ private:
 	bool exitPressed = false;
 
 	bool drawBg = true;
+	bool saved = true;
 
-	Parallax* parallax = nullptr;
+
+	Timer initTimer;
+	int initTime = 1 * 100;
 
 	//----------Fade----------//
 	Timer imageTimer;

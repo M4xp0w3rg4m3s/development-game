@@ -8,6 +8,8 @@
 
 class GuiControlButton;
 class GuiSlider;
+class GuiToggle;
+class Parallax;
 
 class SceneSettings : public Module 
 {
@@ -33,6 +35,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	Parallax* parallax = nullptr;
 private:
 	GuiSlider* generalSlider = nullptr;
 	GuiSlider* musicSlider = nullptr;
@@ -40,9 +43,17 @@ private:
 
 	GuiControlButton* exitButton = nullptr;
 
-	GuiControlButton* fullscreen = nullptr;
+	GuiToggle* fullscreen = nullptr;
+
 
 	b2Vec2 sizeWindow = { 0,0 };
 
 	bool exitButtonPressed = false;
+
+	bool once = false;
+	bool fullscreen_bool = true;
+	bool pressed_once = false;
+	bool FirstTime = true;
+
+	bool drawBg = true;
 };

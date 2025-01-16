@@ -24,6 +24,7 @@ class Entity
 public:
 
 	Entity(EntityType type) : type(type), active(true) {}
+	virtual ~Entity(){}
 
 	virtual bool Awake()
 	{
@@ -77,4 +78,6 @@ public:
 	// want our Entity class, maybe it's not renderable...
 	Vector2D position;       
 	bool renderable = true;
+
+	bool visible = true;
 };
