@@ -33,8 +33,7 @@ bool SceneEnd::Awake()
 // Called before the first frame
 bool SceneEnd::Start()
 {
-	//intro music
-	//Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level1.wav");
+	Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/End_Screen.wav");
 
 	parallax = Engine::GetInstance().parallax.get();
 
@@ -42,7 +41,7 @@ bool SceneEnd::Start()
 	parallax->textureName2 = "Assets/Textures/End_para/2.png";
 	parallax->textureName3 = "Assets/Textures/End_para/3.png";
 	parallax->textureName4 = "Assets/Textures/End_para/4.png";
-	parallax->textureName5 = "Assets/Textures/End_para/5.png";
+	parallax->textureName5 = "Assets/Textures/End_para/4.png";
 
 	previousWidth = parallax->sizeW;
 	parallax->sizeW = 854;
@@ -70,17 +69,7 @@ bool SceneEnd::Update(float dt)
 	auto& camera = Engine::GetInstance().render->camera;
 	static int lastMouseX = (int)mousePosition.getX();
 	int deltaX = (int)mousePosition.getX() - lastMouseX;
-
-	int cameraLimitXRight = parallax->sizeW + 400;
-	int cameraLimitXLeft = -200;
 	camera.x -= deltaX;
-
-	if (camera.x < cameraLimitXLeft) {
-		camera.x = cameraLimitXLeft;
-	}
-	else if (camera.x > cameraLimitXRight) {
-		camera.x = cameraLimitXRight;
-	}
 
 	lastMouseX = (int)mousePosition.getX();
 	parallax->Update(dt);
@@ -90,10 +79,10 @@ bool SceneEnd::Update(float dt)
 	if (sceneTimer.ReadMSec() >= (sceneTime - fadetime) && !last_fadeIn) {
 		FadeIn();
 		last_fadeIn = true;
-		parallax->sizeW = previousWidth;
 	}
 	else if(sceneTimer.ReadMSec() >= sceneTime) {
 		Engine::GetInstance().ChangeLoopState(LoopState::TITLE);
+		parallax->sizeW = previousWidth;
 	}
 
 	fadeRect.x = -Engine::GetInstance().render->camera.x;
