@@ -15,6 +15,7 @@
 #include "SceneTitle.h"
 #include "SceneSettings.h"
 #include "ScenePause.h"
+#include "SceneEnd.h"
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
@@ -48,6 +49,7 @@ Engine::Engine() {
     sceneTitle = std::make_shared<SceneTitle>();
     sceneSettings = std::make_shared<SceneSettings>();
     scenePause = std::make_shared<ScenePause>();
+    sceneEnd = std::make_shared<SceneEnd>();
     map = std::make_shared<Map>();
     parallax = std::make_shared<Parallax>();
     parallaxTwoPoints = std::make_shared<ParallaxTwoPoints>();
@@ -82,6 +84,11 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::PAUSE);
     AddModule(std::static_pointer_cast<Module>(audio), LoopState::PAUSE);
 
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::END);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::END);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::END);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::END);
+
     AddModule(std::static_pointer_cast<Module>(window), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(input), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::GAME);
@@ -104,6 +111,9 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(scenePause), LoopState::PAUSE);
     AddModule(std::static_pointer_cast<Module>(guiManager), LoopState::PAUSE);
 
+    // END
+    AddModule(std::static_pointer_cast<Module>(sceneEnd), LoopState::END);
+
     // GAME
     AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(parallax), LoopState::GAME);
@@ -125,6 +135,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(render), LoopState::SETTINGS);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::PAUSE);
     AddModule(std::static_pointer_cast<Module>(render), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(render), LoopState::END);
 
     LOG("Timer App Constructor: %f", timer.ReadMSec());
 }
@@ -153,6 +164,10 @@ void Engine::AddModule(std::shared_ptr<Module> module, LoopState state){
     case LoopState::PAUSE:
         module->Init();
         moduleListPause.push_back(module);
+        break;
+    case LoopState::END:
+        module->Init();
+        moduleListEnd.push_back(module);
         break;
     case LoopState::GAME:
         module->Init();
@@ -280,11 +295,12 @@ bool Engine::CleanUp() {
     };
 
     cleanModuleList(moduleListCleanOnce);
-    if (IntroStarted) if (result) cleanModuleList(moduleListIntro);
-    if (TitleStarted) if (result) cleanModuleList(moduleListTitle);
-    if (SettingsStarted) if (result) cleanModuleList(moduleListSettings);
-    if (PauseStarted) if (result) cleanModuleList(moduleListPause);
-    if (GameStarted) if (result) cleanModuleList(moduleListGame);
+    if (introStarted) if (result) cleanModuleList(moduleListIntro);
+    if (titleStarted) if (result) cleanModuleList(moduleListTitle);
+    if (settingsStarted) if (result) cleanModuleList(moduleListSettings);
+    if (pauseStarted) if (result) cleanModuleList(moduleListPause);
+    if (endStarted) if (result) cleanModuleList(moduleListEnd);
+    if (gameStarted) if (result) cleanModuleList(moduleListGame);
     LOG("Timer App CleanUp(): %f", timer.ReadMSec());
 
     return result;
@@ -389,6 +405,16 @@ bool Engine::PreUpdate()
         }
     }
 
+    if (currentLoopState == LoopState::END)
+    {
+        for (const auto& module : moduleListEnd) {
+            result = module.get()->PreUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
     if (currentLoopState == LoopState::GAME)
     {
         for (const auto& module : moduleListGame) {
@@ -447,6 +473,16 @@ bool Engine::DoUpdate()
         }
     }
 
+    if (currentLoopState == LoopState::END)
+    {
+        for (const auto& module : moduleListEnd) {
+            result = module.get()->Update(dt);
+            if (!result) {
+                break;
+            }
+        }
+    }
+
     if (currentLoopState == LoopState::GAME)
     {
         for (const auto& module : moduleListGame) {
@@ -497,6 +533,16 @@ bool Engine::PostUpdate()
     if (currentLoopState == LoopState::PAUSE)
     {
         for (const auto& module : moduleListPause) {
+            result = module.get()->PostUpdate();
+            if (!result) {
+                break;
+            }
+        }
+    }
+
+    if (currentLoopState == LoopState::END)
+    {
+        for (const auto& module : moduleListEnd) {
             result = module.get()->PostUpdate();
             if (!result) {
                 break;
@@ -617,6 +663,20 @@ void Engine::AwakeCurrentLoopState()
         }
     }
 
+    if (currentLoopState == LoopState::END)
+    {
+        bool result = true;
+        for (const auto& module : moduleListEnd) {
+            if (!isInCleanOnce(module)) {
+                result = module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+                if (result) result = module.get()->Awake();
+                if (!result) {
+                    break;
+                }
+            }
+        }
+    }
+
     if (currentLoopState == LoopState::GAME)
     {
         bool result = true;
@@ -649,7 +709,7 @@ bool Engine::StartCurrentLoopState()
                 break;
             }
         }
-        IntroStarted = true;
+        introStarted = true;
     }
     if (currentLoopState == LoopState::TITLE)
     {
@@ -661,7 +721,7 @@ bool Engine::StartCurrentLoopState()
                 }
             }
         }
-        TitleStarted = true;
+        titleStarted = true;
     }
     if (currentLoopState == LoopState::SETTINGS)
     {
@@ -673,7 +733,7 @@ bool Engine::StartCurrentLoopState()
                 }
             }
         }
-        SettingsStarted = true;
+        settingsStarted = true;
     }
     if (currentLoopState == LoopState::PAUSE)
     {
@@ -685,7 +745,19 @@ bool Engine::StartCurrentLoopState()
                 }
             }
         }
-        PauseStarted = true;
+        pauseStarted = true;
+    }
+    if (currentLoopState == LoopState::END)
+    {
+        for (const auto& module : moduleListEnd) {
+            if (!isInCleanOnce(module)) {
+                result = module.get()->Start();
+                if (!result) {
+                    break;
+                }
+            }
+        }
+        endStarted = true;
     }
     if (currentLoopState == LoopState::GAME)
     {
@@ -697,7 +769,7 @@ bool Engine::StartCurrentLoopState()
                 }
             }
         }
-        GameStarted = true;
+        gameStarted = true;
     }
     return result;
 }

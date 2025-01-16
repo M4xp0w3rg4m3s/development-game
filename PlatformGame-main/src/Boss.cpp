@@ -208,6 +208,7 @@ bool Boss::Update(float dt)
 			if (animator->isAnimFinished())
 			{
 				Disable();
+				Engine::GetInstance().ChangeLoopState(LoopState::END);
 			}
 		}
 		else if (isAttacking)
