@@ -14,6 +14,7 @@
 
 Boss::Boss() : Enemy(EntityType::BOSS)
 {
+	name = "boss";
 	audioShurikenHitId = Engine::GetInstance().audio->LoadFx("Assets/Audio/Fx/shurikenHit.wav");
 }
 

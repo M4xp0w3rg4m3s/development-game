@@ -96,7 +96,7 @@ bool SceneSettings::Update(float dt)
 	}
 
 	//---Text---//
-	Engine::GetInstance().render->DrawText("OPTIONS", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
+	Engine::GetInstance().render->DrawText("SETTINGS", (int)(sizeWindow.x / 2 - 100), 25, 200, 75);
 
 	Engine::GetInstance().render->DrawText("General", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 1 - 10), 75, 20);
 	Engine::GetInstance().render->DrawText(" Music ", (int)(sizeWindow.x / 2 - 175 - 30), (int)(sizeWindow.y / 3 * 1.5 - 10), 75, 20);

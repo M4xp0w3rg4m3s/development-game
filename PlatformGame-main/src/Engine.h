@@ -142,6 +142,7 @@ public:
 
 	LoopState currentLoopState = LoopState::INTRO;
 	LoopState previousLoopState = LoopState::INTRO;
+	LoopState beforePreviousLoopState = LoopState::INTRO;
 
 private: 
 	bool introStarted = false;

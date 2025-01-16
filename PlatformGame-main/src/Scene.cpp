@@ -1013,5 +1013,5 @@ void Scene::CreateItems(pugi::xml_node itemNode, std::vector<Item*>& itemList)
 void Scene::CreateButtons()
 {
 	SDL_Rect btPos = { 854 - 65, 0, 65, 20 };
-	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, " Options ", btPos, this);
+	optionsBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "  Pause  ", btPos, this);
 }
