@@ -96,6 +96,7 @@ private:
 
 	// Load config file
 	bool LoadConfig();
+	bool LoadConfigBackup();
 
 	std::list<std::shared_ptr<Module>> moduleList;
 	std::list<std::shared_ptr<Module>> moduleListIntro;

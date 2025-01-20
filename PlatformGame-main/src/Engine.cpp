@@ -586,6 +586,28 @@ bool Engine::LoadConfig()
     return ret;
 }
 
+bool Engine::LoadConfigBackup()
+{
+    bool ret = true;
+
+    //Load config.xml file using load_file() method from the xml_document class
+    // If the result is ok get the main node of the XML
+    // else, log the error
+    // check https://pugixml.org/docs/quickstart.html#loading
+
+    pugi::xml_parse_result result = configFile.load_file("config_backup.xml");
+    if (result)
+    {
+        LOG("config_backup.xml parsed without errors");
+    }
+    else
+    {
+        LOG("Error loading config_backup.xml: %s", result.description());
+    }
+
+    return ret;
+}
+
 float Engine::GetDeltaTime() const
 {
     return dt;
