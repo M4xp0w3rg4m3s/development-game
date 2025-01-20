@@ -84,15 +84,16 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::PAUSE);
     AddModule(std::static_pointer_cast<Module>(audio), LoopState::PAUSE);
 
+    AddModule(std::static_pointer_cast<Module>(window), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(input), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(textures), LoopState::GAME);
+    AddModule(std::static_pointer_cast<Module>(audio), LoopState::GAME);
+
     AddModule(std::static_pointer_cast<Module>(window), LoopState::END);
     AddModule(std::static_pointer_cast<Module>(input), LoopState::END);
     AddModule(std::static_pointer_cast<Module>(textures), LoopState::END);
     AddModule(std::static_pointer_cast<Module>(audio), LoopState::END);
 
-    AddModule(std::static_pointer_cast<Module>(window), LoopState::GAME);
-    AddModule(std::static_pointer_cast<Module>(input), LoopState::GAME);
-    AddModule(std::static_pointer_cast<Module>(textures), LoopState::GAME);
-    AddModule(std::static_pointer_cast<Module>(audio), LoopState::GAME);
 
 
     // INTRO
@@ -111,9 +112,6 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(scenePause), LoopState::PAUSE);
     AddModule(std::static_pointer_cast<Module>(guiManager), LoopState::PAUSE);
 
-    // END
-    AddModule(std::static_pointer_cast<Module>(sceneEnd), LoopState::END);
-
     // GAME
     AddModule(std::static_pointer_cast<Module>(physics), LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(parallax), LoopState::GAME);
@@ -127,6 +125,9 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(entityManager),LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(guiManager),LoopState::GAME);
     AddModule(std::static_pointer_cast<Module>(gameHud), LoopState::GAME);
+
+    // END
+    AddModule(std::static_pointer_cast<Module>(sceneEnd), LoopState::END);
 
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render), LoopState::CLEAN_ONCE);

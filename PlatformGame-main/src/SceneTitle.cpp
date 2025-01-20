@@ -146,9 +146,15 @@ bool SceneTitle::Update(float dt)
 				Engine::GetInstance().scene->CreateButtons();
 				Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
 			}
-			else
+			else if(Engine::GetInstance().previousLoopState == LoopState::INTRO)
 			{
 				HandlePlay();
+			}
+			else
+			{
+				playPressed = false;
+				Engine::GetInstance().scene->CreateButtons();
+				Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
 			}
 		}
 		else if (continuePressed)
