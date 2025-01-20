@@ -9270,17 +9270,33 @@
   <object id="452" x="1472" y="480" width="288" height="32"/>
   <object id="453" x="2080" y="480" width="288" height="32"/>
  </objectgroup>
- <objectgroup id="10" name="Checkpoints" locked="1">
-  <object id="477" x="1408" y="352">
+ <objectgroup id="10" name="Checkpoints">
+  <object id="477" x="1395.33" y="368.667">
+   <properties>
+    <property name="Level" type="int" value="2"/>
+    <property name="Order" type="int" value="0"/>
+   </properties>
    <point/>
   </object>
-  <object id="480" x="1888" y="160">
+  <object id="480" x="1876" y="175.333">
+   <properties>
+    <property name="Level" type="int" value="2"/>
+    <property name="Order" type="int" value="1"/>
+   </properties>
    <point/>
   </object>
-  <object id="481" x="2496" y="320">
+  <object id="481" x="2485" y="364.5">
+   <properties>
+    <property name="Level" type="int" value="2"/>
+    <property name="Order" type="int" value="2"/>
+   </properties>
    <point/>
   </object>
-  <object id="482" x="3360" y="320">
+  <object id="482" x="3349.5" y="333">
+   <properties>
+    <property name="Level" type="int" value="2"/>
+    <property name="Order" type="int" value="3"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>
