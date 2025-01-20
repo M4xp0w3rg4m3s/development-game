@@ -98,6 +98,8 @@ private:
 	bool LoadConfig();
 	bool LoadConfigBackup();
 
+	void ResetAll();
+
 	std::list<std::shared_ptr<Module>> moduleList;
 	std::list<std::shared_ptr<Module>> moduleListIntro;
 	std::list<std::shared_ptr<Module>> moduleListTitle;

@@ -608,6 +608,14 @@ bool Engine::LoadConfigBackup()
     return ret;
 }
 
+void Engine::ResetAll()
+{
+
+    CleanUp();
+    Awake();
+    Start();
+}
+
 float Engine::GetDeltaTime() const
 {
     return dt;
