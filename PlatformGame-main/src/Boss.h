@@ -46,6 +46,7 @@ public:
 	bool isAttackingLeft = false;
 
 	int GetLives() const;
+	void SetLives(int _lives);
 private:
 
 	PhysBody* bodyAttackLeft = nullptr;

@@ -150,6 +150,11 @@ bool SceneTitle::Update(float dt)
 			{
 				HandlePlay();
 			}
+			else if (Engine::GetInstance().beforePreviousLoopState == LoopState::END) {
+				playPressed = false;
+				Engine::GetInstance().ChangeLoopStateWithoutStart(LoopState::GAME);
+				Engine::GetInstance().scene->LoadState();
+			}
 			else
 			{
 				playPressed = false;

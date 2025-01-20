@@ -670,6 +670,9 @@ void Scene::LoadState()
 							enemy->SetPosition(enemyPos);
 						}
 					}
+					if (enemyNode.attribute("name").value() == "boss") {
+						static_cast<Boss*>(boss)->SetLives(enemyNode.attribute("life").as_int());
+					}
 				}
 			}
 		}
@@ -811,6 +814,9 @@ void Scene::SaveState()
 					else {
 						enemyNode.attribute("x").set_value(enemy->GetPosition().getX());
 						enemyNode.attribute("y").set_value(enemy->GetPosition().getY());
+					}
+					if (enemyNode.attribute("name").value() == "boss") {
+						enemyNode.attribute("life").set_value(static_cast<Boss*>(boss)->GetLives());
 					}
 				}
 			}

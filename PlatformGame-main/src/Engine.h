@@ -69,6 +69,8 @@ public:
 	void AwakeCurrentLoopState();
 	bool StartCurrentLoopState();
 
+	void RestartEngine();
+
 private:
 
 	// Private constructor to prevent instantiation
@@ -97,8 +99,6 @@ private:
 	// Load config file
 	bool LoadConfig();
 	bool LoadConfigBackup();
-
-	void ResetAll();
 
 	std::list<std::shared_ptr<Module>> moduleList;
 	std::list<std::shared_ptr<Module>> moduleListIntro;

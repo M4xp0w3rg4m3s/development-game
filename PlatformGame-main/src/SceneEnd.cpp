@@ -81,6 +81,7 @@ bool SceneEnd::Update(float dt)
 		last_fadeIn = true;
 	}
 	else if(sceneTimer.ReadMSec() >= sceneTime) {
+		Engine::GetInstance().RestartEngine();
 		Engine::GetInstance().ChangeLoopState(LoopState::TITLE);
 		parallax->sizeW = previousWidth;
 	}

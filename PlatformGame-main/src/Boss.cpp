@@ -37,6 +37,7 @@ bool Boss::Start()
 	height = parameters.attribute("h").as_int();
 	width = parameters.attribute("w").as_int();
 	enemyId = parameters.attribute("id").as_string();
+	lives = parameters.attribute("life").as_int();
 
 	texH = height, texW = width;
 
@@ -540,4 +541,9 @@ void Boss::GetDamaged()
 int Boss::GetLives() const
 {
 	return lives;
+}
+
+void Boss::SetLives(int _lives)
+{
+	lives  = _lives;
 }

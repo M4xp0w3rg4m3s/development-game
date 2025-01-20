@@ -590,30 +590,36 @@ bool Engine::LoadConfigBackup()
 {
     bool ret = true;
 
-    //Load config.xml file using load_file() method from the xml_document class
-    // If the result is ok get the main node of the XML
-    // else, log the error
-    // check https://pugixml.org/docs/quickstart.html#loading
-
-    pugi::xml_parse_result result = configFile.load_file("config_backup.xml");
+    // Load the backup configuration file
+    pugi::xml_document configBackup;
+    pugi::xml_parse_result result = configBackup.load_file("config_backup.xml");
     if (result)
     {
         LOG("config_backup.xml parsed without errors");
+
+        // Save the backup configuration into config.xml
+        if (configBackup.save_file("config.xml"))
+        {
+            LOG("config.xml updated successfully with contents of config_backup.xml");
+        }
+        else
+        {
+            LOG("Error saving config.xml");
+            ret = false;
+        }
     }
     else
     {
         LOG("Error loading config_backup.xml: %s", result.description());
+        ret = false;
     }
 
     return ret;
 }
 
-void Engine::ResetAll()
+void Engine::RestartEngine()
 {
-
-    CleanUp();
-    Awake();
-    Start();
+    LoadConfigBackup();
 }
 
 float Engine::GetDeltaTime() const
