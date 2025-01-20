@@ -131,7 +131,7 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render.get()->camera.x = 0;
 	}
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN && current_level !=  3) {
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level3Map.tmx", true);
@@ -190,7 +190,7 @@ bool Scene::Update(float dt)
 			item->Enable();
 		}
 	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN && current_level != 2) {
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
@@ -243,7 +243,7 @@ bool Scene::Update(float dt)
 			item->Enable();
 		}
 	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN && current_level != 1) {
 
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level1Map.tmx", true);
@@ -836,7 +836,6 @@ void Scene::AdvanceLevel()
 	if (current_level == 1) {
 
 		goingToLvl2 = true;
-
 		Engine::GetInstance().map->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Level2Map.tmx", true);
 		Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/Background_Level2.wav");
@@ -857,9 +856,11 @@ void Scene::AdvanceLevel()
 		for (const auto& enemy : enemyListLevel1) {
 			enemy->Disable();
 		}
+		for (const auto& enemy : enemyListLevel3) {
+			enemy->Disable();
+		}
 		if (!Lvl2_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_2").child("enemy"), enemyListLevel2);
-
 			for (const auto& enemy : enemyListLevel2) {
 				enemy->Start();
 			}
@@ -913,12 +914,14 @@ void Scene::AdvanceLevel()
 
 		player->ResetPlayer(current_level);
 
+		for (const auto& enemy : enemyListLevel1) {
+			enemy->Disable();
+		}
 		for (const auto& enemy : enemyListLevel2) {
 			enemy->Disable();
 		}
 		if (!Lvl3_Enemies_created) {
 			CreateEnemies(configParameters.child("entities").child("enemies_lvl_3").child("enemy"), enemyListLevel3);
-
 			for (const auto& enemy : enemyListLevel3) {
 				enemy->Start();
 			}
