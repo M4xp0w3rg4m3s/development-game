@@ -10510,9 +10510,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="981"/>
-   <tile gid="62"/>
-   <tile gid="62"/>
+   <tile gid="839"/>
+   <tile gid="758"/>
+   <tile gid="897"/>
    <tile gid="62"/>
    <tile gid="982"/>
    <tile/>
@@ -15198,35 +15198,35 @@
    </properties>
    <point/>
   </object>
-  <object id="497" x="2272" y="352">
+  <object id="497" x="2260.75" y="371.75">
    <properties>
     <property name="Level" type="int" value="3"/>
     <property name="Order" type="int" value="1"/>
    </properties>
    <point/>
   </object>
-  <object id="498" x="3104" y="384">
+  <object id="498" x="3122.5" y="417">
    <properties>
     <property name="Level" type="int" value="3"/>
     <property name="Order" type="int" value="2"/>
    </properties>
    <point/>
   </object>
-  <object id="499" x="4096" y="320">
+  <object id="499" x="4116.75" y="329.75">
    <properties>
     <property name="Level" type="int" value="3"/>
     <property name="Order" type="int" value="3"/>
    </properties>
    <point/>
   </object>
-  <object id="500" x="5024" y="288">
+  <object id="500" x="5044" y="301.273">
    <properties>
     <property name="Level" type="int" value="3"/>
     <property name="Order" type="int" value="4"/>
    </properties>
    <point/>
   </object>
-  <object id="501" x="5760" y="224">
+  <object id="501" x="5779" y="238.5">
    <properties>
     <property name="Level" type="int" value="3"/>
     <property name="Order" type="int" value="5"/>
