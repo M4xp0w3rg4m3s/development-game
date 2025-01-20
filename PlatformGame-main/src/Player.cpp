@@ -664,7 +664,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 void Player::KillPlayer()
 {
-	if (!godMode) {
+	if (!godMode && (state != PlayerState::DYING && state != PlayerState::DEAD)) {
 		state = PlayerState::DYING;
 	}
 }
